@@ -14,21 +14,14 @@
   <url type="bugtracker">https://github.com/dpeng/outlook-for-linux/issues</url>
   <launchable type="desktop-id">outlook-for-linux.desktop</launchable>
   <releases>
-    <release version="2.13.0" date="2026-06-25">
+    <release version="2.13.0" date="2026-07-09">
       <description>
         <ul>
-          <li>macos: Dock presence overlay and Apple Silicon performance switches (#2653)</li>
-          <li>media: add media.microphone.ignoreSystemMute to decouple Teams mute from OS mic mute (#2695)</li>
-          <li>notifications: add electron.clickAction config for window restore (#2660)</li>
-          <li>auth: forward pre-login-noise auth signals to reauth recovery (#2688)</li>
-          <li>ci: pin electron-builder to 26.8.1 to restore Windows exe build (#2697)</li>
-          <li>drag-drop: restore File.path on dropped files for Teams uploads (#2679)</li>
-          <li>snap: pin electron-builder to 26.14.0 to restore snap launch (#2686)</li>
-          <li>troubleshooting: add Ubuntu Unity system-tray workaround (#2680) (#2693)</li>
-          <li>snap: pin snapcraft to 8.x in release workflow (#2696)</li>
-          <li>deps-dev: bump electron in the minor-and-patch group (#2685)</li>
-          <li>deps-dev: bump the minor-and-patch group with 3 updates (#2690)</li>
-          <li>deps: bump actions/checkout from 4 to 7 (#2689)</li>
+          <li>Initial Outlook for Linux release based on the existing Electron wrapper foundation.</li>
+          <li>Loads Outlook Web by default with persistent session storage, system notifications, and tray integration.</li>
+          <li>Updates application identity, package metadata, desktop files, documentation, and icon assets for Outlook for Linux.</li>
+          <li>Disables inherited Teams-specific meeting, protocol, and call integrations that do not apply to Outlook.</li>
+          <li>Publishes Linux, macOS, and Windows desktop packages, including a native Apple Silicon macOS build.</li>
         </ul>
       </description>
     </release>
