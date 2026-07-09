@@ -99,13 +99,13 @@ You can also configure logging via command line arguments:
 
 ```bash
 # Enable debug logging
-teams-for-linux --logConfig='{"transports":{"console":{"level":"debug"}}}'
+outlook-for-linux --logConfig='{"transports":{"console":{"level":"debug"}}}'
 
 # Disable all logging
-teams-for-linux --logConfig=false
+outlook-for-linux --logConfig=false
 
 # Use console logging only
-teams-for-linux --logConfig="console"
+outlook-for-linux --logConfig="console"
 ```
 
 ## Log Levels
@@ -149,7 +149,7 @@ When using file transport, you can configure:
 To diagnose logging issues, temporarily enable debug mode:
 
 ```bash
-teams-for-linux --logConfig='{"transports":{"console":{"level":"debug"}}}'
+outlook-for-linux --logConfig='{"transports":{"console":{"level":"debug"}}}'
 ```
 
 ## Limitations

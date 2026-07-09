@@ -20,153 +20,153 @@ This document lists all IPC (Inter-Process Communication) channels registered in
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `submitForm` | Event | Handle form submission for SSO/authentication workflows | [`app/login/index.js:23`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/login/index.js#L23) |
+| `submitForm` | Event | Handle form submission for SSO/authentication workflows | [`app/login/index.js:23`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/login/index.js#L23) |
 
 ## Connection Management
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `offline-retry` | Event | Retry connection when user clicks retry button on offline page | [`app/connectionManager/index.js:42`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/connectionManager/index.js#L42) |
+| `offline-retry` | Event | Retry connection when user clicks retry button on offline page | [`app/connectionManager/index.js:42`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/connectionManager/index.js#L42) |
 
 ## Core Application
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `config-file-changed` | Event | Restart application when configuration file changes | [`app/index.js:253`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L253) |
-| `dock-icon-update` | Event | Update Dock icon with status overlay on macOS | [`app/index.js:285`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L285) |
-| `get-app-version` | Request/Response | Get application version number | [`app/index.js:300`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L300) |
-| `get-config` | Request/Response | Get current application configuration | [`app/index.js:255`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L255) |
-| `get-navigation-state` | Request/Response | Get current navigation state (can go back/forward) | [`app/index.js:323`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L323) |
-| `navigate-back` | Event | Navigate back in browser history | [`app/index.js:305`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L305) |
-| `navigate-forward` | Event | Navigate forward in browser history | [`app/index.js:314`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L314) |
-| `set-badge-count` | Request/Response | Set application badge count (dock/taskbar notification) | [`app/index.js:282`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L282) |
-| `unhandled-rejection` | Event | Log renderer-side unhandled promise rejections | [`app/index.js:332`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L332) |
-| `user-status-changed` | Request/Response | Handle user status changes from Teams (e.g., Available, Busy, Away) | [`app/index.js:280`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L280) |
-| `window-error` | Event | Log renderer-side uncaught window errors | [`app/index.js:361`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/index.js#L361) |
+| `config-file-changed` | Event | Restart application when configuration file changes | [`app/index.js:253`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L253) |
+| `dock-icon-update` | Event | Update Dock icon with status overlay on macOS | [`app/index.js:285`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L285) |
+| `get-app-version` | Request/Response | Get application version number | [`app/index.js:300`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L300) |
+| `get-config` | Request/Response | Get current application configuration | [`app/index.js:255`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L255) |
+| `get-navigation-state` | Request/Response | Get current navigation state (can go back/forward) | [`app/index.js:323`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L323) |
+| `navigate-back` | Event | Navigate back in browser history | [`app/index.js:305`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L305) |
+| `navigate-forward` | Event | Navigate forward in browser history | [`app/index.js:314`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L314) |
+| `set-badge-count` | Request/Response | Set application badge count (dock/taskbar notification) | [`app/index.js:282`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L282) |
+| `unhandled-rejection` | Event | Log renderer-side unhandled promise rejections | [`app/index.js:332`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L332) |
+| `user-status-changed` | Request/Response | Handle user status changes from Teams (e.g., Available, Busy, Away) | [`app/index.js:280`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L280) |
+| `window-error` | Event | Log renderer-side uncaught window errors | [`app/index.js:361`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/index.js#L361) |
 
 ## Custom Background
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `get-custom-bg-list` | Request/Response | Get list of custom background images for Teams meetings | [`app/customBackground/index.js:17`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/customBackground/index.js#L17) |
+| `get-custom-bg-list` | Request/Response | Get list of custom background images for Teams meetings | [`app/customBackground/index.js:17`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/customBackground/index.js#L17) |
 
 ## Custom Stickers
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `delete-sticker` | Request/Response | Delete a sticker file from the sticker folder. Validates the requested name/subfolder do not contain path-traversal components and resolves strictly inside the sticker folder before unlinking. Returns `{ success }` on success or `{ success: false, error }` on failure. | [`app/customStickers/index.js:62`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/customStickers/index.js#L62) |
-| `get-sticker-list` | Request/Response | Return the list of stickers (image files) from the configured folder. Each entry includes a base64 data URL so the renderer can show thumbnails and rebuild a File for synthetic-paste insertion without needing direct filesystem access. | [`app/customStickers/index.js:48`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/customStickers/index.js#L48) |
-| `import-sticker-url` | Request/Response | Download an HTTPS URL into the sticker folder. Validates the URL is HTTPS, the response content-type is on the allowlist, and the byte length is under the configured cap. Returns `{ success, filename }` on success or `{ success: false, error }` on failure. | [`app/customStickers/index.js:54`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/customStickers/index.js#L54) |
+| `delete-sticker` | Request/Response | Delete a sticker file from the sticker folder. Validates the requested name/subfolder do not contain path-traversal components and resolves strictly inside the sticker folder before unlinking. Returns `{ success }` on success or `{ success: false, error }` on failure. | [`app/customStickers/index.js:62`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/customStickers/index.js#L62) |
+| `get-sticker-list` | Request/Response | Return the list of stickers (image files) from the configured folder. Each entry includes a base64 data URL so the renderer can show thumbnails and rebuild a File for synthetic-paste insertion without needing direct filesystem access. | [`app/customStickers/index.js:48`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/customStickers/index.js#L48) |
+| `import-sticker-url` | Request/Response | Download an HTTPS URL into the sticker folder. Validates the URL is HTTPS, the response content-type is on the allowlist, and the byte length is under the configured cap. Returns `{ success, filename }` on success or `{ success: false, error }` on failure. | [`app/customStickers/index.js:54`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/customStickers/index.js#L54) |
 
 ## Idle Monitoring
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `get-system-idle-state` | Request/Response | Get system idle state to sync with Teams presence | [`app/idle/monitor.js:29`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/idle/monitor.js#L29) |
+| `get-system-idle-state` | Request/Response | Get system idle state to sync with Teams presence | [`app/idle/monitor.js:29`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/idle/monitor.js#L29) |
 
 ## Incoming Calls
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `incoming-call-action` | Event | Handle incoming call actions (accept/decline) | [`app/incomingCallToast/index.js:27`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/incomingCallToast/index.js#L27) |
-| `incoming-call-toast-ready` | One-Time Event | Signal from toast window that it's ready to be displayed | [`app/incomingCallToast/index.js:37`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/incomingCallToast/index.js#L37) |
+| `incoming-call-action` | Event | Handle incoming call actions (accept/decline) | [`app/incomingCallToast/index.js:27`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/incomingCallToast/index.js#L27) |
+| `incoming-call-toast-ready` | One-Time Event | Signal from toast window that it's ready to be displayed | [`app/incomingCallToast/index.js:37`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/incomingCallToast/index.js#L37) |
 
 ## Main Window
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `call-connected` | Request/Response | Notify when a call is connected | [`app/mainAppWindow/browserWindowManager.js:128`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L128) |
-| `call-disconnected` | Request/Response | Notify when a call is disconnected | [`app/mainAppWindow/browserWindowManager.js:130`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L130) |
-| `screen-sharing-started` | Event | we cannot reuse) and means one capture feeds both Teams and the preview. The 'screen-sharing-started' / 'screen-sharing-stopped' channels are a broadcast: ScreenSharingService updates internal state, MQTTMediaStatusService publishes to the broker, and this listener wires the MessagePort. Adding another ipcMain.on here is the established pattern, not a duplication. | [`app/mainAppWindow/index.js:702`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mainAppWindow/index.js#L702) |
-| `select-source` | Event | Handle screen sharing source selection from user | [`app/mainAppWindow/browserWindowManager.js:109`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L109) |
+| `call-connected` | Request/Response | Notify when a call is connected | [`app/mainAppWindow/browserWindowManager.js:128`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L128) |
+| `call-disconnected` | Request/Response | Notify when a call is disconnected | [`app/mainAppWindow/browserWindowManager.js:130`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L130) |
+| `screen-sharing-started` | Event | we cannot reuse) and means one capture feeds both Teams and the preview. The 'screen-sharing-started' / 'screen-sharing-stopped' channels are a broadcast: ScreenSharingService updates internal state, MQTTMediaStatusService publishes to the broker, and this listener wires the MessagePort. Adding another ipcMain.on here is the established pattern, not a duplication. | [`app/mainAppWindow/index.js:702`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mainAppWindow/index.js#L702) |
+| `select-source` | Event | Handle screen sharing source selection from user | [`app/mainAppWindow/browserWindowManager.js:109`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mainAppWindow/browserWindowManager.js#L109) |
 
 ## Menus & Tray
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `get-teams-settings` | One-Time Event | Receive Teams settings from renderer to save to file | [`app/menus/index.js:235`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/menus/index.js#L235) |
-| `set-teams-settings` | One-Time Event | Acknowledge settings restoration completion from renderer | [`app/menus/index.js:241`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/menus/index.js#L241) |
-| `tray-update` | Event | Update tray icon based on Teams status (notifications, badge count) | [`app/menus/tray.js:20`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/menus/tray.js#L20) |
+| `get-teams-settings` | One-Time Event | Receive Teams settings from renderer to save to file | [`app/menus/index.js:235`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/menus/index.js#L235) |
+| `set-teams-settings` | One-Time Event | Acknowledge settings restoration completion from renderer | [`app/menus/index.js:241`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/menus/index.js#L241) |
+| `tray-update` | Event | Update tray icon based on Teams status (notifications, badge count) | [`app/menus/tray.js:20`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/menus/tray.js#L20) |
 
 ## Microsoft Graph API
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `graph-api-create-calendar-event` | Request/Response | Create a new calendar event | [`app/graphApi/ipcHandlers.js:47`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L47) |
-| `graph-api-get-calendar-events` | Request/Response | Get calendar events with optional OData query options | [`app/graphApi/ipcHandlers.js:25`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L25) |
-| `graph-api-get-calendar-view` | Request/Response | Get calendar view for a specific time range | [`app/graphApi/ipcHandlers.js:36`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L36) |
-| `graph-api-get-mail-messages` | Request/Response | Get mail messages with optional OData query options | [`app/graphApi/ipcHandlers.js:58`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L58) |
-| `graph-api-get-user-profile` | Request/Response | Get current user profile from Microsoft Graph API | [`app/graphApi/ipcHandlers.js:14`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L14) |
-| `graph-api-search-people` | Request/Response | Search people using People API (for Quick Chat feature) | [`app/graphApi/ipcHandlers.js:69`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L69) |
-| `graph-api-send-chat-message` | Request/Response | Send a chat message to a user via Graph API | [`app/graphApi/ipcHandlers.js:80`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L80) |
+| `graph-api-create-calendar-event` | Request/Response | Create a new calendar event | [`app/graphApi/ipcHandlers.js:47`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L47) |
+| `graph-api-get-calendar-events` | Request/Response | Get calendar events with optional OData query options | [`app/graphApi/ipcHandlers.js:25`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L25) |
+| `graph-api-get-calendar-view` | Request/Response | Get calendar view for a specific time range | [`app/graphApi/ipcHandlers.js:36`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L36) |
+| `graph-api-get-mail-messages` | Request/Response | Get mail messages with optional OData query options | [`app/graphApi/ipcHandlers.js:58`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L58) |
+| `graph-api-get-user-profile` | Request/Response | Get current user profile from Microsoft Graph API | [`app/graphApi/ipcHandlers.js:14`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L14) |
+| `graph-api-search-people` | Request/Response | Search people using People API (for Quick Chat feature) | [`app/graphApi/ipcHandlers.js:69`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L69) |
+| `graph-api-send-chat-message` | Request/Response | Send a chat message to a user via Graph API | [`app/graphApi/ipcHandlers.js:80`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/graphApi/ipcHandlers.js#L80) |
 
 ## Notifications
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `play-notification-sound` | Request/Response | Play notification sound for Teams messages and calls | [`app/notifications/service.js:37`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/notifications/service.js#L37) |
-| `show-notification` | Request/Response | Show system notification for Teams activity | [`app/notifications/service.js:39`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/notifications/service.js#L39) |
+| `play-notification-sound` | Request/Response | Play notification sound for Teams messages and calls | [`app/notifications/service.js:37`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/notifications/service.js#L37) |
+| `show-notification` | Request/Response | Show system notification for Teams activity | [`app/notifications/service.js:39`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/notifications/service.js#L39) |
 
 ## Notifications (Custom)
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `notification-show-toast` | Event | Display custom in-app toast notification in bottom-right corner | [`app/notificationSystem/index.js:17`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/notificationSystem/index.js#L17) |
-| `notification-toast-click` | Event | Handle toast clicks - close the window and focus main window | [`app/notificationSystem/index.js:19`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/notificationSystem/index.js#L19) |
+| `notification-show-toast` | Event | Display custom in-app toast notification in bottom-right corner | [`app/notificationSystem/index.js:17`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/notificationSystem/index.js#L17) |
+| `notification-toast-click` | Event | Handle toast clicks - close the window and focus main window | [`app/notificationSystem/index.js:19`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/notificationSystem/index.js#L19) |
 
 ## Other
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `add-profile-cancel` | Event | User dismissed the dialog (Cancel button or Escape). | [`app/profileDialogs/addProfile/index.js:22`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profileDialogs/addProfile/index.js#L22) |
-| `add-profile-submit` | Event | Form submit from the renderer; `record` is a plain object matching the shape ProfilesManager.add() accepts: `name`, optional `url`, `avatarInitials`, `avatarColor`. | [`app/profileDialogs/addProfile/index.js:18`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profileDialogs/addProfile/index.js#L18) |
-| `camera-state-changed` | Event | Publish MQTT status when camera state changes | [`app/mqtt/mediaStatusService.js:31`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L31) |
-| `join-meeting-cancel` | Event | Handle join meeting dialog cancel | [`app/joinMeetingDialog/index.js:18`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/joinMeetingDialog/index.js#L18) |
-| `join-meeting-submit` | Event | Handle join meeting dialog submission | [`app/joinMeetingDialog/index.js:14`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/joinMeetingDialog/index.js#L14) |
-| `manage-profile-close` | Event | User dismissed the dialog (Close button or Escape). | [`app/profileDialogs/manageProfile/index.js:29`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L29) |
-| `manage-profile-remove` | Event | Remove request from the renderer; main shows the destructive confirmation before forwarding to ProfilesManager. | [`app/profileDialogs/manageProfile/index.js:25`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L25) |
-| `manage-profile-rename` | Request/Response | Inline rename request from the renderer. Uses request/response (`ipcMain.handle` / `ipcRenderer.invoke`) so the renderer can `await` the result and keep the input open on validation rejection — losing the user's typed value on error was a gemini-flagged UX bug on PR #2510. Payload carries the profile `id` and the new `name`. | [`app/profileDialogs/manageProfile/index.js:19`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L19) |
-| `microphone-state-changed` | Event | Publish MQTT status when microphone state changes | [`app/mqtt/mediaStatusService.js:33`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L33) |
-| `profile-add` | Request/Response | ADR-020: persist a new profile; UI creates the matching view | [`app/profilesManager/index.js:74`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L74) |
-| `profile-get-active` | Request/Response | ADR-020: return the currently active profile, or null | [`app/profilesManager/index.js:70`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L70) |
-| `profile-list` | Request/Response | ADR-020: list every profile this user has configured | [`app/profilesManager/index.js:68`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L68) |
-| `profile-remove` | Request/Response | ADR-020: delete a profile; UI is responsible for clearing storage | [`app/profilesManager/index.js:80`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L80) |
-| `profile-switch` | Request/Response | ADR-020: mark a profile active; UI swaps the visible WebContentsView | [`app/profilesManager/index.js:72`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L72) |
-| `profile-update` | Request/Response | ADR-020: patch a profile's metadata (name, avatar, pinned, etc.) | [`app/profilesManager/index.js:76`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/profilesManager/index.js#L76) |
-| `quick-chat:hide` | Event | Hide the Quick Chat modal | [`app/quickChat/index.js:33`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/quickChat/index.js#L33) |
-| `quick-chat:show` | Event | Show the Quick Chat modal | [`app/quickChat/index.js:30`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/quickChat/index.js#L30) |
-| `screen-sharing-started` | Event | Publish MQTT status when screen sharing starts | [`app/mqtt/mediaStatusService.js:36`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L36) |
-| `screen-sharing-stopped` | Event | Publish MQTT status when screen sharing stops | [`app/mqtt/mediaStatusService.js:38`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L38) |
-| `webauthn:create` | Request/Response | Handle credential creation requests from renderer | [`app/webauthn/index.js:268`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/webauthn/index.js#L268) |
-| `webauthn:get` | Request/Response | Handle assertion requests from renderer | [`app/webauthn/index.js:271`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/webauthn/index.js#L271) |
-| `webauthn:pin-cancel` | Event | Receive cancellation from the PIN dialog when user clicks Cancel or closes the window | [`app/webauthn/pinDialog.js:91`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/webauthn/pinDialog.js#L91) |
-| `webauthn:pin-submit` | Event | Receive PIN from the PIN dialog when user submits the form | [`app/webauthn/pinDialog.js:89`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/webauthn/pinDialog.js#L89) |
+| `add-profile-cancel` | Event | User dismissed the dialog (Cancel button or Escape). | [`app/profileDialogs/addProfile/index.js:22`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profileDialogs/addProfile/index.js#L22) |
+| `add-profile-submit` | Event | Form submit from the renderer; `record` is a plain object matching the shape ProfilesManager.add() accepts: `name`, optional `url`, `avatarInitials`, `avatarColor`. | [`app/profileDialogs/addProfile/index.js:18`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profileDialogs/addProfile/index.js#L18) |
+| `camera-state-changed` | Event | Publish MQTT status when camera state changes | [`app/mqtt/mediaStatusService.js:31`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L31) |
+| `join-meeting-cancel` | Event | Handle join meeting dialog cancel | [`app/joinMeetingDialog/index.js:18`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/joinMeetingDialog/index.js#L18) |
+| `join-meeting-submit` | Event | Handle join meeting dialog submission | [`app/joinMeetingDialog/index.js:14`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/joinMeetingDialog/index.js#L14) |
+| `manage-profile-close` | Event | User dismissed the dialog (Close button or Escape). | [`app/profileDialogs/manageProfile/index.js:29`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L29) |
+| `manage-profile-remove` | Event | Remove request from the renderer; main shows the destructive confirmation before forwarding to ProfilesManager. | [`app/profileDialogs/manageProfile/index.js:25`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L25) |
+| `manage-profile-rename` | Request/Response | Inline rename request from the renderer. Uses request/response (`ipcMain.handle` / `ipcRenderer.invoke`) so the renderer can `await` the result and keep the input open on validation rejection — losing the user's typed value on error was a gemini-flagged UX bug on PR #2510. Payload carries the profile `id` and the new `name`. | [`app/profileDialogs/manageProfile/index.js:19`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profileDialogs/manageProfile/index.js#L19) |
+| `microphone-state-changed` | Event | Publish MQTT status when microphone state changes | [`app/mqtt/mediaStatusService.js:33`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L33) |
+| `profile-add` | Request/Response | ADR-020: persist a new profile; UI creates the matching view | [`app/profilesManager/index.js:74`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L74) |
+| `profile-get-active` | Request/Response | ADR-020: return the currently active profile, or null | [`app/profilesManager/index.js:70`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L70) |
+| `profile-list` | Request/Response | ADR-020: list every profile this user has configured | [`app/profilesManager/index.js:68`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L68) |
+| `profile-remove` | Request/Response | ADR-020: delete a profile; UI is responsible for clearing storage | [`app/profilesManager/index.js:80`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L80) |
+| `profile-switch` | Request/Response | ADR-020: mark a profile active; UI swaps the visible WebContentsView | [`app/profilesManager/index.js:72`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L72) |
+| `profile-update` | Request/Response | ADR-020: patch a profile's metadata (name, avatar, pinned, etc.) | [`app/profilesManager/index.js:76`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/profilesManager/index.js#L76) |
+| `quick-chat:hide` | Event | Hide the Quick Chat modal | [`app/quickChat/index.js:33`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/quickChat/index.js#L33) |
+| `quick-chat:show` | Event | Show the Quick Chat modal | [`app/quickChat/index.js:30`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/quickChat/index.js#L30) |
+| `screen-sharing-started` | Event | Publish MQTT status when screen sharing starts | [`app/mqtt/mediaStatusService.js:36`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L36) |
+| `screen-sharing-stopped` | Event | Publish MQTT status when screen sharing stops | [`app/mqtt/mediaStatusService.js:38`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mqtt/mediaStatusService.js#L38) |
+| `webauthn:create` | Request/Response | Handle credential creation requests from renderer | [`app/webauthn/index.js:268`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/webauthn/index.js#L268) |
+| `webauthn:get` | Request/Response | Handle assertion requests from renderer | [`app/webauthn/index.js:271`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/webauthn/index.js#L271) |
+| `webauthn:pin-cancel` | Event | Receive cancellation from the PIN dialog when user clicks Cancel or closes the window | [`app/webauthn/pinDialog.js:91`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/webauthn/pinDialog.js#L91) |
+| `webauthn:pin-submit` | Event | Receive PIN from the PIN dialog when user submits the form | [`app/webauthn/pinDialog.js:89`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/webauthn/pinDialog.js#L89) |
 
 ## Partitions & Zoom
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `get-zoom-level` | Request/Response | Get current zoom level for a partition | [`app/partitions/manager.js:12`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/partitions/manager.js#L12) |
-| `save-zoom-level` | Request/Response | Save zoom level for a partition | [`app/partitions/manager.js:14`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/partitions/manager.js#L14) |
+| `get-zoom-level` | Request/Response | Get current zoom level for a partition | [`app/partitions/manager.js:12`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/partitions/manager.js#L12) |
+| `save-zoom-level` | Request/Response | Save zoom level for a partition | [`app/partitions/manager.js:14`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/partitions/manager.js#L14) |
 
 ## Screen Sharing
 
 | Channel | Type | Description | Location |
 |---------|------|-------------|----------|
-| `cancel-desktop-media` | Event | Cancel desktop media selection dialog | [`app/screenSharing/service.js:18`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L18) |
-| `choose-desktop-media` | Request/Response | Select desktop media source for screen sharing | [`app/screenSharing/service.js:16`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L16) |
-| `close-view` | One-Time Event | Close the stream selector view without selection | [`app/screenSharing/index.js:64`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/index.js#L64) |
-| `desktop-capturer-get-sources` | Request/Response | Get available desktop capturer sources (screens/windows) for sharing | [`app/screenSharing/service.js:12`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L12) |
-| `get-screen-share-screen` | Request/Response | Get screen share screen details | [`app/screenSharing/service.js:28`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L28) |
-| `get-screen-share-stream` | Request/Response | Get screen share stream for thumbnail preview | [`app/screenSharing/service.js:26`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L26) |
-| `get-screen-sharing-displays` | Request/Response | Get connected displays (id, label, internal, bounds, scaleFactor) for the share picker | [`app/screenSharing/service.js:14`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L14) |
-| `get-screen-sharing-status` | Request/Response | Get current screen sharing status | [`app/screenSharing/service.js:24`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L24) |
-| `resize-preview-window` | Event | Resize screen sharing preview window | [`app/screenSharing/service.js:30`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L30) |
-| `screen-sharing-started` | Event | Notify when screen sharing session starts | [`app/screenSharing/service.js:20`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L20) |
-| `screen-sharing-stopped` | Event | Notify when screen sharing session stops | [`app/screenSharing/service.js:22`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L22) |
-| `selected-source` | One-Time Event | Receive user's screen sharing source selection from picker UI | [`app/screenSharing/index.js:62`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/index.js#L62) |
-| `source-selected` | One-Time Event | Receive selected screen sharing source from native picker window | [`app/screenSharing/service.js:233`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L233) |
-| `stop-screen-sharing-from-thumbnail` | Event | Stop screen sharing from thumbnail preview | [`app/screenSharing/service.js:32`](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/screenSharing/service.js#L32) |
+| `cancel-desktop-media` | Event | Cancel desktop media selection dialog | [`app/screenSharing/service.js:18`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L18) |
+| `choose-desktop-media` | Request/Response | Select desktop media source for screen sharing | [`app/screenSharing/service.js:16`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L16) |
+| `close-view` | One-Time Event | Close the stream selector view without selection | [`app/screenSharing/index.js:64`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/index.js#L64) |
+| `desktop-capturer-get-sources` | Request/Response | Get available desktop capturer sources (screens/windows) for sharing | [`app/screenSharing/service.js:12`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L12) |
+| `get-screen-share-screen` | Request/Response | Get screen share screen details | [`app/screenSharing/service.js:28`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L28) |
+| `get-screen-share-stream` | Request/Response | Get screen share stream for thumbnail preview | [`app/screenSharing/service.js:26`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L26) |
+| `get-screen-sharing-displays` | Request/Response | Get connected displays (id, label, internal, bounds, scaleFactor) for the share picker | [`app/screenSharing/service.js:14`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L14) |
+| `get-screen-sharing-status` | Request/Response | Get current screen sharing status | [`app/screenSharing/service.js:24`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L24) |
+| `resize-preview-window` | Event | Resize screen sharing preview window | [`app/screenSharing/service.js:30`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L30) |
+| `screen-sharing-started` | Event | Notify when screen sharing session starts | [`app/screenSharing/service.js:20`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L20) |
+| `screen-sharing-stopped` | Event | Notify when screen sharing session stops | [`app/screenSharing/service.js:22`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L22) |
+| `selected-source` | One-Time Event | Receive user's screen sharing source selection from picker UI | [`app/screenSharing/index.js:62`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/index.js#L62) |
+| `source-selected` | One-Time Event | Receive selected screen sharing source from native picker window | [`app/screenSharing/service.js:233`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L233) |
+| `stop-screen-sharing-from-thumbnail` | Event | Stop screen sharing from thumbnail preview | [`app/screenSharing/service.js:32`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/screenSharing/service.js#L32) |
 
 ---
 

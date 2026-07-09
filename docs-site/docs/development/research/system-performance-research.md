@@ -8,7 +8,7 @@
 
 ## Summary
 
-An audit of the Teams for Linux codebase identified ten performance-sensitive patterns across
+An audit of the Outlook for Linux codebase identified ten performance-sensitive patterns across
 renderer-side browser tools, main-process I/O, and network handling. The findings are organized
 by severity and include concrete recommendations. No performance metrics infrastructure exists
 today, so a lightweight instrumentation layer is also proposed.
@@ -268,7 +268,7 @@ ipcMain.handle('get-perf-metrics', () => ({
 This adds no dependencies and produces structured logs compatible with the existing
 `electron-log` infrastructure. Since `electron-log` intercepts `console.*` calls in
 production, all `[PERF]`-prefixed messages are automatically written to the log file
-(typically `~/.config/teams-for-linux/logs/main.log`). No additional transport
+(typically `~/.config/outlook-for-linux/logs/main.log`). No additional transport
 configuration is needed — developers and users can grep for `[PERF]` in the existing
 log output to review startup timings and memory trends.
 

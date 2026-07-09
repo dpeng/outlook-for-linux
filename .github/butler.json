@@ -5,5 +5,5 @@
     "code_navigation": true
   },
   "doc_paths": ["docs-site/docs/**", "*.md"],
-  "shadow_repo": "IsmaelMartinez/teams-for-linux-shadow"
+  "shadow_repo": "IsmaelMartinez/outlook-for-linux-shadow"
 }

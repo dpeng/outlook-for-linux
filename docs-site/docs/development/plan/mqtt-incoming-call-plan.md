@@ -5,7 +5,7 @@ REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
 :::
 
 **Date:** 2026-04-20
-**Issue:** [#2370 - Add incoming call(s) of any kind into MQTT](https://github.com/IsmaelMartinez/teams-for-linux/issues/2370)
+**Issue:** [#2370 - Add incoming call(s) of any kind into MQTT](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2370)
 **Goal:** Publish incoming-call and scheduled-meeting-starting events to MQTT so Home Assistant users can trigger smart-home automations the moment Teams rings or a scheduled meeting is about to start.
 
 **Architecture:** Phase 1 reuses the existing IPC-to-MQTT bridge pattern. The renderer already fires `incoming-call-created` / `incoming-call-ended` via Teams React state. `BrowserWindowManager` catches those, and we add `app.emit('teams-incoming-call-started' | 'teams-incoming-call-ended')` alongside the existing `app.emit('teams-call-connected')`. `MQTTMediaStatusService` listens via `app.on(...)` and publishes to `{topicPrefix}/incoming-call`. No new IPC channels, no new config keys, payload is boolean-only. Phase 2 adds a new `CalendarPollingService` that uses the existing Graph API client to maintain a rolling 12-24h cache and publishes `{topicPrefix}/meeting-starting` when a calendar event enters a configurable lead-time window.
@@ -427,7 +427,7 @@ mqtt: {
     brokerUrl: "",
     username: "",
     password: "",
-    clientId: "teams-for-linux",
+    clientId: "outlook-for-linux",
     topicPrefix: "teams",
     statusTopic: "status",
     commandTopic: "",
@@ -817,10 +817,10 @@ These stay YAGNI until a second distinct user requests them:
 
 ## References
 
-- Issue: https://github.com/IsmaelMartinez/teams-for-linux/issues/2370
+- Issue: https://github.com/IsmaelMartinez/outlook-for-linux/issues/2370
 - Research: `docs-site/docs/development/research/mqtt-extended-status-investigation.md` (Phase 3 "Calendar & Meetings" section described this approach)
-- Shipped: MQTT microphone state — [PR #2497](https://github.com/IsmaelMartinez/teams-for-linux/pull/2497)
+- Shipped: MQTT microphone state — [PR #2497](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2497)
 - Research: `docs-site/docs/development/research/graph-api-integration-research.md`
-- Adjacent fix (same infrastructure): PR [#2406](https://github.com/IsmaelMartinez/teams-for-linux/pull/2406) / issue [#2358](https://github.com/IsmaelMartinez/teams-for-linux/issues/2358) — added `activityHub.emit()` and activated WebRTC patching under `mqtt.enabled`
+- Adjacent fix (same infrastructure): PR [#2406](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2406) / issue [#2358](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2358) — added `activityHub.emit()` and activated WebRTC patching under `mqtt.enabled`
 - Pattern reference: `app/mqtt/mediaStatusService.js` (existing IPC→MQTT bridge)
 - Pattern reference: `app/mainAppWindow/browserWindowManager.js:244` (`app.emit('teams-call-connected')` precedent)

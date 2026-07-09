@@ -1,9 +1,9 @@
 # Installation Guide
 
-Multiple installation methods are available for Teams for Linux across different Linux distributions.
+Multiple installation methods are available for Outlook for Linux across different Linux distributions.
 
-:::info About Teams for Linux
-**Unofficial Microsoft Teams client for Linux** — a native desktop app that wraps the Teams web version with enhanced Linux integration including system notifications, tray integration, custom backgrounds, screen sharing, and multiple account profiles.
+:::info About Outlook for Linux
+**Unofficial Microsoft Outlook client for Linux** — a native desktop app that wraps Outlook Web with enhanced Linux integration including system notifications, tray integration, system notifications, tray integration, and persistent session storage.
 :::
 
 ## Quick Installation
@@ -16,23 +16,23 @@ We maintain dedicated deb and rpm repositories hosted with ❤️ by [Nils Büch
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
-sudo wget -qO /etc/apt/keyrings/teams-for-linux.asc https://repo.teamsforlinux.de/teams-for-linux.asc
+sudo wget -qO /etc/apt/keyrings/outlook-for-linux.asc https://repo.teamsforlinux.de/outlook-for-linux.asc
 sh -c 'echo "Types: deb
 URIs: https://repo.teamsforlinux.de/debian/
 Suites: stable
 Components: main
-Signed-By: /etc/apt/keyrings/teams-for-linux.asc
-Architectures: amd64" | sudo tee /etc/apt/sources.list.d/teams-for-linux-packages.sources'
-sudo apt update && sudo apt install teams-for-linux
+Signed-By: /etc/apt/keyrings/outlook-for-linux.asc
+Architectures: amd64" | sudo tee /etc/apt/sources.list.d/outlook-for-linux-packages.sources'
+sudo apt update && sudo apt install outlook-for-linux
 ```
 
 #### RHEL/Fedora/CentOS
 
 ```bash
-curl -1sLf -o /tmp/teams-for-linux.asc https://repo.teamsforlinux.de/teams-for-linux.asc
-sudo rpm --import /tmp/teams-for-linux.asc
-sudo curl -1sLf -o /etc/yum.repos.d/teams-for-linux.repo https://repo.teamsforlinux.de/rpm/teams-for-linux.repo
-sudo dnf install teams-for-linux
+curl -1sLf -o /tmp/outlook-for-linux.asc https://repo.teamsforlinux.de/outlook-for-linux.asc
+sudo rpm --import /tmp/outlook-for-linux.asc
+sudo curl -1sLf -o /etc/yum.repos.d/outlook-for-linux.repo https://repo.teamsforlinux.de/rpm/outlook-for-linux.repo
+sudo dnf install outlook-for-linux
 ```
 
 #### Beta Channel (Pre-releases)
@@ -43,26 +43,26 @@ New versions are published to a `beta` channel first and promoted to `stable` af
 
 ```bash
 sudo mkdir -p /etc/apt/keyrings
-sudo wget -qO /etc/apt/keyrings/teams-for-linux.asc https://repo.teamsforlinux.de/teams-for-linux.asc
+sudo wget -qO /etc/apt/keyrings/outlook-for-linux.asc https://repo.teamsforlinux.de/outlook-for-linux.asc
 sh -c 'echo "Types: deb
 URIs: https://repo.teamsforlinux.de/debian/
 Suites: beta
 Components: main
-Signed-By: /etc/apt/keyrings/teams-for-linux.asc
-Architectures: amd64" | sudo tee /etc/apt/sources.list.d/teams-for-linux-packages.sources'
-sudo apt update && sudo apt install teams-for-linux
+Signed-By: /etc/apt/keyrings/outlook-for-linux.asc
+Architectures: amd64" | sudo tee /etc/apt/sources.list.d/outlook-for-linux-packages.sources'
+sudo apt update && sudo apt install outlook-for-linux
 ```
 
 **RHEL/Fedora/CentOS** — use the beta repository:
 
 ```bash
-curl -1sLf -o /tmp/teams-for-linux.asc https://repo.teamsforlinux.de/teams-for-linux.asc
-sudo rpm --import /tmp/teams-for-linux.asc
-sudo curl -1sLf -o /etc/yum.repos.d/teams-for-linux-beta.repo https://repo.teamsforlinux.de/rpm-beta/teams-for-linux-beta.repo
-sudo dnf install teams-for-linux
+curl -1sLf -o /tmp/outlook-for-linux.asc https://repo.teamsforlinux.de/outlook-for-linux.asc
+sudo rpm --import /tmp/outlook-for-linux.asc
+sudo curl -1sLf -o /etc/yum.repos.d/outlook-for-linux-beta.repo https://repo.teamsforlinux.de/rpm-beta/outlook-for-linux-beta.repo
+sudo dnf install outlook-for-linux
 ```
 
-To return to stable releases, change `Suites: beta` back to `Suites: stable` (Debian/Ubuntu), or remove `/etc/yum.repos.d/teams-for-linux-beta.repo` and reinstall from the stable repository (RHEL/Fedora/CentOS).
+To return to stable releases, change `Suites: beta` back to `Suites: stable` (Debian/Ubuntu), or remove `/etc/yum.repos.d/outlook-for-linux-beta.repo` and reinstall from the stable repository (RHEL/Fedora/CentOS).
 
 ## Distribution-Specific Packages
 
@@ -70,18 +70,18 @@ To return to stable releases, change `Suites: beta` back to `Suites: stable` (De
 
 ```bash
 # Using yay
-yay -S teams-for-linux
+yay -S outlook-for-linux
 
 # Using paru
-paru -S teams-for-linux
+paru -S outlook-for-linux
 
 # Manual AUR build
-git clone https://aur.archlinux.org/teams-for-linux.git
-cd teams-for-linux
+git clone https://aur.archlinux.org/outlook-for-linux.git
+cd outlook-for-linux
 makepkg -si
 ```
 
-[![AUR: teams-for-linux](https://img.shields.io/badge/AUR-teams--for--linux-blue.svg)](https://aur.archlinux.org/packages/teams-for-linux)
+[![AUR: outlook-for-linux](https://img.shields.io/badge/AUR-teams--for--linux-blue.svg)](https://aur.archlinux.org/packages/outlook-for-linux)
 
 ### Ubuntu (Pacstall)
 
@@ -89,31 +89,31 @@ makepkg -si
 # Install Pacstall first (if not already installed)
 sudo bash -c "$(curl -fsSL https://pacstall.dev/q/install)"
 
-# Install Teams for Linux
-pacstall -I teams-for-linux-deb
+# Install Outlook for Linux
+pacstall -I outlook-for-linux-deb
 ```
 
-[![Pacstall: teams-for-linux-deb](https://img.shields.io/badge/Pacstall-teams--for--linux--deb-00958C)](https://github.com/pacstall/pacstall-programs/tree/master/packages/teams-for-linux-deb)
+[![Pacstall: outlook-for-linux-deb](https://img.shields.io/badge/Pacstall-teams--for--linux--deb-00958C)](https://github.com/pacstall/pacstall-programs/tree/master/packages/outlook-for-linux-deb)
 
 ### Vylen Linux
 
 ```bash
-sudo emerald install teams-for-linux
+sudo emerald install outlook-for-linux
 ```
 
-[![Vylen Linux: teams-for-linux](https://img.shields.io/badge/Vylen_Linux-teams--for--linux-green)](https://vylen.gitlab.io/packages/#teams-for-linux)
+[![Vylen Linux: outlook-for-linux](https://img.shields.io/badge/Vylen_Linux-teams--for--linux-green)](https://vylen.gitlab.io/packages/#outlook-for-linux)
 
 ### Snap Store
 
 ```bash
-sudo snap install teams-for-linux
+sudo snap install outlook-for-linux
 ```
 
 :::tip Update Frequency
 Flatpak is the slowest update channel — it only receives a new version after the release has reached 100% across all other channels. Snap stable is the next slowest, with manual promotion after testing. If you prefer fewer update notifications, these are good choices. See the [Release Cadence](development/manual-release-process.md#release-cadence) section for details.
 :::
 
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/teams-for-linux)
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/outlook-for-linux)
 
 ### Flathub
 
@@ -127,7 +127,7 @@ flatpak install flathub com.github.IsmaelMartinez.teams_for_linux
 
 ### Download from GitHub Releases
 
-1. Go to [GitHub Releases](https://github.com/IsmaelMartinez/teams-for-linux/releases)
+1. Go to [GitHub Releases](https://github.com/IsmaelMartinez/outlook-for-linux/releases)
 2. Download the appropriate package for your system:
    - **AppImage** - Universal Linux package
    - **deb** - Debian/Ubuntu package
@@ -140,7 +140,7 @@ flatpak install flathub com.github.IsmaelMartinez.teams_for_linux
 #### Debian/Ubuntu (.deb)
 
 ```bash
-sudo dpkg -i teams-for-linux_*.deb
+sudo dpkg -i outlook-for-linux_*.deb
 sudo apt-get install -f  # Fix dependencies if needed
 ```
 
@@ -148,20 +148,20 @@ sudo apt-get install -f  # Fix dependencies if needed
 
 ```bash
 # Fedora
-sudo dnf install teams-for-linux_*.rpm
+sudo dnf install outlook-for-linux_*.rpm
 
 # RHEL/CentOS
-sudo rpm -i teams-for-linux_*.rpm
+sudo rpm -i outlook-for-linux_*.rpm
 ```
 
 #### AppImage
 
 ```bash
 # Make executable
-chmod +x teams-for-linux_*.AppImage
+chmod +x outlook-for-linux_*.AppImage
 
 # Run directly
-./teams-for-linux_*.AppImage
+./outlook-for-linux_*.AppImage
 
 # For better desktop integration, use AppImageLauncher
 ```
@@ -174,11 +174,11 @@ For AppImage files, install [`AppImageLauncher`](https://github.com/TheAssassin/
 
 ```bash
 # Extract
-tar -xzf teams-for-linux_*.tar.gz
+tar -xzf outlook-for-linux_*.tar.gz
 
 # Run
-cd teams-for-linux/
-./teams-for-linux
+cd outlook-for-linux/
+./outlook-for-linux
 ```
 
 ## First Launch
@@ -187,21 +187,21 @@ cd teams-for-linux/
 
 1. **Launch** the application:
    ```bash
-   teams-for-linux
+   outlook-for-linux
    ```
 
 2. **Sign in** with your Microsoft Teams account
 
-3. **Configure** if needed by creating `~/.config/teams-for-linux/config.json`
+3. **Configure** if needed by creating `~/.config/outlook-for-linux/config.json`
 
 ### Initial Configuration
 
-For basic usage, no configuration is required. Teams for Linux will work out of the box.
+For basic usage, no configuration is required. Outlook for Linux will work out of the box.
 
 For advanced features, create a configuration file:
 
 ```bash
-mkdir -p ~/.config/teams-for-linux/
+mkdir -p ~/.config/outlook-for-linux/
 ```
 
 Example basic configuration:
@@ -221,20 +221,20 @@ See the [Configuration Guide](configuration.md) for all available options.
 
 ```bash
 # Standard launch
-teams-for-linux
+outlook-for-linux
 
 # Use custom config directory
-teams-for-linux --user-data-dir=/path/to/custom/profile
+outlook-for-linux --user-data-dir=/path/to/custom/profile
 ```
 
 ### Multiple Instances
 
 ```bash
 # Work profile
-teams-for-linux --user-data-dir=~/.config/teams-work --class=teams-work
+outlook-for-linux --user-data-dir=~/.config/teams-work --class=teams-work
 
 # Personal profile  
-teams-for-linux --user-data-dir=~/.config/teams-personal --class=teams-personal
+outlook-for-linux --user-data-dir=~/.config/teams-personal --class=teams-personal
 ```
 
 See [Multiple Instances](multiple-instances.md) for detailed setup.
@@ -243,10 +243,10 @@ See [Multiple Instances](multiple-instances.md) for detailed setup.
 
 ```bash
 # Enable debug logging
-teams-for-linux --logConfig='{"level":"debug"}'
+outlook-for-linux --logConfig='{"level":"debug"}'
 
 # Show developer tools with Electron logging
-ELECTRON_ENABLE_LOGGING=true teams-for-linux
+ELECTRON_ENABLE_LOGGING=true outlook-for-linux
 ```
 
 ## Troubleshooting Installation
@@ -291,8 +291,8 @@ sudo usermod -a -G video $USER
 
 ```bash
 # Re-import repository key
-curl -1sLf -o /tmp/teams-for-linux.asc https://repo.teamsforlinux.de/teams-for-linux.asc
-sudo rpm --import /tmp/teams-for-linux.asc  # For RPM systems
+curl -1sLf -o /tmp/outlook-for-linux.asc https://repo.teamsforlinux.de/outlook-for-linux.asc
+sudo rpm --import /tmp/outlook-for-linux.asc  # For RPM systems
 ```
 
 #### Network/Proxy Issues
@@ -306,18 +306,18 @@ export https_proxy=http://proxy.company.com:8080
 
 After installation:
 
-1. **[Configuration](configuration.md)** - Customize Teams for Linux settings
+1. **[Configuration](configuration.md)** - Customize Outlook for Linux settings
 2. **[Multiple Instances](multiple-instances.md)** - Set up work and personal profiles
 3. **[Screen Sharing](screen-sharing.md)** - Configure screen capture
 4. **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
-5. **[Uninstall Guide](uninstall.md)** - Remove Teams for Linux from your system
+5. **[Uninstall Guide](uninstall.md)** - Remove Outlook for Linux from your system
 
 ## Support
 
 - **Documentation**: [Full documentation](index.md)
-- **Issues**: [GitHub Issues](https://github.com/IsmaelMartinez/teams-for-linux/issues)
-- **Community**: [Matrix Space](https://matrix.to/#/#teams-for-linux-space:matrix.org)
-- **Discussions**: [GitHub Discussions](https://github.com/IsmaelMartinez/teams-for-linux/discussions)
+- **Issues**: [GitHub Issues](https://github.com/IsmaelMartinez/outlook-for-linux/issues)
+- **Community**: [Matrix Space](https://matrix.to/#/#outlook-for-linux-space:matrix.org)
+- **Discussions**: [GitHub Discussions](https://github.com/IsmaelMartinez/outlook-for-linux/discussions)
 
 ## Related Documentation
 

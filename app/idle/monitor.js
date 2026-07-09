@@ -20,7 +20,7 @@ class IdleMonitor {
     this.#config = config;
     this.#getUserStatus = getUserStatus;
     // Expand $USER in the state file path
-    const stateFilePath = config.idleDetection?.stateFile || "/tmp/teams-for-linux-idle-state-$USER";
+    const stateFilePath = config.idleDetection?.stateFile || "/tmp/outlook-for-linux-idle-state-$USER";
     this.#stateFilePath = stateFilePath.replace('$USER', process.env.USER || process.env.USERNAME || 'unknown');
   }
 

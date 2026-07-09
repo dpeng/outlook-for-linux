@@ -10,7 +10,7 @@ id: 002-token-cache-secure-storage
 
 ## Context
 
-Microsoft Teams for Linux users experienced frequent authentication interruptions requiring manual re-login approximately every 24 hours, after system sleep/wake cycles, and after application restarts. Investigation revealed that the Electron wrapper lacked a proper token cache interface, preventing Teams' authentication provider from performing silent token refresh despite having valid refresh tokens in localStorage.
+Microsoft Outlook for Linux users experienced frequent authentication interruptions requiring manual re-login approximately every 24 hours, after system sleep/wake cycles, and after application restarts. Investigation revealed that the Electron wrapper lacked a proper token cache interface, preventing Teams' authentication provider from performing silent token refresh despite having valid refresh tokens in localStorage.
 
 ### Problem Analysis
 
@@ -163,7 +163,7 @@ graph TB
 
 ## Decision Record Metadata
 
-- **Authors**: Teams for Linux Development Team
+- **Authors**: Outlook for Linux Development Team
 - **Decision Date**: September 2025
 - **Implementation Date**: September 2025  
 - **Review Date**: December 2025 (planned)
@@ -174,7 +174,7 @@ graph TB
 ---
 
 > [!NOTE]
-> This ADR documents the complete decision process for implementing secure token storage in Teams for Linux. The simplified architecture achieved the same security and functionality goals with significantly reduced complexity.
+> This ADR documents the complete decision process for implementing secure token storage in Outlook for Linux. The simplified architecture achieved the same security and functionality goals with significantly reduced complexity.
 
 > [!IMPORTANT]
 > The natural transition approach eliminates migration complexity while providing security benefits without user disruption.

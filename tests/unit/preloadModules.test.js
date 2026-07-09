@@ -9,7 +9,7 @@ const { join } = require('node:path');
 // Initialization" rule. The `modulesRequiringIpc` Set in
 // `app/browser/preload.js` controls which browser-side modules receive
 // `ipcRenderer` during `init`. Dropping `trayIconRenderer` or
-// `mqttStatusMonitor` from this Set is a silent regression --- the modules
+// a module from this Set is a silent regression --- the modules
 // load fine, then crash later inside their handlers with
 // `TypeError: Cannot read properties of undefined (reading 'send')`.
 // CLAUDE.md notes the fix has been "accidentally removed multiple times
@@ -21,7 +21,7 @@ const { join } = require('node:path');
 // Set declaration is a stable invariant the rule depends on.
 
 const PRELOAD_PATH = join(__dirname, '..', '..', 'app', 'browser', 'preload.js');
-const REQUIRED_MODULES = ['settings', 'theme', 'trayIconRenderer', 'mqttStatusMonitor', 'webauthnOverride'];
+const REQUIRED_MODULES = ['settings', 'theme', 'trayIconRenderer', 'webauthnOverride'];
 
 describe('preload.js modulesRequiringIpc Set', () => {
 	const source = readFileSync(PRELOAD_PATH, 'utf8');

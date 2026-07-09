@@ -38,7 +38,7 @@
 
 const dbus = require("@homebridge/dbus-native");
 
-const DESKTOP_URI = "application://teams-for-linux.desktop";
+const DESKTOP_URI = "application://outlook-for-linux.desktop";
 const PATH_ID = simpleHash(DESKTOP_URI);
 const SIGNAL_PATH = `/com/canonical/unity/launcherentry/${PATH_ID}`;
 const INTERFACE = "com.canonical.Unity.LauncherEntry";

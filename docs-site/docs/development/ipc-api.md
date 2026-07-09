@@ -1,6 +1,6 @@
 # IPC API Documentation
 
-This document provides an overview of Inter-Process Communication (IPC) in Teams for Linux.
+This document provides an overview of Inter-Process Communication (IPC) in Outlook for Linux.
 
 :::info Complete Channel Reference
 **For a complete list of all IPC channels**, see the [Auto-Generated IPC API Reference](ipc-api-generated.md).
@@ -10,7 +10,7 @@ The auto-generated documentation includes all IPC channels with descriptions, ty
 
 ## Overview
 
-Teams for Linux uses Electron's IPC system to communicate between the main process and renderer processes. There are two types of IPC channels:
+Outlook for Linux uses Electron's IPC system to communicate between the main process and renderer processes. There are two types of IPC channels:
 
 - **`ipcMain.handle()`** - Request/Response pattern. The renderer sends a request and waits for a response.
 - **`ipcMain.on()`** - Event pattern. Fire-and-forget notifications from renderer to main process.
@@ -19,7 +19,7 @@ Teams for Linux uses Electron's IPC system to communicate between the main proce
 
 ### Security Configuration (v2.5.2+)
 
-As a compensating control for disabled `contextIsolation` and `sandbox` features, Teams for Linux implements comprehensive IPC security:
+As a compensating control for disabled `contextIsolation` and `sandbox` features, Outlook for Linux implements comprehensive IPC security:
 
 - **Channel Allowlisting**: Only pre-approved IPC channels are permitted
 - **Payload Sanitization**: Automatic removal of dangerous properties (`__proto__`, `constructor`, etc.)

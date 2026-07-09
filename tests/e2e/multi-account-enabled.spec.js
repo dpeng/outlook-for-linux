@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   startApp,
-  findMainTeamsWindow,
+  findMainOutlookWindow,
   waitForLoginRedirect,
   getRegisteredHandlers,
   closeAndCleanup,
@@ -14,7 +14,7 @@ import {
 // initialization or the bootstrap check breaks the startup sequence.
 test('multi-account enabled, no profiles yet = same redirect to Microsoft login', async () => {
   const ctx = await startApp({
-    prefix: 'teams-e2e-enabled-',
+    prefix: 'outlook-e2e-enabled-',
     config: { multiAccount: { enabled: true } },
     // Need `electronApp.evaluate` to introspect ipcMain._invokeHandlers
     // and to call the profile-list handler directly.
@@ -24,7 +24,7 @@ test('multi-account enabled, no profiles yet = same redirect to Microsoft login'
   try {
     expect(ctx.electronApp.windows().length).toBeGreaterThan(0);
 
-    const mainWindow = findMainTeamsWindow(ctx.electronApp);
+    const mainWindow = findMainOutlookWindow(ctx.electronApp);
     expect(mainWindow).toBeTruthy();
     await waitForLoginRedirect(mainWindow);
 

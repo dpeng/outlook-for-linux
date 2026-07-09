@@ -1,6 +1,6 @@
 # Configuration Options
 
-This document details all available configuration options for the Teams for Linux application. These options can be set via command-line arguments or in a `config.json` file located in the application's configuration directory.
+This document details all available configuration options for the Outlook for Linux application. These options can be set via command-line arguments or in a `config.json` file located in the application's configuration directory.
 
 :::note
 For a complete, always-up-to-date list of every option generated directly from the code, see the [Configuration Options Reference](configuration-generated.md), or use the interactive [Configuration Explorer](configuration-explorer.mdx) to search the options and build a `config.json`. This guide adds examples, file locations, and platform notes on top of those.
@@ -48,7 +48,7 @@ For a complete, always-up-to-date list of every option generated directly from t
 
 ### Command Line Example
 ```bash
-teams-for-linux --partition nopersist
+outlook-for-linux --partition nopersist
 ```
 
 ### Basic Config File
@@ -66,9 +66,9 @@ Create a `config.json` file with your desired settings:
 
 Place your `config.json` file in the appropriate location based on your installation type:
 
-- **Vanilla**: `~/.config/teams-for-linux/config.json`
-- **Snap**: `~/snap/teams-for-linux/current/.config/teams-for-linux/config.json`
-- **Flatpak**: `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux/config.json`
+- **Vanilla**: `~/.config/outlook-for-linux/config.json`
+- **Snap**: `~/snap/outlook-for-linux/current/.config/outlook-for-linux/config.json`
+- **Flatpak**: `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/outlook-for-linux/config.json`
 
 > [!NOTE]
 > [yargs](https://www.npmjs.com/package/yargs) supports multiple configuration methods—refer to their documentation if you prefer using a configuration file over command-line arguments.
@@ -178,7 +178,7 @@ For systems where Electron's `powerMonitor` doesn't work correctly (e.g., Waylan
 {
   "idleDetection": {
     "forceState": false,
-    "stateFile": "/tmp/teams-for-linux-idle-state-$USER"
+    "stateFile": "/tmp/outlook-for-linux-idle-state-$USER"
   }
 }
 ```
@@ -186,7 +186,7 @@ For systems where Electron's `powerMonitor` doesn't work correctly (e.g., Waylan
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `idleDetection.forceState` | `boolean` | `false` | Enable state file-based idle state control |
-| `idleDetection.stateFile` | `string` | `/tmp/teams-for-linux-idle-state-$USER` | Path to state file (supports `$USER` expansion) |
+| `idleDetection.stateFile` | `string` | `/tmp/outlook-for-linux-idle-state-$USER` | Path to state file (supports `$USER` expansion) |
 
 **Usage:**
 
@@ -194,13 +194,13 @@ When `idleDetection.forceState` is `true`, the app reads the state file to deter
 
 ```bash
 # Force idle state
-echo inactive > /tmp/teams-for-linux-idle-state-$USER
+echo inactive > /tmp/outlook-for-linux-idle-state-$USER
 
 # Force active state
-echo active > /tmp/teams-for-linux-idle-state-$USER
+echo active > /tmp/outlook-for-linux-idle-state-$USER
 
 # Remove file to use automatic detection
-rm /tmp/teams-for-linux-idle-state-$USER
+rm /tmp/outlook-for-linux-idle-state-$USER
 ```
 
 The state file is automatically cleaned up when the app exits.
@@ -304,7 +304,7 @@ Opt-in configuration for the single-window multi-tenant account switcher:
 |--------|------|---------|-------------|
 | `proxyServer` | `string` | `null` | Proxy Server with format address:port |
 | `network.webRTCIPHandlingPolicy` | `string` | `null` | Controls which network interfaces WebRTC uses for ICE candidate gathering. Choices: `default`, `default_public_and_private_interfaces`, `default_public_interface_only`, `disable_non_proxied_udp` |
-| `network.disableQuic` | `boolean` | `true` | Append Chromium's `--disable-quic` switch at startup. Defaults to `true` to work around issue [#2518](https://github.com/IsmaelMartinez/teams-for-linux/issues/2518) (concurrent SharePoint downloads abort with `ERR_QUIC_PROTOCOL_ERROR` on the shared QUIC session). Set to `false` to re-enable QUIC if a future Chromium release fixes the underlying transport bug. |
+| `network.disableQuic` | `boolean` | `true` | Append Chromium's `--disable-quic` switch at startup. Defaults to `true` to work around issue [#2518](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2518) (concurrent SharePoint downloads abort with `ERR_QUIC_PROTOCOL_ERROR` on the shared QUIC session). Set to `false` to re-enable QUIC if a future Chromium release fixes the underlying transport bug. |
 
 *   `default` - Exposes user's public and local IPs. This is the default behavior. When this policy is used, WebRTC has the right to enumerate all interfaces and bind them to discover public interfaces.
 
@@ -410,7 +410,7 @@ Media settings are organized under the `media` configuration object with subgrou
 
 ### Custom Stickers
 
-A floating sticker panel that lists image files from a local folder and pastes the selected one into the focused chat compose box. Off by default. See [`app/customStickers/README.md`](https://github.com/IsmaelMartinez/teams-for-linux/blob/main/app/customStickers/README.md) for details.
+A floating sticker panel that lists image files from a local folder and pastes the selected one into the focused chat compose box. Off by default. See [`app/customStickers/README.md`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/customStickers/README.md) for details.
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -445,14 +445,14 @@ A floating sticker panel that lists image files from a local folder and pastes t
 | `mqtt.brokerUrl` | `string` | `""` | MQTT broker URL (e.g., `mqtt://192.168.1.100:1883` or `mqtts://broker:8883` for TLS) |
 | `mqtt.username` | `string` | `""` | MQTT username for authentication (optional) |
 | `mqtt.password` | `string` | `""` | MQTT password for authentication (optional) |
-| `mqtt.clientId` | `string` | `"teams-for-linux"` | Unique MQTT client identifier |
+| `mqtt.clientId` | `string` | `"outlook-for-linux"` | Unique MQTT client identifier |
 | `mqtt.topicPrefix` | `string` | `"teams"` | Topic prefix for all MQTT messages |
 | `mqtt.statusTopic` | `string` | `"status"` | Topic name for status messages (outbound, combined with topicPrefix) |
 | `mqtt.commandTopic` | `string` | `""` | Topic name for receiving commands (inbound). Leave empty to disable (status-only mode). Set to `"command"` to enable bidirectional mode. |
 | `mqtt.statusCheckInterval` | `number` | `10000` | Polling interval in milliseconds for status detection fallback |
 | `mqtt.homeAssistant.enabled` | `boolean` | `false` | Enable Home Assistant MQTT auto-discovery (publishes discovery configs so HA creates entities automatically) |
 | `mqtt.homeAssistant.discoveryPrefix` | `string` | `"homeassistant"` | MQTT discovery topic prefix used by Home Assistant |
-| `mqtt.homeAssistant.deviceName` | `string` | `"Teams for Linux"` | Device name shown in Home Assistant |
+| `mqtt.homeAssistant.deviceName` | `string` | `"Outlook for Linux"` | Device name shown in Home Assistant |
 
 **Example MQTT Configuration:**
 ```json
@@ -462,7 +462,7 @@ A floating sticker panel that lists image files from a local folder and pastes t
     "brokerUrl": "mqtt://192.168.1.100:1883",
     "username": "teams-user",
     "password": "secret",
-    "clientId": "teams-for-linux",
+    "clientId": "outlook-for-linux",
     "topicPrefix": "teams",
     "statusTopic": "status",
     "commandTopic": "command",
@@ -470,7 +470,7 @@ A floating sticker panel that lists image files from a local folder and pastes t
     "homeAssistant": {
       "enabled": true,
       "discoveryPrefix": "homeassistant",
-      "deviceName": "Teams for Linux"
+      "deviceName": "Outlook for Linux"
     }
   }
 }
@@ -598,7 +598,7 @@ When running under Wayland, GPU acceleration is **automatically disabled by defa
 
 **Command-line argument**:
 ```bash
-teams-for-linux --disableGpu=false
+outlook-for-linux --disableGpu=false
 ```
 
 If you don't set this option at all (via config file or CLI), GPU will be disabled automatically on Wayland. This smart default ensures the app works out of the box while allowing power users to optimize performance.
@@ -621,7 +621,7 @@ When enabled, this flag:
 
 > **Warning:** Enabling this may break screen sharing on XWayland for some systems. Only enable it if you are experiencing camera problems.
 
-**Related issues:** [#2169](https://github.com/IsmaelMartinez/teams-for-linux/issues/2169), [#2217](https://github.com/IsmaelMartinez/teams-for-linux/issues/2217)
+**Related issues:** [#2169](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2169), [#2217](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2217)
 :::
 
 ## Usage Examples & Guides
@@ -712,11 +712,11 @@ When enabled, this flag:
 
 ### System-wide Configuration
 
-Teams for Linux supports system-wide configuration files for enterprise and multi-user environments.
+Outlook for Linux supports system-wide configuration files for enterprise and multi-user environments.
 
 #### Configuration Precedence
-1. **System-wide config**: `/etc/teams-for-linux/config.json`
-2. **User config**: User's config directory (e.g., `~/.config/teams-for-linux/config.json`)
+1. **System-wide config**: `/etc/outlook-for-linux/config.json`
+2. **User config**: User's config directory (e.g., `~/.config/outlook-for-linux/config.json`)
 3. **Default values**: Built-in application defaults
 
 > [!NOTE]
@@ -724,7 +724,7 @@ Teams for Linux supports system-wide configuration files for enterprise and mult
 
 #### Example System-wide Config
 
-Create `/etc/teams-for-linux/config.json` to set organization-wide defaults:
+Create `/etc/outlook-for-linux/config.json` to set organization-wide defaults:
 
 ```json
 {
@@ -745,7 +745,7 @@ Create `/etc/teams-for-linux/config.json` to set organization-wide defaults:
 }
 ```
 
-**Related GitHub Issues:** [Issue #1773](https://github.com/IsmaelMartinez/teams-for-linux/issues/1773)
+**Related GitHub Issues:** [Issue #1773](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1773)
 
 ### Electron CLI Flags
 
@@ -767,7 +767,7 @@ The configuration file can include Electron CLI flags that will be added when th
 
 #### Custom Feature Flags (enable-features / disable-features)
 
-Teams for Linux automatically sets Chromium feature flags for optimal functionality. These defaults are applied only if you don't provide your own flags.
+Outlook for Linux automatically sets Chromium feature flags for optimal functionality. These defaults are applied only if you don't provide your own flags.
 
 **Default Settings:**
 - `--disable-features=HardwareMediaKeyHandling` - Prevents conflicts with Teams media controls
@@ -779,10 +779,10 @@ If you need custom feature flags, provide them when launching the app. The appli
 
 ```bash
 # Example: Adding your own features on Wayland
-teams-for-linux --enable-features=MyCustomFeature,WebRTCPipeWireCapturer
+outlook-for-linux --enable-features=MyCustomFeature,WebRTCPipeWireCapturer
 
 # Example: Disabling features
-teams-for-linux --disable-features=HardwareMediaKeyHandling,UnwantedFeature
+outlook-for-linux --disable-features=HardwareMediaKeyHandling,UnwantedFeature
 ```
 
 > [!WARNING]
@@ -796,7 +796,7 @@ teams-for-linux --disable-features=HardwareMediaKeyHandling,UnwantedFeature
 
 ```bash
 # Wayland users with custom needs
-teams-for-linux --enable-features=MyFeature,WebRTCPipeWireCapturer \
+outlook-for-linux --enable-features=MyFeature,WebRTCPipeWireCapturer \
                 --disable-features=HardwareMediaKeyHandling,OtherFeature
 ```
 
@@ -867,7 +867,7 @@ The cache management feature automatically cleans cache files when they grow too
 Enable debug logging to monitor cache activities:
 
 ```bash
-teams-for-linux --logConfig='{"level":"debug"}'
+outlook-for-linux --logConfig='{"level":"debug"}'
 ```
 
 **Option 1: Safe cleanup (won't sign you out)**
@@ -875,23 +875,23 @@ teams-for-linux --logConfig='{"level":"debug"}'
 This mirrors what the app's automatic cleaner does:
 
 ```bash
-# Stop Teams for Linux first
-pkill -f "teams-for-linux"
+# Stop Outlook for Linux first
+pkill -f "outlook-for-linux"
 
 # Remove top-level caches
-rm -rf ~/.config/teams-for-linux/Cache/*
-rm -rf ~/.config/teams-for-linux/GPUCache/*
-rm -rf ~/.config/teams-for-linux/"Code Cache"/*
+rm -rf ~/.config/outlook-for-linux/Cache/*
+rm -rf ~/.config/outlook-for-linux/GPUCache/*
+rm -rf ~/.config/outlook-for-linux/"Code Cache"/*
 
 # Remove partition-specific caches (default partition name is teams-4-linux)
-rm -rf ~/.config/teams-for-linux/Partitions/teams-4-linux/Cache/*
-rm -rf ~/.config/teams-for-linux/Partitions/teams-4-linux/GPUCache/*
-rm -rf ~/.config/teams-for-linux/Partitions/teams-4-linux/"Code Cache"/*
+rm -rf ~/.config/outlook-for-linux/Partitions/teams-4-linux/Cache/*
+rm -rf ~/.config/outlook-for-linux/Partitions/teams-4-linux/GPUCache/*
+rm -rf ~/.config/outlook-for-linux/Partitions/teams-4-linux/"Code Cache"/*
 
 # Remove problematic temporary files
-rm -f ~/.config/teams-for-linux/DIPS-wal
-rm -f ~/.config/teams-for-linux/SharedStorage-wal
-rm -f ~/.config/teams-for-linux/Cookies-journal
+rm -f ~/.config/outlook-for-linux/DIPS-wal
+rm -f ~/.config/outlook-for-linux/SharedStorage-wal
+rm -f ~/.config/outlook-for-linux/Cookies-journal
 ```
 
 **Option 2: Full reset for Teams origin (will sign you out)**
@@ -920,7 +920,7 @@ The tray icon functionality varies depending on your Linux desktop environment:
 
 If you're using Linux Mint Cinnamon or other Cinnamon-based distributions:
 
-- **Hover over the tray icon** to see unread count in tooltip: "Teams for Linux (5)"
+- **Hover over the tray icon** to see unread count in tooltip: "Outlook for Linux (5)"
 - **Click the tray icon** to show/focus the Teams window
 - **Window flashing** indicates new notifications
 - **Right-click** for context menu options

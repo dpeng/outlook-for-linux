@@ -1,12 +1,12 @@
 # Security Architecture & Considerations
 
-This document outlines the security architecture, design decisions, and compensating controls implemented in Teams for Linux, particularly around the DOM access requirements and security trade-offs.
+This document outlines the security architecture, design decisions, and compensating controls implemented in Outlook for Linux, particularly around the DOM access requirements and security trade-offs.
 
 ## Security Context
 
 ### The DOM Access Requirement
 
-Teams for Linux requires DOM access to Microsoft Teams' React components to provide core functionality:
+Outlook for Linux requires DOM access to Microsoft Teams' React components to provide core functionality:
 
 - **User Status Tracking**: Monitor and sync user presence state
 - **Custom Background Integration**: Inject custom background options into Teams interface

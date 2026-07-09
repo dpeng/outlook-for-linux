@@ -1,6 +1,6 @@
-# Hats — teams-for-linux
+# Hats — outlook-for-linux
 
-This file is the per-repo classification taxonomy consumed by the github-issue-triage-bot's `/brief-preview` retrieval (see `IsmaelMartinez/github-issue-triage-bot`, `docs/plans/2026-04-22-research-brief-bot-design.md`). Each hat names a class of issue, the retrieval signals that bias toward it, the reasoning posture it should be reviewed under, and a small set of anchor issues that ground the hat in concrete past cases. The taxonomy is also consumed by the `teams-for-linux-issue-review` Claude Code skill when it pulls retrieval context from the bot.
+This file is the per-repo classification taxonomy consumed by the github-issue-triage-bot's `/brief-preview` retrieval (see `IsmaelMartinez/github-issue-triage-bot`, `docs/plans/2026-04-22-research-brief-bot-design.md`). Each hat names a class of issue, the retrieval signals that bias toward it, the reasoning posture it should be reviewed under, and a small set of anchor issues that ground the hat in concrete past cases. The taxonomy is also consumed by the `outlook-for-linux-issue-review` Claude Code skill when it pulls retrieval context from the bot.
 
 Eight hats below, plus `other` as a fallback. Keep the file under a few thousand tokens so the entire taxonomy fits in any future brief-generator system prompt.
 

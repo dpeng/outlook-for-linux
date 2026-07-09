@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   startApp,
-  findMainTeamsWindow,
+  findMainOutlookWindow,
   waitForLoginRedirect,
   closeAndCleanup,
 } from './helpers/electronApp.js';
@@ -25,12 +25,12 @@ test('preload passes ipcRenderer to trayIconRenderer (regression #1902)', async 
   // can install an ipcMain listener on the main process. Same pattern
   // as `multi-account-disabled.spec.js`.
   const ctx = await startApp({
-    prefix: 'teams-e2e-preload-tray-',
+    prefix: 'outlook-e2e-preload-tray-',
     allowEval: true,
   });
 
   try {
-    const mainWindow = findMainTeamsWindow(ctx.electronApp);
+    const mainWindow = findMainOutlookWindow(ctx.electronApp);
     expect(mainWindow).toBeTruthy();
     await waitForLoginRedirect(mainWindow);
 

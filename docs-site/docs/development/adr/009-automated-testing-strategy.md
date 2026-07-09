@@ -10,7 +10,7 @@ id: 009-automated-testing-strategy
 
 ## Context
 
-Teams for Linux required a testing strategy to ensure application stability and prevent regressions. As an Electron application wrapping Microsoft Teams, several constraints affected the testing approach:
+Outlook for Linux required a testing strategy to ensure application stability and prevent regressions. As an Electron application wrapping Microsoft Teams, several constraints affected the testing approach:
 
 **Key Constraints:**
 

@@ -74,21 +74,21 @@ class CustomBackground {
     if (!this.isCustomBackgroundEnabled()) {
       return;
     }
-    // Custom background for teams v1
+    // Custom background for the inherited web app v1 path
     if (
       details.url.startsWith(
-        "https://statics.teams.cdn.office.net/teams-for-linux/custom-bg/",
+        "https://statics.teams.cdn.office.net/outlook-for-linux/custom-bg/",
       )
     ) {
       const reqUrl = details.url.replace(
-        "https://statics.teams.cdn.office.net/teams-for-linux/custom-bg/",
+        "https://statics.teams.cdn.office.net/outlook-for-linux/custom-bg/",
         "",
       );
       const imgUrl = httpHelper.joinURLs(this.#customBGServiceUrl.href, reqUrl);
       console.debug('[CUSTOM_BG] Forwarding v1 background request');
       return { redirectURL: imgUrl };
     }
-    // Custom background replace for teams v2
+    // Custom background replacement for the inherited web app v2 path
     else if (
       details.url.startsWith(
         "https://statics.teams.cdn.office.net/evergreen-assets/backgroundimages/",
@@ -185,13 +185,13 @@ class CustomBackground {
 }
 
 function setPath(cfg) {
-  if (!cfg.src.startsWith("/teams-for-linux/custom-bg/")) {
-    cfg.src = httpHelper.joinURLs("/teams-for-linux/custom-bg/", cfg.src);
+  if (!cfg.src.startsWith("/outlook-for-linux/custom-bg/")) {
+    cfg.src = httpHelper.joinURLs("/outlook-for-linux/custom-bg/", cfg.src);
   }
 
-  if (!cfg.thumb_src.startsWith("/teams-for-linux/custom-bg/")) {
+  if (!cfg.thumb_src.startsWith("/outlook-for-linux/custom-bg/")) {
     cfg.thumb_src = httpHelper.joinURLs(
-      "/teams-for-linux/custom-bg/",
+      "/outlook-for-linux/custom-bg/",
       cfg.thumb_src,
     );
   }

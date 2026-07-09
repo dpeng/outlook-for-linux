@@ -25,9 +25,9 @@
  * those users feedback.
  *
  * The `appIconName` reported to KDE follows the running packaging:
- *   - deb / rpm / source: `teams-for-linux` (matches the .desktop ID).
+ *   - deb / rpm / source: `outlook-for-linux` (matches the .desktop ID).
  *   - Flatpak: the Flatpak app id from `FLATPAK_ID` (e.g.
- *     `com.github.IsmaelMartinez.teams_for_linux`).
+ *     `com.github.dpeng.outlook_for_linux`).
  *   - Snap: the snap instance name from `SNAP_INSTANCE_NAME` / `SNAP_NAME`.
  * Plasma resolves the name against the running session's icon theme; an
  * unmatched name renders the JobView row with no icon, which is cosmetic
@@ -53,7 +53,7 @@ function detectAppIconName() {
   // meta/gui directory.
   if (process.env.SNAP_INSTANCE_NAME) return process.env.SNAP_INSTANCE_NAME;
   if (process.env.SNAP_NAME) return process.env.SNAP_NAME;
-  return "teams-for-linux";
+  return "outlook-for-linux";
 }
 
 function getBus() {
@@ -87,7 +87,7 @@ async function start(options) {
   const sessionBus = getBus();
   if (!sessionBus) return noopHandle();
 
-  const appName = options.appName ?? "Teams for Linux";
+  const appName = options.appName ?? "Outlook for Linux";
   const appIconName = options.appIconName ?? detectAppIconName();
 
   // `capabilities` is a bitfield: 1 = Cancelable, 2 = Suspendable. We pass

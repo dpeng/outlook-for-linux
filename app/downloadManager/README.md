@@ -75,7 +75,7 @@ been created by the main window.
 | `download.alwaysAskWhereToSave` | `boolean` | `false` | Show Electron's native Save As dialog for every download. Takes precedence over `saveDirectory`. |
 | `download.openWhenDone` | `boolean` | `false` | Open each completed download in the OS default handler via `shell.openPath` (the same as double-clicking it in a file manager). |
 
-Add this to `~/.config/teams-for-linux/config.json` to turn the feature on:
+Add this to `~/.config/outlook-for-linux/config.json` to turn the feature on:
 
 ```json
 {

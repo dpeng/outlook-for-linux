@@ -88,8 +88,8 @@ class CustomStickers {
     // Drop a single bundled example into the user's freshly-created folder so
     // the panel has something to show on first open. User can delete it and
     // add their own. Only runs when the folder did not exist before init.
-    const exampleSrc = path.join(__dirname, "example", "example-teams-for-linux.png");
-    const exampleDest = path.join(this.stickerFolder, "example-teams-for-linux.png");
+    const exampleSrc = path.join(__dirname, "example", "example-outlook-for-linux.png");
+    const exampleDest = path.join(this.stickerFolder, "example-outlook-for-linux.png");
     try {
       if (!fs.existsSync(exampleSrc)) {
         return;

@@ -1,6 +1,6 @@
 # Assets
 
-This directory contains various static assets used by the Teams for Linux application, including CSS files, fonts, icons, and sounds.
+This directory contains various static assets used by the Outlook for Linux application, including CSS files, fonts, icons, and sounds.
 
 ## Subdirectories:
 

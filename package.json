@@ -1,16 +1,18 @@
 {
-  "name": "teams-for-linux",
+ "name": "outlook-for-linux",
+ "productName": "Outlook for Linux",
   "version": "2.13.0",
   "main": "app/index.js",
-  "description": "Unofficial client for Microsoft Teams for Linux",
-  "homepage": "https://github.com/IsmaelMartinez/teams-for-linux",
+ "description": "Unofficial client for Outlook for Linux",
+ "homepage": "https://github.com/dpeng/outlook-for-linux",
   "keywords": [
-    "Teams",
-    "Microsoft Teams"
+ "Outlook",
+ "Microsoft Outlook",
+ "Microsoft 365"
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://github.com/IsmaelMartinez/teams-for-linux"
+ "url": "git+ssh://github.com/dpeng/outlook-for-linux"
   },
   "author": {
     "name": "Ismael Martinez",
@@ -77,16 +79,11 @@
     "follow-redirects": "^1.16.0"
   },
   "build": {
-    "appId": "teams-for-linux",
+ "appId": "outlook-for-linux",
+ "icon": "build/icon.png",
     "asarUnpack": [
       "node_modules/spellchecker/vendor/hunspell_dictionaries"
     ],
-    "protocols": {
-      "name": "msteams",
-      "schemes": [
-        "msteams"
-      ]
-    },
     "extraResources": [
       {
         "from": "app/assets/sounds",
@@ -95,17 +92,18 @@
     ],
     "linux": {
       "category": "Chat;Network;Office",
+ "icon": "build/icon.png",
       "packageCategory": "net",
-      "executableName": "teams-for-linux",
-      "synopsis": "Teams for Linux",
-      "description": "Unofficial Microsoft Teams client for Linux using Electron. It uses the Web App and wraps it as a standalone application using Electron.",
+ "executableName": "outlook-for-linux",
+ "synopsis": "Outlook for Linux",
+ "description": "Unofficial Microsoft Outlook client for Linux using Electron. It uses the Outlook Web App and wraps it as a standalone application using Electron.",
       "executableArgs": [
         "--ozone-platform=x11"
       ],
       "desktop": {
         "entry": {
-          "Name": "Teams for Linux",
-          "Comment": "Unofficial client for Microsoft Teams for Linux"
+ "Name": "Outlook for Linux",
+ "Comment": "Unofficial client for Microsoft Outlook for Linux"
         }
       },
       "target": [
@@ -139,7 +137,7 @@
       ]
     },
     "snap": {
-      "summary": "Teams for Linux",
+ "summary": "Outlook for Linux",
       "confinement": "strict",
       "grade": "stable",
       "base": "core22",
@@ -164,6 +162,7 @@
     },
     "mac": {
       "category": "public.app-category.productivity",
+ "icon": "build/icon.icns",
       "extendInfo": {
         "NSCameraUsageDescription": "We need camera access for video calls.",
         "NSMicrophoneUsageDescription": "We need microphone access for audio."

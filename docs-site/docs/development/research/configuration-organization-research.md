@@ -12,7 +12,7 @@ Phase 1 (documentation) complete. New features use nested patterns from day one.
 ## Executive Summary
 
 ### Current State
-Teams for Linux has **66 active configuration options** managed through a flat yargs-based configuration system. While functional, the current organization has several issues: related options are scattered across documentation categories, naming conventions are inconsistent, and conditional options add complexity.
+Outlook for Linux has **66 active configuration options** managed through a flat yargs-based configuration system. While functional, the current organization has several issues: related options are scattered across documentation categories, naming conventions are inconsistent, and conditional options add complexity.
 
 ### Key Findings
 
@@ -71,7 +71,7 @@ The configuration system uses a layered approach:
 
 ```
 System Config → User Config → CLI Args → Defaults
-(/etc/teams-for-linux/config.json) → (~/.config/.../config.json) → (process.argv) → (yargs defaults)
+(/etc/outlook-for-linux/config.json) → (~/.config/.../config.json) → (process.argv) → (yargs defaults)
 ```
 
 **Files Involved:**
@@ -298,7 +298,7 @@ mqtt: {
   brokerUrl: "",
   username: "",
   password: "",
-  clientId: "teams-for-linux",
+  clientId: "outlook-for-linux",
   topicPrefix: "teams",
   statusTopic: "status",
   statusCheckInterval: 10000
@@ -372,7 +372,7 @@ defaultNotificationUrgency: "normal",
 **Goal:** Improve discoverability without code changes
 
 **Changes:**
-1. [x] Add MQTT to configuration.md (completed in PR [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939))
+1. [x] Add MQTT to configuration.md (completed in PR [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939))
 2. [x] Remove deprecated options (completed - contextIsolation, sandbox removed)
 3. [ ] Reorganize documentation categories into logical groupings
 
@@ -432,7 +432,7 @@ defaultNotificationUrgency: "normal",
 - disableGlobalShortcuts, globalShortcuts
 
 ### MQTT Integration
-- mqtt configuration object (see [MQTT Integration Guide](https://ismaelmartinez.github.io/teams-for-linux/mqtt-integration))
+- mqtt configuration object (see [MQTT Integration Guide](https://ismaelmartinez.github.io/outlook-for-linux/mqtt-integration))
 
 ### Performance & Hardware
 - disableGpu, electronCLIFlags
@@ -454,7 +454,7 @@ defaultNotificationUrgency: "normal",
 
 **Deliverables:**
 - [ ] Updated docs-site/docs/configuration.md (reorganize categories)
-- [x] New MQTT configuration section with examples (completed in PR [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939))
+- [x] New MQTT configuration section with examples (completed in PR [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939))
 - [x] Deprecated options removal (completed - removed from config)
 - **Remaining Effort: 1-2 hours**
 
@@ -547,7 +547,7 @@ function migrateConfig(config) {
   if (migrations.length > 0) {
     console.info(`[Config Migration] Auto-migrated: ${migrations.join(', ')}`);
     console.info('[Config Migration] Your old config still works, but consider updating to new format');
-    console.info('[Config Migration] See: https://ismaelmartinez.github.io/teams-for-linux/configuration');
+    console.info('[Config Migration] See: https://ismaelmartinez.github.io/outlook-for-linux/configuration');
   }
 
   return config;
@@ -657,9 +657,9 @@ function argv(configPath, appVersion) {
 **Cross-Platform Compatibility:**
 
 This approach works seamlessly across all installation methods:
-- **Vanilla**: Reads from `~/.config/teams-for-linux/config.json`
-- **Snap**: Reads from `~/snap/teams-for-linux/current/.config/teams-for-linux/config.json`
-- **Flatpak**: Reads from `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux/config.json`
+- **Vanilla**: Reads from `~/.config/outlook-for-linux/config.json`
+- **Snap**: Reads from `~/snap/outlook-for-linux/current/.config/outlook-for-linux/config.json`
+- **Flatpak**: Reads from `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/outlook-for-linux/config.json`
 
 The migration logic runs **in-memory by default** - it doesn't modify the user's `config.json` file. This means:
 - ✅ No write permission issues with snap/flatpak sandboxing
@@ -709,7 +709,7 @@ function promptUserForAutoFix(config, configPath, migrations) {
     type: 'question',
     title: 'Config Migration Available',
     message: 'Your config.json uses old format',
-    detail: `Teams for Linux can automatically update your config.json to the new format.\n\n` +
+    detail: `Outlook for Linux can automatically update your config.json to the new format.\n\n` +
             `Areas to migrate: ${migrations.join(', ')}\n\n` +
             `Your current config will be backed up to config.json.backup\n\n` +
             `Choose "Update Now" to migrate automatically, or "Ask Me Later" to continue with in-memory migration.`,
@@ -1071,8 +1071,8 @@ The automatic migration in v3.0 addresses several edge cases:
 
 4. **Sandboxed environments** (snap/flatpak):
    - User config directories are writable in snap/flatpak
-   - Snap: `~/snap/teams-for-linux/current/.config/teams-for-linux/`
-   - Flatpak: `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux/`
+   - Snap: `~/snap/outlook-for-linux/current/.config/outlook-for-linux/`
+   - Flatpak: `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/outlook-for-linux/`
    - Backup and migration work correctly in both
 
 5. **Partial migration**: If user manually updated some but not all keys:
@@ -1095,7 +1095,7 @@ The automatic migration in v3.0 addresses several edge cases:
 ### Phase 1: Documentation (2.x - Next Release)
 
 **Week 1:**
-- [x] ~~Add MQTT configuration section to docs~~ ✅ **COMPLETED** in PR [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939)
+- [x] ~~Add MQTT configuration section to docs~~ ✅ **COMPLETED** in PR [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939)
 - [x] ~~Remove deprecated options (contextIsolation/sandbox)~~ ✅ **COMPLETED** (removed from app/config/index.js)
 - [ ] Reorganize configuration.md categories
 
@@ -1179,7 +1179,7 @@ The automatic migration in v3.0 addresses several edge cases:
 ## Success Metrics
 
 ### Phase 1 Success Criteria
-- [x] MQTT configuration documented with examples (completed in PR [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939))
+- [x] MQTT configuration documented with examples (completed in PR [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939))
 - [x] Deprecated options removed (completed - contextIsolation, sandbox removed)
 - [ ] All 66 options organized into logical categories
 - [ ] Zero breaking changes
@@ -1263,7 +1263,7 @@ The automatic migration in v3.0 addresses several edge cases:
 
 ### Internal Documentation
 - [Configuration Options](../../configuration.md) - Current user documentation
-- [MQTT Integration](https://github.com/IsmaelMartinez/teams-for-linux/blob/develop/app/mqtt/README.md) - MQTT module documentation
+- [MQTT Integration](https://github.com/IsmaelMartinez/outlook-for-linux/blob/develop/app/mqtt/README.md) - MQTT module documentation
 - Architecture Modernization Research (removed — DDD approach rejected, incremental refactoring adopted)
 
 ### Code References
@@ -1273,9 +1273,9 @@ The automatic migration in v3.0 addresses several edge cases:
 
 ### Related Issues
 - Configuration improvements investigation (current)
-- MQTT integration: [#1926](https://github.com/IsmaelMartinez/teams-for-linux/pull/1926), [#1931](https://github.com/IsmaelMartinez/teams-for-linux/pull/1931)
-- MQTT documentation: [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939) ✅ **MERGED**
-- System-wide config: [#1773](https://github.com/IsmaelMartinez/teams-for-linux/issues/1773)
+- MQTT integration: [#1926](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1926), [#1931](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1931)
+- MQTT documentation: [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939) ✅ **MERGED**
+- System-wide config: [#1773](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1773)
 
 ### External References
 - [Yargs Configuration](https://yargs.js.org/docs/#api-reference-configobject) - Config file handling
@@ -1419,7 +1419,7 @@ The automatic migration in v3.0 addresses several edge cases:
     "brokerUrl": "",
     "username": "",
     "password": "",
-    "clientId": "teams-for-linux",
+    "clientId": "outlook-for-linux",
     "topicPrefix": "teams",
     "statusTopic": "status",
     "statusCheckInterval": 10000
@@ -1559,13 +1559,13 @@ The automatic migration in v3.0 addresses several edge cases:
 
 Since this research was completed, several improvements have been implemented:
 
-- [x] MQTT documentation added in PR [#1939](https://github.com/IsmaelMartinez/teams-for-linux/pull/1939)
+- [x] MQTT documentation added in PR [#1939](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1939)
 - [x] Deprecated options (`contextIsolation`, `sandbox`) removed from configuration
-- [x] Custom notification system added in PR [#1979](https://github.com/IsmaelMartinez/teams-for-linux/pull/1979) with new `customNotification` object config
-- [x] Graph API integration added in PR [#1958](https://github.com/IsmaelMartinez/teams-for-linux/pull/1958) with new `graphApi` object config
-- [x] MQTT commands feature implemented in PR [#1986](https://github.com/IsmaelMartinez/teams-for-linux/pull/1986) - bidirectional MQTT support with `commandTopic`
-- [x] Badge count control added with `disableBadgeCount` option in PR [#1994](https://github.com/IsmaelMartinez/teams-for-linux/pull/1994)
-- [x] Documentation reorganization (Issue [#2120](https://github.com/IsmaelMartinez/teams-for-linux/issues/2120))
+- [x] Custom notification system added in PR [#1979](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1979) with new `customNotification` object config
+- [x] Graph API integration added in PR [#1958](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1958) with new `graphApi` object config
+- [x] MQTT commands feature implemented in PR [#1986](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1986) - bidirectional MQTT support with `commandTopic`
+- [x] Badge count control added with `disableBadgeCount` option in PR [#1994](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1994)
+- [x] Documentation reorganization (Issue [#2120](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2120))
 - [x] `screenSharing` nested object added; `screenSharingThumbnail` and `screenLockInhibitionMethod` deprecated
 - [x] `media` nested object added; `disableAutogain` and `videoMenu` deprecated
 - [x] `auth.intune` nested object added; `ssoInTuneEnabled` and `ssoInTuneAuthUser` deprecated

@@ -13,7 +13,7 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
  Create as many sidebars as you want.
  */
 const sidebars: SidebarsConfig = {
-  // Teams for Linux documentation sidebar
+  // Outlook for Linux documentation sidebar
   docsSidebar: [
     'index',
     'quick-reference',

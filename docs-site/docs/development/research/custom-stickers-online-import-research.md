@@ -1,19 +1,19 @@
 # Custom Stickers — External Sources (Issue #2476 follow-up)
 
 :::info Idea-stage
-Tracking follow-up enhancements to the custom-stickers MVP. The MVP (PR #2550) ships with a local-folder model where users manually drop image files into a configured folder. This document scopes the realistic paths for layering external sources on top of that, ranked from simplest first step to most ambitious. Nothing here is scheduled. The mentality is "simple to start, expand if useful".
+Tracking follow-up enhancements to the custom-stickers initial version. The initial version (PR #2550) ships with a local-folder model where users manually drop image files into a configured folder. This document scopes the realistic paths for layering external sources on top of that, ranked from simplest first step to most ambitious. Nothing here is scheduled. The mentality is "simple to start, expand if useful".
 :::
 
 **Date**: 2026-05-21
-**Issue**: [#2476 — Custom stickers support](https://github.com/IsmaelMartinez/teams-for-linux/issues/2476)
-**Depends on**: Custom stickers MVP (PR #2550) merged
+**Issue**: [#2476 — Custom stickers support](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2476)
+**Depends on**: Custom stickers initial version (PR #2550) merged
 **Status**: Under consideration — sequencing pending
 
 ---
 
 ## Background
 
-The custom stickers MVP gives users a panel that lists every image file in `<userData>/stickers/`. Adding stickers is "drop files into that folder", which is fine for power users and friction for everyone else. The original issue mentioned drag-and-drop add as an optional follow-up. The broader space below that is what "external" can mean for sticker sources, and there are two distinct interpretations worth being explicit about.
+The custom stickers initial version gives users a panel that lists every image file in `<userData>/stickers/`. Adding stickers is "drop files into that folder", which is fine for power users and friction for everyone else. The original issue mentioned drag-and-drop add as an optional follow-up. The broader space below that is what "external" can mean for sticker sources, and there are two distinct interpretations worth being explicit about.
 
 The first interpretation is pulling existing stickers from the internet into the local folder. URL paste, Telegram pack import, and similar. The wrapper acts as a fetcher; the catalog already exists somewhere public.
 
@@ -49,7 +49,7 @@ Telegram is the only major sticker library reachable from a desktop client witho
 
 Each pack is a list of `.webp` or `.tgs` files (`.tgs` is Lottie JSON; static `.webp` is the simpler case and the only one in scope for v1). Downloading a pack means N HTTPS GET requests; no manifest parsing beyond a small JSON list. Telegram does not rate-limit anonymous fetches of pack contents.
 
-Architecture is a new IPC channel `import-sticker-pack` taking a pack identifier (URL or slug) and returning `{ imported, skipped, errors }`. Stickers from a pack go into a subdirectory named after the pack slug, which preserves provenance and unlocks the "categories via subfolders" follow-up if anyone ever wants tab-style pack navigation. The MVP scanner currently only looks at the top level; recursing one level is a trivial extension and should land before the import work to keep the changes orthogonal.
+Architecture is a new IPC channel `import-sticker-pack` taking a pack identifier (URL or slug) and returning `{ imported, skipped, errors }`. Stickers from a pack go into a subdirectory named after the pack slug, which preserves provenance and unlocks the "categories via subfolders" follow-up if anyone ever wants tab-style pack navigation. The initial version scanner currently only looks at the top level; recursing one level is a trivial extension and should land before the import work to keep the changes orthogonal.
 
 ### Telegram resolution: Bot API vs. scrape
 
@@ -77,7 +77,7 @@ Bundled local image-generation models are out of scope for v1 due to download si
 
 ## Format handling
 
-Telegram packs ship as either static `.webp` or animated `.tgs` (Lottie). The MVP scanner already supports `.webp` if added to `customStickers.formats`, so static packs work out of the box once import lands. `.tgs` is a separate problem: it needs rendering to a static image (or to GIF) at import time, which requires a Lottie runtime in Node. Static-only is the right v1 cut; animated is a follow-up of the follow-up.
+Telegram packs ship as either static `.webp` or animated `.tgs` (Lottie). The initial version scanner already supports `.webp` if added to `customStickers.formats`, so static packs work out of the box once import lands. `.tgs` is a separate problem: it needs rendering to a static image (or to GIF) at import time, which requires a Lottie runtime in Node. Static-only is the right v1 cut; animated is a follow-up of the follow-up.
 
 AI generation backends return whatever format the user's backend produces, typically PNG or JPEG. The wrapper writes the bytes verbatim and trusts the content-type header for the extension; if missing, defaults to `.png`.
 
@@ -153,7 +153,7 @@ Animated AI-generated stickers. No realistic format target until static is estab
 
 Telegram changes the page or rate-limits anonymous fetches. Mitigation: fall back to the Bot API path; document the user-token workaround.
 
-URL paste accepts a URL that hosts non-image or malicious content. Mitigation: content-type allowlist plus size cap. Same liability model as the local-folder MVP; the user is responsible for what they import.
+URL paste accepts a URL that hosts non-image or malicious content. Mitigation: content-type allowlist plus size cap. Same liability model as the local-folder initial version; the user is responsible for what they import.
 
 AI generation cost runs higher than the user expects. Mitigation: the user owns the backend and the cost model. The wrapper does not abstract billing.
 
@@ -163,8 +163,8 @@ Disk usage. A typical Telegram pack is 20-50 stickers averaging 30-80 KB each. E
 
 ## Related references
 
-- Custom stickers MVP: PR [#2550](https://github.com/IsmaelMartinez/teams-for-linux/pull/2550)
-- Feasibility spike: [`spike/2476-stickers/`](https://github.com/IsmaelMartinez/teams-for-linux/tree/main/spike/2476-stickers)
-- Custom background module (precedent for user-configured backend pattern): [`app/customBackground/`](https://github.com/IsmaelMartinez/teams-for-linux/tree/main/app/customBackground)
+- Custom stickers initial version: PR [#2550](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2550)
+- Feasibility spike: [`spike/2476-stickers/`](https://github.com/IsmaelMartinez/outlook-for-linux/tree/main/spike/2476-stickers)
+- Custom background module (precedent for user-configured backend pattern): [`app/customBackground/`](https://github.com/IsmaelMartinez/outlook-for-linux/tree/main/app/customBackground)
 - Telegram Bot API `getStickerSet`: https://core.telegram.org/bots/api#getstickerset
 - Lottie / `.tgs` format notes: https://core.telegram.org/animated_stickers

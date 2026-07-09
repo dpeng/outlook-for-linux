@@ -193,11 +193,6 @@ if (isMac) {
   requestMediaAccess();
 }
 
-const protocolClient = "msteams";
-if (!app.isDefaultProtocolClient(protocolClient, process.execPath)) {
-  app.setAsDefaultProtocolClient(protocolClient, process.execPath);
-}
-
 if (gotTheLock) {
   app.on("second-instance", mainAppWindow.onAppSecondInstance);
   app.on("ready", handleAppReady);
@@ -259,8 +254,10 @@ if (gotTheLock) {
   // Initialize notification service IPC handlers
   notificationService.initialize();
 
-  // Initialize screen sharing service IPC handlers
-  screenSharingService.initialize();
+  // Initialize inherited screen sharing IPC handlers only when explicitly enabled.
+  if (config.screenSharing?.enabled) {
+    screenSharingService.initialize();
+  }
 
   // Initialize partitions manager IPC handlers
   partitionsManager.initialize();
@@ -276,7 +273,7 @@ if (gotTheLock) {
   // Initialize custom notification manager for toast notifications
   customNotificationManager.initialize();
 
-  // Handle user status changes from Teams (e.g., Available, Busy, Away)
+  // Handle user status changes from the web app (e.g., Available, Busy, Away)
   ipcMain.handle("user-status-changed", userStatusChangedHandler);
   // Set application badge count (dock/taskbar notification)
   ipcMain.handle("set-badge-count", setBadgeCountHandler);
@@ -734,10 +731,14 @@ async function handleAppReady() {
     loadMenuToggleSettings();
 
     const customBackground = new CustomBackground(app, config);
-    customBackground.initialize();
+    if (config.isCustomBackgroundEnabled) {
+      customBackground.initialize();
+    }
 
     const customStickers = new CustomStickers(app, config);
-    customStickers.initialize();
+    if (config.customStickers?.enabled) {
+      customStickers.initialize();
+    }
 
     await mainAppWindow.onAppReady(appConfig, customBackground, screenSharingService, profilesManager);
 
@@ -769,7 +770,9 @@ async function handleAppReady() {
 
     initializeGraphApiClient();
     registerGraphApiHandlers(ipcMain, graphApiClient);
-    initializeQuickChat();
+    if (config.quickChat?.enabled) {
+      initializeQuickChat();
+    }
     registerGlobalShortcuts(config, mainAppWindow, app);
     initializeAutoUpdater();
 

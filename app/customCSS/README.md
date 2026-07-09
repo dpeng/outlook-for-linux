@@ -13,6 +13,6 @@ Provides custom styling capabilities for the Teams interface.
 - `condensedDark`, `condensedLight`: Condensed layout variants
 - `tweaks`: General UI improvements
 
-Themes sourced from [userstyles.org](https://userstyles.org). See [issue #77](https://github.com/IsmaelMartinez/teams-for-linux/issues/77) for adding new themes.
+Themes sourced from [userstyles.org](https://userstyles.org). See [issue #77](https://github.com/IsmaelMartinez/outlook-for-linux/issues/77) for adding new themes.
 
 Configuration details: [`../../docs-site/docs/configuration.md`](../../docs-site/docs/configuration.md)

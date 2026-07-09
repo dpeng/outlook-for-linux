@@ -10,7 +10,7 @@ id: 010-multiple-windows-support
 
 ## Context
 
-Issue [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984) requested the ability to open multiple windows for a single account, similar to the native Windows Teams client's pop-out functionality for chats and meetings.
+Issue [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984) requested the ability to open multiple windows for a single account, similar to the native Windows Teams client's pop-out functionality for chats and meetings.
 
 **Investigation Date:** November 2025
 **Requested Features:**
@@ -132,10 +132,10 @@ Users can already run multiple independent instances by specifying different use
 
 ```bash
 # Instance 1 (default)
-teams-for-linux
+outlook-for-linux
 
 # Instance 2 (separate profile)
-teams-for-linux --user-data-dir=/path/to/profile2
+outlook-for-linux --user-data-dir=/path/to/profile2
 ```
 
 Each instance operates independently with:
@@ -150,7 +150,7 @@ Each instance operates independently with:
 ### Monitor Teams PWA Evolution
 
 If Microsoft adds native multi-window support to Teams PWA:
-1. Evaluate minimal changes needed in Teams for Linux
+1. Evaluate minimal changes needed in Outlook for Linux
 2. Implement support for native feature
 3. Update documentation
 
@@ -158,7 +158,7 @@ If Microsoft adds native multi-window support to Teams PWA:
 
 ## Related
 
-- Issue [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984) - Allow multiple windows for one account
+- Issue [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984) - Allow multiple windows for one account
 - `app/index.js:61` - Single instance lock implementation
 - `app/mainAppWindow/index.js:530-553` - Window open handler
 - `app/security/ipcValidator.js` - IPC channel validation (72 channels)

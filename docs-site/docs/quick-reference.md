@@ -1,6 +1,6 @@
 # Quick Reference
 
-This quick reference is a condensed cheat-sheet for the most common commands, the configuration file location, key options, and troubleshooting entry points for Teams for Linux. Each item links to the fuller documentation page for detail.
+This quick reference is a condensed cheat-sheet for the most common commands, the configuration file location, key options, and troubleshooting entry points for Outlook for Linux. Each item links to the fuller documentation page for detail.
 
 ## Common Commands
 
@@ -25,11 +25,11 @@ User configuration lives in a `config.json` whose path depends on how the app wa
 
 | Install type | Path |
 |--------------|------|
-| Vanilla (deb / rpm / AppImage) | `~/.config/teams-for-linux/config.json` |
-| Snap | `~/snap/teams-for-linux/current/.config/teams-for-linux/config.json` |
-| Flatpak | `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux/config.json` |
+| Vanilla (deb / rpm / AppImage) | `~/.config/outlook-for-linux/config.json` |
+| Snap | `~/snap/outlook-for-linux/current/.config/outlook-for-linux/config.json` |
+| Flatpak | `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/outlook-for-linux/config.json` |
 
-A system-wide file at `/etc/teams-for-linux/config.json` is also read, with the user file taking precedence. See [Configuration Options](configuration.md) for the complete list of options, types, and defaults.
+A system-wide file at `/etc/outlook-for-linux/config.json` is also read, with the user file taking precedence. See [Configuration Options](configuration.md) for the complete list of options, types, and defaults.
 
 ## Frequently Used Options
 

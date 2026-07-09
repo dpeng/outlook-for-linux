@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Enable hardware security key (FIDO2/WebAuthn) authentication in Teams for Linux on Linux, where Electron's Chromium engine lacks native support.
+**Goal:** Enable hardware security key (FIDO2/WebAuthn) authentication in Outlook for Linux on Linux, where Electron's Chromium engine lacks native support.
 
 **Architecture:** On Linux, monkey-patch `navigator.credentials.create()` and `.get()` in the preload script (following the same pattern as `emulatePlatform.js` and `disableAutogain.js`), route calls via IPC to a main-process module that shells out to Yubico's `fido2-tools` CLI (`fido2-token`, `fido2-cred`, `fido2-assert`). On macOS and Windows, Electron's Chromium handles WebAuthn natively — no patching needed.
 
 **Tech Stack:** Electron IPC, Yubico libfido2 CLI tools (system package), base64url encoding, WebAuthn clientDataJSON, cbor-x (CBOR encoding for attestation objects)
 
-**Related issue:** [#802](https://github.com/IsmaelMartinez/teams-for-linux/issues/802)
+**Related issue:** [#802](https://github.com/IsmaelMartinez/outlook-for-linux/issues/802)
 
 **Known limitations (v1):** Only the first connected FIDO2 device is used. Multi-device selection is a future enhancement.
 
@@ -138,7 +138,7 @@ git commit -m "spike: add WebAuthn/FIDO2 support validation test (#802)"
 
 ## Community Validation Results (2026-03-13)
 
-Community member rlavriv ([#2332](https://github.com/IsmaelMartinez/teams-for-linux/issues/2332)) ran the spike-5 validation script on Arch Linux (kernel 6.19.6) with a YubiKey OTP+FIDO+CCID (vendor 0x1050, product 0x0407) and fido2-tools v1.16.0. The test exposed several critical bugs in the plan's assumptions about fido2-tools input/output formats.
+Community member rlavriv ([#2332](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2332)) ran the spike-5 validation script on Arch Linux (kernel 6.19.6) with a YubiKey OTP+FIDO+CCID (vendor 0x1050, product 0x0407) and fido2-tools v1.16.0. The test exposed several critical bugs in the plan's assumptions about fido2-tools input/output formats.
 
 ### Bug 1: Input encoding — hex vs base64
 

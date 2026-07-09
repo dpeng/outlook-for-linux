@@ -20,7 +20,7 @@ npx http-server -p 80 --cors "*" -g
 After the server starts, access the application by navigating to
 `http://localhost` in your browser.
 
-> **Note:** Remember to launch Teams for Linux with the appropriate
+> **Note:** Remember to launch Outlook for Linux with the appropriate
 > configuration options to enable the custom background feature (refer to the
 > [README](../README.md) for details).
 

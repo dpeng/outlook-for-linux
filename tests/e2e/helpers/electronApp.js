@@ -7,10 +7,11 @@ import { join } from 'node:path';
 // flag-toggle test). Keeps the launch/discover/cleanup boilerplate in
 // one place so each spec can stay focused on its assertions.
 
-const TEAMS_HOSTNAMES = new Set([
-  'teams.cloud.microsoft',
-  'teams.microsoft.com',
-  'teams.live.com',
+const OUTLOOK_HOSTNAMES = new Set([
+  'outlook.office.com',
+  'outlook.office365.com',
+  'outlook.live.com',
+  'outlook.cloud.microsoft',
   'login.microsoftonline.com',
 ]);
 
@@ -62,14 +63,14 @@ export async function startApp({ prefix, config, allowEval = false }) {
 }
 
 /**
- * Find the main Teams window in an electronApp by hostname match. Returns
- * undefined if no window has navigated to a Teams or Microsoft login URL.
+ * Find the main Outlook window in an electronApp by hostname match. Returns
+ * undefined if no window has navigated to an Outlook or Microsoft login URL.
  */
-export function findMainTeamsWindow(electronApp) {
+export function findMainOutlookWindow(electronApp) {
   return electronApp.windows().find((w) => {
     const url = w.url();
     try {
-      return TEAMS_HOSTNAMES.has(new URL(url).hostname);
+      return OUTLOOK_HOSTNAMES.has(new URL(url).hostname);
     } catch {
       return false;
     }

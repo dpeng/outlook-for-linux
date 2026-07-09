@@ -1,4 +1,4 @@
-# Cross-Distro Testing for Teams for Linux
+# Cross-Distro Testing for Outlook for Linux
 # 3 distros x 3 display servers = 9 test configurations
 #
 # Usage:
@@ -25,7 +25,7 @@ x-common: &common
   volumes:
     - ./app:/app:ro
     # Persist login session and app config across container restarts
-    - ./session:/home/tester/.config/teams-for-linux
+    - ./session:/home/tester/.config/outlook-for-linux
     # Mount project source for running Playwright tests inside the container
     - ../../:/src:ro
   environment: &common-env

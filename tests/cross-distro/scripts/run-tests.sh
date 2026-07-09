@@ -12,7 +12,7 @@
 # is guaranteed to be compatible between login and test runs.
 set -e
 
-SESSION_DIR="/home/tester/.config/teams-for-linux"
+SESSION_DIR="/home/tester/.config/outlook-for-linux"
 SRC_DIR="/src"
 readonly SEPARATOR="============================================="
 
@@ -217,7 +217,7 @@ if [[ "$MODE" == "login" ]]; then
     echo "  noVNC: http://localhost:${NOVNC_PORT}/vnc.html"
     echo "  VNC:   localhost:${VNC_PORT}"
     echo ""
-    echo "  Log into Teams, wait for it to fully load,"
+    echo "  Log into Outlook, wait for it to fully load,"
     echo "  then press Ctrl+C to save the session."
     echo "$SEPARATOR"
     echo ""

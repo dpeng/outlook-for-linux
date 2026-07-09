@@ -12,7 +12,7 @@ Implemented
 
 ADR 014 documented the Quick Chat feature using People API + deep links for contact search and chat navigation. That approach worked but had significant limitations: no inline message sending, no inline message history, and a page refresh when navigating via deep link. Users had to switch context to the Teams UI to actually type and send a message, which undermined the "quick" aspect of the feature.
 
-Issue [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984) originally requested quick chat access, and inline messaging was always the intended goal. A research spike was conducted to discover how Teams sends messages internally, since the Graph API Chat endpoints require `Chat.Create` and `Chat.ReadWrite` scopes that are not available in the Teams embedded web app token.
+Issue [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984) originally requested quick chat access, and inline messaging was always the intended goal. A research spike was conducted to discover how Teams sends messages internally, since the Graph API Chat endpoints require `Chat.Create` and `Chat.ReadWrite` scopes that are not available in the Teams embedded web app token.
 
 The spike revealed that Teams uses an IC3 (Internal Communications 3) chat service with a CDL Web Worker architecture for message sending. However, the available Graph API token does include `ChatMessage.Send` and `ChatMember.Read` scopes, which are sufficient to send messages and verify chat membership through the standard Graph API — provided we can resolve the correct chat thread ID for a 1:1 conversation.
 
@@ -96,8 +96,8 @@ Instead of DOM scanning, traverse the React component tree to extract the curren
 
 - [ADR 014](014-quick-chat-deep-link-approach.md) - Original Quick Chat deep link approach (superseded for messaging)
 - [ADR 010](010-multiple-windows-support.md) - Multiple windows support rejection
-- Issue [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984) - Original feature request
-- PR [#2119](https://github.com/IsmaelMartinez/teams-for-linux/pull/2119) - Implementation PR
+- Issue [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984) - Original feature request
+- PR [#2119](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2119) - Implementation PR
 
 ## References
 

@@ -35,8 +35,8 @@ echo "[*] Built: $APPIMAGE"
 
 # Copy to the app/ mount directory
 mkdir -p "$SCRIPT_DIR/app"
-cp "$APPIMAGE" "$SCRIPT_DIR/app/teams-for-linux.AppImage"
-chmod +x "$SCRIPT_DIR/app/teams-for-linux.AppImage"
+cp "$APPIMAGE" "$SCRIPT_DIR/app/outlook-for-linux.AppImage"
+chmod +x "$SCRIPT_DIR/app/outlook-for-linux.AppImage"
 
 echo "[*] Starting ${DISTRO}-${DISPLAY_SERVER} container..."
 cd "$SCRIPT_DIR"

@@ -1,7 +1,7 @@
 {
   "$generatedBy": "scripts/generateConfigDocs.js",
   "source": "app/config/options.js",
-  "optionCount": 72,
+  "optionCount": 71,
   "options": [
     {
       "name": "appActiveCheckInterval",
@@ -14,19 +14,26 @@
       "name": "screenSharing",
       "type": "object",
       "default": {
+        "enabled": false,
         "thumbnail": {
-          "enabled": true,
+          "enabled": false,
           "alwaysOnTop": true
         },
         "lockInhibitionMethod": "Electron"
       },
-      "description": "Screen sharing configuration. thumbnail: controls the preview window shown during active sharing. lockInhibitionMethod: screen lock inhibition method (Electron/WakeLockSentinel).",
+      "description": "Screen sharing configuration. Disabled by default for Outlook for Linux. thumbnail: controls the preview window shown during active sharing. lockInhibitionMethod: screen lock inhibition method (Electron/WakeLockSentinel).",
       "applyMode": "restart",
       "fields": [
         {
+          "path": "enabled",
+          "type": "boolean",
+          "default": false,
+          "description": "Enable inherited in-app screen sharing integration."
+        },
+        {
           "path": "thumbnail.enabled",
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Automatically show the preview thumbnail window when screen sharing starts."
         },
         {
@@ -51,7 +58,7 @@
       "name": "appIcon",
       "type": "string",
       "default": "",
-      "description": "Teams app icon to show in the tray",
+      "description": "Outlook app icon to show in the tray",
       "applyMode": "restart"
     },
     {
@@ -78,7 +85,7 @@
     {
       "name": "appTitle",
       "type": "string",
-      "default": "Microsoft Teams",
+      "default": "Outlook",
       "description": "A text to be suffixed with page title",
       "applyMode": "restart"
     },
@@ -108,7 +115,7 @@
       "type": "object",
       "default": {
         "forceState": false,
-        "stateFile": "/tmp/teams-for-linux-idle-state-$USER"
+        "stateFile": "/tmp/outlook-for-linux-idle-state-$USER"
       },
       "description": "Idle detection configuration. forceState: enables state file-based idle control (workaround for Wayland/Hyprland). stateFile: path to state file with $USER expansion support.",
       "applyMode": "restart",
@@ -122,7 +129,7 @@
         {
           "path": "stateFile",
           "type": "string",
-          "default": "/tmp/teams-for-linux-idle-state-$USER",
+          "default": "/tmp/outlook-for-linux-idle-state-$USER",
           "description": "Path to the idle state file (supports $USER expansion)."
         }
       ]
@@ -489,7 +496,7 @@
       "name": "followSystemTheme",
       "type": "boolean",
       "default": true,
-      "description": "Follow the operating-system dark/light theme preference. Default is true; set false to keep Teams's own theme regardless of OS changes.",
+      "description": "Follow the operating-system dark/light theme preference. Default is true; set false to keep Outlook's own theme regardless of OS changes.",
       "applyMode": "restart"
     },
     {
@@ -553,8 +560,8 @@
     {
       "name": "meetupJoinRegEx",
       "type": "string",
-      "default": "^https://teams\\.(?:microsoft\\.com|live\\.com|cloud\\.microsoft)/(v2/\\?meetingjoin=|meet/|l/(?:app|call|channel|chat|entity|file|meet(?:ing|up-join)|message|task|team)/)",
-      "description": "Regex for Teams meetup-join and related links",
+      "default": "$^",
+      "description": "Regex for meeting links. Disabled by default for Outlook for Linux.",
       "applyMode": "restart"
     },
     {
@@ -605,14 +612,14 @@
     {
       "name": "onNewWindowOpenMeetupJoinUrlInApp",
       "type": "boolean",
-      "default": true,
-      "description": "Open meetupJoinRegEx URLs in the app instead of the default browser",
+      "default": false,
+      "description": "Open meetupJoinRegEx URLs in the app instead of the default browser. Disabled by default for Outlook for Linux.",
       "applyMode": "restart"
     },
     {
       "name": "partition",
       "type": "string",
-      "default": "persist:teams-4-linux",
+      "default": "persist:outlook-for-linux",
       "description": "BrowserWindow webpreferences partition",
       "applyMode": "restart"
     },
@@ -682,34 +689,10 @@
       "applyMode": "restart"
     },
     {
-      "name": "msTeamsProtocols",
-      "type": "object",
-      "default": {
-        "v1": "^msteams:/(?:meet/|l/(?:app|call|channel|chat|entity|file|meet(?:ing|up-join)|message|task|team)/)",
-        "v2": "^msteams://teams\\.(?:microsoft\\.com|live\\.com|cloud\\.microsoft)/(?:meet/|l/(?:app|call|channel|chat|entity|file|meet(?:ing|up-join)|message|task|team)/)"
-      },
-      "description": "Regular expressions for Microsoft Teams protocol links (v1 and v2).",
-      "applyMode": "restart",
-      "fields": [
-        {
-          "path": "v1",
-          "type": "string",
-          "default": "^msteams:/(?:meet/|l/(?:app|call|channel|chat|entity|file|meet(?:ing|up-join)|message|task|team)/)",
-          "description": "Regular expression matching legacy msteams: scheme protocol links."
-        },
-        {
-          "path": "v2",
-          "type": "string",
-          "default": "^msteams://teams\\.(?:microsoft\\.com|live\\.com|cloud\\.microsoft)/(?:meet/|l/(?:app|call|channel|chat|entity|file|meet(?:ing|up-join)|message|task|team)/)",
-          "description": "Regular expression matching host-based msteams:// scheme protocol links."
-        }
-      ]
-    },
-    {
       "name": "url",
       "type": "string",
-      "default": "https://teams.cloud.microsoft",
-      "description": "Microsoft Teams URL",
+      "default": "https://outlook.office.com/mail/",
+      "description": "Microsoft Outlook URL",
       "applyMode": "restart"
     },
     {
@@ -768,7 +751,7 @@
           "path": "microphone.disableAutogain",
           "type": "boolean",
           "default": false,
-          "description": "Disable microphone auto gain control so Teams does not automatically adjust microphone volume levels."
+          "description": "Disable microphone auto gain control so the web app does not automatically adjust microphone volume levels."
         },
         {
           "path": "microphone.speakingIndicator",
@@ -780,13 +763,13 @@
           "path": "microphone.ignoreSystemMute",
           "type": "boolean",
           "default": false,
-          "description": "Stop Teams' mute button from following the operating system microphone mute on Linux. Chromium reports the OS capture-source mute to the page as a track mute event and Teams mirrors it onto its own button; enable this to keep the Teams button where you left it and rely solely on your system/hotkey mute (which still cuts the transmitted audio). Remote participants' mute state is unaffected."
+          "description": "Stop the web app's mute button from following the operating system microphone mute on Linux. Chromium reports the OS capture-source mute to the page as a track mute event; enable this to keep the web app button where you left it and rely solely on your system/hotkey mute."
         },
         {
           "path": "microphone.overrideConstraints.enabled",
           "type": "boolean",
           "default": false,
-          "description": "Enable overriding the microphone audio constraints Teams requests via getUserMedia; only the keys you set are overridden."
+          "description": "Enable overriding microphone audio constraints requested via getUserMedia; only the keys you set are overridden."
         },
         {
           "path": "microphone.overrideConstraints.echoCancellation",
@@ -823,7 +806,7 @@
           "path": "camera.resolution.mode",
           "type": "string",
           "default": "remove",
-          "description": "Resolution mode: remove strips Teams' constraints to allow native camera resolution, override sets a specific width/height.",
+          "description": "Resolution mode: remove strips web app constraints to allow native camera resolution, override sets a specific width/height.",
           "choices": [
             "remove",
             "override"
@@ -843,7 +826,7 @@
           "path": "camera.autoAdjustAspectRatio.enabled",
           "type": "boolean",
           "default": false,
-          "description": "Reapply proper aspect ratio constraints to fix camera video stretching when moving Teams between monitors with different orientations."
+          "description": "Reapply proper aspect ratio constraints to fix camera video stretching when moving the web app between monitors with different orientations."
         },
         {
           "path": "video.menuEnabled",
@@ -873,15 +856,15 @@
         "brokerUrl": "",
         "username": "",
         "password": "",
-        "clientId": "teams-for-linux",
-        "topicPrefix": "teams",
+        "clientId": "outlook-for-linux",
+        "topicPrefix": "outlook",
         "statusTopic": "status",
         "commandTopic": "",
         "statusCheckInterval": 10000,
         "homeAssistant": {
           "enabled": false,
           "discoveryPrefix": "homeassistant",
-          "deviceName": "Teams for Linux"
+          "deviceName": "Outlook for Linux"
         },
         "mediaTopics": {
           "inCall": "in-call",
@@ -892,7 +875,7 @@
           "screenSharing": "screen-sharing"
         }
       },
-      "description": "MQTT configuration for publishing Teams status updates and receiving action commands",
+      "description": "MQTT configuration for publishing web app status updates and receiving action commands",
       "applyMode": "restart",
       "fields": [
         {
@@ -922,13 +905,13 @@
         {
           "path": "clientId",
           "type": "string",
-          "default": "teams-for-linux",
+          "default": "outlook-for-linux",
           "description": "Unique MQTT client identifier."
         },
         {
           "path": "topicPrefix",
           "type": "string",
-          "default": "teams",
+          "default": "outlook",
           "description": "Topic prefix for all MQTT messages."
         },
         {
@@ -964,7 +947,7 @@
         {
           "path": "homeAssistant.deviceName",
           "type": "string",
-          "default": "Teams for Linux",
+          "default": "Outlook for Linux",
           "description": "Device name shown in Home Assistant."
         }
       ]
@@ -997,7 +980,7 @@
       "default": {
         "enabled": false
       },
-      "description": "Microsoft Graph API integration for enhanced Teams functionality (calendar, user profile, etc.)",
+      "description": "Microsoft Graph API integration for enhanced Outlook functionality (calendar, user profile, etc.)",
       "applyMode": "restart",
       "fields": [
         {
@@ -1024,7 +1007,7 @@
           "enabled": false
         }
       },
-      "description": "Authentication configuration. auth.webauthn.enabled turns on hardware security key support on Linux (requires fido2-tools). auth.webauthn.debug enables verbose diagnostic logs, intended for beta testers only. auth.reauthRecovery.enabled opts into the in-app re-authentication recovery feature and is off by default; while off, renderer auth-failure signals are ignored and Teams' own stale 'sign in again' banner is left untouched (you re-authenticate by relaunching, as before this feature existed). When on, a reliable MSAL InteractionRequired signal automatically clears stale auth state and reloads to force a fresh interactive login, and clicking the stale 'sign in again' banner is intercepted to recover in-app instead of opening the login popup externally. Uncaught Teams worker 'UPR' errors are noisy and fire on healthy sessions, so they never trigger an automatic reload on their own; they only help recognise a genuinely broken session for the banner interception. Interception only happens when the session has emitted a trusted auth-failure signal within the last hour, so login popups from healthy flows (initial sign-in, consent and step-up prompts, adding an account) are never diverted. During an active call, recovery is never run silently (it would end the call): the user is asked whether to sign in now, after the call, or not at all.",
+      "description": "Authentication configuration. auth.webauthn.enabled turns on hardware security key support on Linux (requires fido2-tools). auth.webauthn.debug enables verbose diagnostic logs, intended for beta testers only. auth.reauthRecovery.enabled opts into the in-app re-authentication recovery feature and is off by default; while off, renderer auth-failure signals are ignored and the web app's own stale 'sign in again' banner is left untouched. When on, a reliable MSAL InteractionRequired signal automatically clears stale auth state and reloads to force a fresh interactive login, and clicking the stale 'sign in again' banner is intercepted to recover in-app instead of opening the login popup externally. Uncaught Microsoft web worker 'UPR' errors are noisy and fire on healthy sessions, so they never trigger an automatic reload on their own; they only help recognise a genuinely broken session for the banner interception. Interception only happens when the session has emitted a trusted auth-failure signal within the last hour, so login popups from healthy flows (initial sign-in, consent and step-up prompts, adding an account) are never diverted.",
       "applyMode": "restart",
       "fields": [
         {

@@ -1,10 +1,10 @@
 # Multiple Instances (Profiles)
 
-Teams for Linux supports multiple accounts two ways: an **in-app account switcher** that keeps every account in a single window, or **separate isolated instances** that each run as their own process. Either way, sessions, settings, and data stay fully isolated per account.
+Outlook for Linux supports multiple accounts two ways: an **in-app account switcher** that keeps every account in a single window, or **separate isolated instances** that each run as their own process. Either way, sessions, settings, and data stay fully isolated per account.
 
 ## Two Ways to Run Multiple Accounts
 
-- **In-app account switcher** (single window, experimental) — enable `multiAccount.enabled` and switch between accounts inside one Teams for Linux window via the **Profiles** menu. Each account is isolated in its own session partition. This is the newer approach introduced in [ADR-020](development/adr/020-multi-account-profile-switcher); see [In-App Account Switcher](#in-app-account-switcher-experimental) below.
+- **In-app account switcher** (single window, experimental) — enable `multiAccount.enabled` and switch between accounts inside one Outlook for Linux window via the **Profiles** menu. Each account is isolated in its own session partition. This is the newer approach introduced in [ADR-020](development/adr/020-multi-account-profile-switcher); see [In-App Account Switcher](#in-app-account-switcher-experimental) below.
 - **Separate isolated instances** (multiple windows/processes) — launch a separate process per account, each with its own `--user-data-dir`, icon, and window class. This is the established approach and is documented in the rest of this page.
 
 :::tip When to use which
@@ -43,7 +43,7 @@ The rest of this page covers the separate-instances approach: one process per ac
 
 ### Work Profile
 ```bash
-./teams-for-linux \
+./outlook-for-linux \
   --appIcon=/path/to/work-icon.png \
   --class=teams-work \
   --user-data-dir=/home/user/.config/teams-profile-work
@@ -51,7 +51,7 @@ The rest of this page covers the separate-instances approach: one process per ac
 
 ### Personal Profile
 ```bash
-./teams-for-linux \
+./outlook-for-linux \
   --appIcon=/path/to/personal-icon.png \
   --class=teams-personal \
   --user-data-dir=/home/user/.config/teams-profile-personal
@@ -140,9 +140,9 @@ Each profile can have its own `config.json` file in its respective user data dir
 #### Work Profile Desktop Entry
 ```ini
 [Desktop Entry]
-Name=Teams for Linux (Work)
-Comment=Microsoft Teams for Linux - Work Profile
-Exec=/path/to/teams-for-linux --class=teams-work --user-data-dir=%h/.config/teams-profile-work --appIcon=%h/.local/share/icons/teams-work.png
+Name=Outlook for Linux (Work)
+Comment=Microsoft Outlook for Linux - Work Profile
+Exec=/path/to/outlook-for-linux --class=teams-work --user-data-dir=%h/.config/teams-profile-work --appIcon=%h/.local/share/icons/teams-work.png
 Icon=teams-work
 Terminal=false
 Type=Application
@@ -153,9 +153,9 @@ StartupWMClass=teams-work
 #### Personal Profile Desktop Entry
 ```ini
 [Desktop Entry]
-Name=Teams for Linux (Personal)
-Comment=Microsoft Teams for Linux - Personal Profile
-Exec=/path/to/teams-for-linux --class=teams-personal --user-data-dir=%h/.config/teams-profile-personal --appIcon=%h/.local/share/icons/teams-personal.png
+Name=Outlook for Linux (Personal)
+Comment=Microsoft Outlook for Linux - Personal Profile
+Exec=/path/to/outlook-for-linux --class=teams-personal --user-data-dir=%h/.config/teams-profile-personal --appIcon=%h/.local/share/icons/teams-personal.png
 Icon=teams-personal
 Terminal=false
 Type=Application
@@ -168,7 +168,7 @@ StartupWMClass=teams-personal
 #### `teams-work.sh`
 ```bash
 #!/bin/bash
-/path/to/teams-for-linux \
+/path/to/outlook-for-linux \
   --class=teams-work \
   --user-data-dir="$HOME/.config/teams-profile-work" \
   --appIcon="$HOME/.local/share/icons/teams-work.png" \
@@ -178,7 +178,7 @@ StartupWMClass=teams-personal
 #### `teams-personal.sh`
 ```bash
 #!/bin/bash
-/path/to/teams-for-linux \
+/path/to/outlook-for-linux \
   --class=teams-personal \
   --user-data-dir="$HOME/.config/teams-profile-personal" \
   --appIcon="$HOME/.local/share/icons/teams-personal.png" \
@@ -193,13 +193,13 @@ For users managing multiple organizations:
 
 ```bash
 # Organization A
-./teams-for-linux \
+./outlook-for-linux \
   --class=teams-org-a \
   --user-data-dir="$HOME/.config/teams-org-a" \
   --appTitle="Teams - Org A"
 
 # Organization B  
-./teams-for-linux \
+./outlook-for-linux \
   --class=teams-org-b \
   --user-data-dir="$HOME/.config/teams-org-b" \
   --appTitle="Teams - Org B"
@@ -211,13 +211,13 @@ For developers working with different Teams environments:
 
 ```bash
 # Production environment
-./teams-for-linux \
+./outlook-for-linux \
   --class=teams-prod \
   --user-data-dir="$HOME/.config/teams-production" \
   --url="https://teams.cloud.microsoft"
 
 # Development/Test environment
-./teams-for-linux \
+./outlook-for-linux \
   --class=teams-dev \
   --user-data-dir="$HOME/.config/teams-development" \
   --url="https://teams-dev.company.com"
@@ -236,7 +236,7 @@ $HOME/.config/
 │   ├── config.json
 │   ├── Cache/
 │   └── Partitions/
-└── teams-for-linux/           # Default profile
+└── outlook-for-linux/           # Default profile
     ├── config.json
     └── ...
 ```

@@ -1,7 +1,7 @@
 # Spike: custom stickers (#2476) — feasibility
 
 **Status:** concluded — Phase 1 succeeded, proceeding with renderer-only implementation
-**Issue:** [#2476](https://github.com/IsmaelMartinez/teams-for-linux/issues/2476)
+**Issue:** [#2476](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2476)
 **Pattern:** 4 (floating UI outside Teams DOM + synthetic event into Teams)
 
 ## What we are trying to verify

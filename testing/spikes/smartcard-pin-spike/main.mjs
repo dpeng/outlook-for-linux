@@ -2,7 +2,7 @@
 //
 // Standalone Electron main script that answers the spike questions in
 // docs-site/docs/development/research/smartcard-nss-pin-dialog-research.md
-// WITHOUT touching the Teams for Linux app code.
+// WITHOUT touching the Outlook for Linux app code.
 //
 // Run from the repo root (after `npm install`):
 //

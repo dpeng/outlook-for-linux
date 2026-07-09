@@ -1,6 +1,6 @@
-# Screen Sharing in Teams for Linux
+# Screen Sharing in Outlook for Linux
 
-Teams for Linux provides screen sharing capabilities that integrate with the Microsoft Teams web interface.
+Outlook for Linux provides screen sharing capabilities that integrate with the Microsoft Teams web interface.
 
 When you start screen sharing, a full-window picker overlay appears showing thumbnails of all available screens and windows. Selecting a source shows a detail panel with a larger preview before you confirm. Once sharing begins, an optional floating preview window shows what you're sharing.
 
@@ -49,10 +49,10 @@ To disable the preview window entirely:
 #### Preview Window Not Appearing
 - **Check configuration**: Ensure `screenSharing.thumbnail.enabled` is `true`
 - **Window manager**: Some Linux window managers may interfere with always-on-top windows
-- **Restart**: Try restarting Teams for Linux
+- **Restart**: Try restarting Outlook for Linux
 
 #### Screen Selection Dialog Not Showing
-- **Permissions**: Check if Teams for Linux has screen capture permissions
+- **Permissions**: Check if Outlook for Linux has screen capture permissions
 - **Wayland**: On Wayland, ensure proper screen sharing portal is configured
 - **X11**: Verify X11 screen capture is working
 
@@ -76,7 +76,7 @@ To disable the preview window entirely:
 #### macOS
 - Requires screen recording permissions
 - System will prompt for permission on first use
-- May need to add Teams for Linux to Security & Privacy settings
+- May need to add Outlook for Linux to Security & Privacy settings
 
 #### Windows
 - No additional configuration required

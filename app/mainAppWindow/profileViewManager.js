@@ -1,21 +1,21 @@
 const { WebContentsView, session } = require("electron");
 const path = require("node:path");
 
-const LEGACY_PARTITION = "persist:teams-4-linux";
+const LEGACY_PARTITION = "persist:outlook-for-linux";
 
-// Hostnames the bootstrap-on-navigate listener treats as "Teams was
+// Hostnames the bootstrap-on-navigate listener treats as "Outlook was
 // successfully reached" — i.e. the post-login destinations. We
 // deliberately exclude `login.microsoftonline.com` and other pre-auth
 // URLs so navigating to the login page (which sets its own cookies on
 // the partition) does not falsely trigger bootstrap.
-const TEAMS_HOST_RE =
-  /(^|\.)teams\.(microsoft\.com|live\.com|cloud\.microsoft)$/;
+const OUTLOOK_HOST_RE =
+  /(^|\.)outlook\.(office\.com|office365\.com|live\.com|cloud\.microsoft)$/;
 
-function isTeamsNavigationUrl(url) {
+function isOutlookNavigationUrl(url) {
   if (!url || typeof url !== "string") return false;
   try {
     const { protocol, hostname } = new URL(url);
-    return protocol === "https:" && TEAMS_HOST_RE.test(hostname);
+    return protocol === "https:" && OUTLOOK_HOST_RE.test(hostname);
   } catch {
     return false;
   }
@@ -23,7 +23,7 @@ function isTeamsNavigationUrl(url) {
 
 // Cookie names that only appear on the partition after the user has
 // successfully completed the Microsoft auth flow (vs. pre-auth tracking
-// cookies like `MUID`/`MSCC` that get set on first visit to a Teams
+// cookies like `MUID`/`MSCC` that get set on first visit to an Outlook
 // hostname). Mirrors the smaller "is the user signed in" subset of the
 // `AUTH_COOKIE_NAMES` set in `app/mainAppWindow/index.js`. Kept inline
 // (rather than imported) to avoid circular requires; if a third caller
@@ -48,7 +48,7 @@ function hasAuthCookie(cookies) {
  * (ADR-020). Owns the per-profile `WebContentsView` overlays that sit on
  * top of the main `BrowserWindow`'s content area.
  *
- * Architecture: Profile 0 (the legacy `persist:teams-4-linux` partition)
+ * Architecture: Profile 0 (the legacy `persist:outlook-for-linux` partition)
  * lives on the root window's `webContents` — it is the existing main
  * window we have today. Switching to Profile 0 hides every overlay so
  * the underlying root window is visible. Adding a new profile creates a
@@ -56,9 +56,9 @@ function hasAuthCookie(cookies) {
  * that profile shows the matching overlay over the root window.
  *
  * No view is created for legacy-partition profiles; the root window
- * already serves that role. This avoids running Teams twice in the same
+ * already serves that role. This avoids running Outlook twice in the same
  * partition and keeps the scope of 1c.1 surgical (no rerouting of the
- * existing auth-recovery or `msteams://` deep-link handlers, both of
+ * existing auth-recovery handlers, both of
  * which operate on `window.webContents`).
  *
  * Subscribes to `profilesManager` lifecycle events so that profile
@@ -115,23 +115,23 @@ class ProfileViewManager {
     // and skips. Once they complete the in-window login, the partition
     // gains cookies but Profile 0 has not been registered, so the
     // Profiles → Switch to submenu sits empty. Re-running the bootstrap
-    // on every navigation that lands on a Teams URL closes that gap:
-    // the moment the user reaches Teams post-login, Profile 0 gets
+    // on every navigation that lands on an Outlook URL closes that gap:
+    // the moment the user reaches Outlook post-login, Profile 0 gets
     // registered, the menu rebuilds via ProfilesManager's `add` event,
     // and the user sees their account in Switch-to without restarting.
     //
     // Filtering by destination URL matters — `login.microsoftonline.com`
     // and other pre-auth pages set their own cookies on the partition,
     // which would falsely trip the cookies-only bootstrap heuristic. We
-    // only act on landings on a Teams hostname, which is where a real
+    // only act on landings on an Outlook hostname, which is where a real
     // post-login session ends up.
     //
     // Cost is one URL parse per top-level navigation, plus one cookie
-    // read per Teams-URL landing. Once Profile 0 exists,
+    // read per Outlook-URL landing. Once Profile 0 exists,
     // `bootstrapProfileZeroIfNeeded` short-circuits on its guard and
     // the cookie read is skipped.
     this.#navigationHandler = (_event, url) => {
-      if (!isTeamsNavigationUrl(url)) return;
+      if (!isOutlookNavigationUrl(url)) return;
       this.bootstrapProfileZeroIfNeeded().catch((error) => {
         console.warn(
           "[ProfileViewManager] Bootstrap-on-navigate failed",
@@ -159,9 +159,9 @@ class ProfileViewManager {
   }
 
   /**
-   * Bootstrap Profile 0 from the legacy `persist:teams-4-linux` partition
+   * Bootstrap Profile 0 from the legacy `persist:outlook-for-linux` partition
    * if (a) no profiles exist yet and (b) the legacy partition has cookies.
-   * The cookies-only heuristic catches every realistic warm-Teams session
+   * The cookies-only heuristic catches every realistic warm-Outlook session
    * while keeping the check to a single async call (ADR-020 § "First-run
    * bootstrap"; design decision logged in plans/feature-phase1c-multi-account.md).
    *
@@ -293,8 +293,8 @@ class ProfileViewManager {
         spellcheck: true,
         webviewTag: true,
         // SECURITY: matches the root window's webPreferences
-        // (browserWindowManager.js). Required for Teams DOM access via
-        // ReactHandler; compensated by IPC validation.
+        // (browserWindowManager.js). Required for inherited DOM integrations;
+        // compensated by IPC validation.
         contextIsolation: false,
         nodeIntegration: false,
         sandbox: false,

@@ -1,10 +1,10 @@
 ---
 id: index
-title: Teams for Linux Documentation
+title: Outlook for Linux Documentation
 slug: /
 ---
 
-# Teams for Linux
+# Outlook for Linux
 
 A native Linux desktop wrapper around the Microsoft Teams web app, with the integration features the web client cannot provide on its own: system tray and notifications, custom backgrounds, screen sharing, multiple account profiles, certificate handling, Intune SSO, secure token storage, and an MQTT bridge for home automation.
 
@@ -17,10 +17,10 @@ Independent project, not affiliated with Microsoft. Some behaviour is constraine
 Install the package for your distribution from the [Installation guide](installation.md), then launch:
 
 ```bash
-teams-for-linux
+outlook-for-linux
 ```
 
-For a custom configuration, drop a JSON file at `~/.config/teams-for-linux/config.json`. The full schema lives in the [Configuration reference](configuration.md). A minimal example:
+For a custom configuration, drop a JSON file at `~/.config/outlook-for-linux/config.json`. The full schema lives in the [Configuration reference](configuration.md). A minimal example:
 
 ```json
 {
@@ -57,5 +57,5 @@ If you want to fix a bug or add a feature:
 
 ## Community
 
-- [GitHub Issues](https://github.com/IsmaelMartinez/teams-for-linux/issues) — bug reports and feature requests
-- [Matrix space](https://matrix.to/#/#teams-for-linux-space:matrix.org) — chat with users and contributors
+- [GitHub Issues](https://github.com/IsmaelMartinez/outlook-for-linux/issues) — bug reports and feature requests
+- [Matrix space](https://matrix.to/#/#outlook-for-linux-space:matrix.org) — chat with users and contributors

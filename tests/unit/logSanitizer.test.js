@@ -195,13 +195,13 @@ describe('Edge cases', () => {
 	test('long email', () => assert.ok(sanitize(`Long: ${'a'.repeat(50)}@${'b'.repeat(50)}.com`).includes('[EMAIL]')));
 });
 
-describe('Teams for Linux scenarios', () => {
+describe('Outlook for Linux scenarios', () => {
 	runContainsTests([
 		['MQTT broker', 'Connecting to: mqtt://teams-user:mqttpass123@broker.home.local:1883', ['mqtt://[CREDENTIALS]@'], ['teams-user', 'mqttpass123']],
 		['Graph API params', 'Graph API: https://graph.microsoft.com/v1.0/me?$select=mail&access_token=eyJ', ['?[PARAMS]']],
 		['SSO credential', 'SSO for user@company.onmicrosoft.com with access_token=abc123', ['[EMAIL]', 'access_token=[REDACTED]']],
 		['certificate', 'Verified: fingerprint=AA:BB:CC:DD:EE:FF:00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD', ['[FINGERPRINT]']],
-		['config path', 'Loading from /home/realusername/.config/teams-for-linux/config.json', ['/home/[USER]']],
+		['config path', 'Loading from /home/realusername/.config/outlook-for-linux/config.json', ['/home/[USER]']],
 	]);
 });
 

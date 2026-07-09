@@ -8,9 +8,9 @@ Research and design analysis. This document proposes a direction and a phased pl
 
 | Phase | Status | Reference |
 | --- | --- | --- |
-| Phase 0 — drift fixes and contributor walkthrough | Shipped (v2.12.0) | [PR #2602](https://github.com/IsmaelMartinez/teams-for-linux/pull/2602) |
-| Phase 1 — generated config reference + `config-schema.json` with CI drift guard | Shipped (v2.12.0) | [PR #2604](https://github.com/IsmaelMartinez/teams-for-linux/pull/2604) |
-| Phase 2 — interactive config explorer in the docs site | Shipped (v2.12.0) | [PR #2606](https://github.com/IsmaelMartinez/teams-for-linux/pull/2606) |
+| Phase 0 — drift fixes and contributor walkthrough | Shipped (v2.12.0) | [PR #2602](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2602) |
+| Phase 1 — generated config reference + `config-schema.json` with CI drift guard | Shipped (v2.12.0) | [PR #2604](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2604) |
+| Phase 2 — interactive config explorer in the docs site | Shipped (v2.12.0) | [PR #2606](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2606) |
 | Phase 3a — `applyMode` + nested-field metadata, with the hard-failing metadata lint from "Ambitious ideas" | Implemented | This change |
 | Phase 4 — warn-only startup validation of `config.json` | Implemented | This change (`app/config/validator.js`) |
 | Phase 3b — in-app settings window | Not started | Unblocked by Phase 3a; next phase, high risk |
@@ -19,7 +19,7 @@ Research and design analysis. This document proposes a direction and a phased pl
 
 ### Current State
 
-The contributing experience for teams-for-linux is mature, yet the project carries one structural weakness in its configuration documentation. The application exposes 76 options defined in a single yargs block in `app/config/index.js`, each already carrying its own description, type, and default value, but those definitions live in isolation from the separate 924-line `configuration.md` reference. This manual duplication is a maintenance burden that drifts, a problem confirmed during this research by a stale protocol-handler regex default and two config keys that exist in code but are absent from the docs. The project's IPC surface already demonstrates the better model: it is auto-generated from code and ships with a clean guide for adding channels. The configuration layer has none of that synchronization, and there is no in-app editor, so users hand-edit a config file across three platform-specific paths.
+The contributing experience for outlook-for-linux is mature, yet the project carries one structural weakness in its configuration documentation. The application exposes 76 options defined in a single yargs block in `app/config/index.js`, each already carrying its own description, type, and default value, but those definitions live in isolation from the separate 924-line `configuration.md` reference. This manual duplication is a maintenance burden that drifts, a problem confirmed during this research by a stale protocol-handler regex default and two config keys that exist in code but are absent from the docs. The project's IPC surface already demonstrates the better model: it is auto-generated from code and ships with a clean guide for adding channels. The configuration layer has none of that synchronization, and there is no in-app editor, so users hand-edit a config file across three platform-specific paths.
 
 The documentation platform, Docusaurus 3.10, is healthy and is not the source of the inconsistency, so the solution is an architectural change rather than a tooling upgrade. The fix is to establish the code as the single source of truth that feeds the documentation, a future settings UI, and startup validation, which removes the manual effort of keeping separate copies in sync and prevents the recurrence of stale defaults or missing keys.
 
@@ -111,7 +111,7 @@ Three ideas go beyond the baseline plan and are grounded in this codebase rather
 
 The first is self-documenting config diagnostics: a "copy effective config" action (in the settings window and as a CLI flag) that emits the resolved `startupConfig` with every value annotated by its source (built-in default, system config, user config, or persisted override), using the same schema. The three-store precedence is invisible today and is a recurring support-friction source, and this turns the merge logic a maintainer has to mentally trace into a one-click artifact that dovetails with the bug template's existing diagnostics ask.
 
-The second is a schema-driven config migration codemod that explicitly does not ship as runtime auto-migration (which the prior research rejected for good reasons), but as a user-invoked `teams-for-linux --migrate-config` that rewrites a config from deprecated flat keys to the nested form and prints a diff. It captures the cleanup value of the deprecation metadata without the runtime risk, and it is generated from the same schema so it never drifts.
+The second is a schema-driven config migration codemod that explicitly does not ship as runtime auto-migration (which the prior research rejected for good reasons), but as a user-invoked `outlook-for-linux --migrate-config` that rewrites a config from deprecated flat keys to the nested form and prints a diff. It captures the cleanup value of the deprecation metadata without the runtime risk, and it is generated from the same schema so it never drifts.
 
 The third is a config-option lint that runs in CI on every PR touching `app/config/index.js` and fails if a new option lacks a `describe`, a `type`, or an `applyMode`, the same way the IPC workflow enforces the allowlist. The thesis collapses the moment one contributor adds an option without metadata, so making schema completeness a merge gate keeps the single source of truth structurally self-enforcing rather than dependent on reviewer vigilance.
 

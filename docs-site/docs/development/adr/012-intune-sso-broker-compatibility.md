@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-The Intune SSO feature in Teams for Linux stopped working with Microsoft Identity Broker versions 2.0.2 and newer. Users reported the error:
+The Intune SSO feature in Outlook for Linux stopped working with Microsoft Identity Broker versions 2.0.2 and newer. Users reported the error:
 
 ```
 Broker cannot initialize SSO { error: 'No such interface found', suggestion: 'Ensure Microsoft Identity Broker is installed and running on this system' }
@@ -147,7 +147,7 @@ Maintain completely separate implementations for old and new brokers.
 
 ## Notes
 
-- Issue: [teams-for-linux #2047](https://github.com/IsmaelMartinez/teams-for-linux/issues/2047)
+- Issue: [outlook-for-linux #2047](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2047)
 - Reference implementation: [linux-entra-sso PR #116](https://github.com/siemens/linux-entra-sso/pull/116)
 - D-Bus interface spec: [sso-mib dbus/spec](https://github.com/siemens/sso-mib/blob/main/dbus/spec/com.microsoft.identity.broker1.xml)
 

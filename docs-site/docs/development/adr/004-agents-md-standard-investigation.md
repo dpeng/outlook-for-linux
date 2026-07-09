@@ -69,7 +69,7 @@ Instead of adopting agents.md, we implemented a consolidation strategy:
 
 3. **Establish clear documentation hierarchy:**
    - Local markdown files in `docs-site/docs/` are the source of truth
-   - Web URLs (https://ismaelmartinez.github.io/teams-for-linux/) are for human reference only
+   - Web URLs (https://ismaelmartinez.github.io/outlook-for-linux/) are for human reference only
    - AI agents should read local files, not fetch from web
 
 ## Consequences

@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-The Teams for Linux project wants to share repository health and activity statistics with its community. Metrics such as issues created/closed per month, PRs merged, commits per month, contributor activity, and release cadence help users and potential contributors understand the project's vitality and trajectory.
+The Outlook for Linux project wants to share repository health and activity statistics with its community. Metrics such as issues created/closed per month, PRs merged, commits per month, contributor activity, and release cadence help users and potential contributors understand the project's vitality and trajectory.
 
 Currently, this data is only available through GitHub's built-in Insights tab, which requires navigating to the repository and is not shareable or embeddable. We want a solution that:
 
@@ -31,7 +31,7 @@ Repobeats generates a single SVG image that updates automatically and displays c
 **Implementation:**
 
 1. Sign in at [repobeats.axiom.co](https://repobeats.axiom.co/) with a GitHub account
-2. Select the `IsmaelMartinez/teams-for-linux` repository
+2. Select the `IsmaelMartinez/outlook-for-linux` repository
 3. Copy the generated SVG embed snippet
 4. Add it to the project README.md (e.g., in a "Project Activity" section)
 5. Optionally embed it in the documentation site at `docs-site/docs/development/contributing.md`
@@ -73,7 +73,7 @@ Repobeats generates a single SVG image that updates automatically and displays c
 
 [OSS Insight](https://ossinsight.io/) is a comprehensive analytics platform powered by TiDB that analyzes billions of GitHub events. It provides detailed dashboards for any public repository with metrics on stars, forks, issues, PRs, commits, contributors, and more.
 
-- **Shareable output**: Web URL per repository (e.g., `ossinsight.io/analyze/IsmaelMartinez/teams-for-linux`), no embeddable image
+- **Shareable output**: Web URL per repository (e.g., `ossinsight.io/analyze/IsmaelMartinez/outlook-for-linux`), no embeddable image
 - **Free**: Yes, fully free
 - **Pros**:
   - Extremely detailed analytics with historical data going back to 2011

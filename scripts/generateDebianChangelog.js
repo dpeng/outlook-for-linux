@@ -59,7 +59,7 @@ async function generateDebianChangelog(projectRoot = null) {
       }
     }
 
-    changelogContent += `teams-for-linux (${version}) stable; urgency=medium\n\n`;
+    changelogContent += `outlook-for-linux (${version}) stable; urgency=medium\n\n`;
     changelogContent += `${releaseNotes}\n\n`;
     changelogContent += ` -- Ismael Martinez <ismaelmartinez@gmail.com>  ${debianDate}\n\n`;
   }

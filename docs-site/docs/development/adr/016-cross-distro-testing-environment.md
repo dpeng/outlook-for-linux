@@ -10,9 +10,9 @@ id: 016-cross-distro-testing-environment
 
 ## Context
 
-Teams for Linux runs across multiple Linux distributions (Ubuntu, Fedora, Debian) and display servers (X11, Wayland, XWayland). Users report issues specific to certain distro/display server combinations, but we had no systematic way to reproduce them. Manual testing required maintaining VMs or dual-boot setups, which was impractical for a volunteer-maintained project.
+Outlook for Linux runs across multiple Linux distributions (Ubuntu, Fedora, Debian) and display servers (X11, Wayland, XWayland). Users report issues specific to certain distro/display server combinations, but we had no systematic way to reproduce them. Manual testing required maintaining VMs or dual-boot setups, which was impractical for a volunteer-maintained project.
 
-PR [#2226](https://github.com/IsmaelMartinez/teams-for-linux/pull/2226) introduced a Docker-based testing environment with 9 configurations (3 distros x 3 display servers), accessible via noVNC in a browser. This ADR documents the architecture decisions, the Apple Silicon limitation discovered during testing, and the recommended hosting approach.
+PR [#2226](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2226) introduced a Docker-based testing environment with 9 configurations (3 distros x 3 display servers), accessible via noVNC in a browser. This ADR documents the architecture decisions, the Apple Silicon limitation discovered during testing, and the recommended hosting approach.
 
 ## Decision
 
@@ -83,7 +83,7 @@ Use commercial testing platforms for Electron app testing.
 
 ## Related
 
-- PR [#2226](https://github.com/IsmaelMartinez/teams-for-linux/pull/2226): Cross-distro testing environment implementation
+- PR [#2226](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2226): Cross-distro testing environment implementation
 - ADR [009](009-automated-testing-strategy.md): Automated testing strategy (smoke tests with Playwright)
 - [V8 Pointer Compression](https://v8.dev/blog/pointer-compression): technical background on the 4GB limit
 - [Electron V8 Memory Cage](https://www.electronjs.org/blog/v8-memory-cage): Electron's adoption of pointer compression

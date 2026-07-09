@@ -14,7 +14,7 @@ The `build.yml` and `snap.yml` GitHub Actions workflows each contained a `commen
 
 This is a well-documented GitHub Actions security restriction: when a workflow is triggered by a `pull_request` event from a fork, the `GITHUB_TOKEN` is scoped to **read-only** access on the base repository, regardless of what `permissions:` the workflow declares. This prevents fork PRs from modifying the upstream repository (a deliberate security boundary). The `pull-requests: write` permission declared in the workflow is silently downgraded for fork PRs.
 
-The error manifested in PRs [#2218](https://github.com/IsmaelMartinez/teams-for-linux/pull/2218) and [#2220](https://github.com/IsmaelMartinez/teams-for-linux/pull/2220) with:
+The error manifested in PRs [#2218](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2218) and [#2220](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2220) with:
 
 ```text
 RequestError [HttpError]: Resource not accessible by integration
@@ -107,7 +107,7 @@ Create a GitHub App or use a Personal Access Token with `pull_requests: write` s
 
 ## Related
 
-- Issue: 403 errors on PRs [#2218](https://github.com/IsmaelMartinez/teams-for-linux/pull/2218), [#2220](https://github.com/IsmaelMartinez/teams-for-linux/pull/2220)
+- Issue: 403 errors on PRs [#2218](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2218), [#2220](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2220)
 - **Implementation**: `.github/workflows/comment-artifacts.yml`
 - [GitHub Docs: Triggering a workflow from a workflow](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_run)
 - [GitHub Docs: fork PR permissions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)

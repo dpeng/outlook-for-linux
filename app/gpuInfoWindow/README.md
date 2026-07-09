@@ -4,7 +4,7 @@ Displays `chrome://gpu` information in a separate window for debugging graphics 
 
 ## Usage
 
-**Menu:** Teams for Linux → Debug → Open GPU Info
+**Menu:** Outlook for Linux → Debug → Open GPU Info
 
 ## Implementation
 

@@ -14,7 +14,7 @@ The appimagetool post-processing approach implemented by this ADR does not produ
 
 ## Context
 
-Teams for Linux distributes AppImage builds for Linux users. A feature request ([Issue #2065](https://github.com/IsmaelMartinez/teams-for-linux/issues/2065)) proposed embedding update metadata into AppImage releases to enable third-party update managers like [Gear Lever](https://github.com/mijorus/gearlever) to automatically detect and manage updates.
+Outlook for Linux distributes AppImage builds for Linux users. A feature request ([Issue #2065](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2065)) proposed embedding update metadata into AppImage releases to enable third-party update managers like [Gear Lever](https://github.com/mijorus/gearlever) to automatically detect and manage updates.
 
 **Key Constraints:**
 
@@ -48,7 +48,7 @@ Added two new steps to each Linux build job (`linux_x64`, `linux_arm64`, `linux_
 Uses the GitHub releases zsync format:
 
 ```text
-gh-releases-zsync|IsmaelMartinez|teams-for-linux|latest|teams-for-linux-*<arch>*.AppImage.zsync
+gh-releases-zsync|IsmaelMartinez|outlook-for-linux|latest|outlook-for-linux-*<arch>*.AppImage.zsync
 ```
 
 | Architecture | ARCH env | Pattern |
@@ -113,7 +113,7 @@ Create a separate workflow triggered after release publication.
 
 ## Related
 
-- Issue: [#2065](https://github.com/IsmaelMartinez/teams-for-linux/issues/2065)
+- Issue: [#2065](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2065)
 - Implementation: `.github/workflows/build.yml`
 
 ## References

@@ -5,7 +5,7 @@
  * for disabled contextIsolation and sandbox features.
  */
 
-// Allowlist of legitimate IPC channels used by Teams for Linux
+// Allowlist of legitimate IPC channels used by Outlook for Linux
 const allowedChannels = new Set([
   // Core application channels
   'config-file-changed',

@@ -41,5 +41,5 @@ Enable in `config.json`:
 ## Related
 
 - Browser override: `app/browser/tools/webauthnOverride.js`
-- Issue: [#802](https://github.com/IsmaelMartinez/teams-for-linux/issues/802)
-- Community validation: [#2332](https://github.com/IsmaelMartinez/teams-for-linux/issues/2332)
+- Issue: [#802](https://github.com/IsmaelMartinez/outlook-for-linux/issues/802)
+- Community validation: [#2332](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2332)

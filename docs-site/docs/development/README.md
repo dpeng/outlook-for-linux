@@ -1,6 +1,6 @@
 # Development Documentation
 
-This directory contains technical documentation for Teams for Linux developers and contributors.
+This directory contains technical documentation for Outlook for Linux developers and contributors.
 
 ## Structure
 
@@ -12,7 +12,7 @@ This directory contains technical documentation for Teams for Linux developers a
 
 ## For Contributors
 
-When working on Teams for Linux:
+When working on Outlook for Linux:
 
 1. **Review token cache architecture** for authentication and secure storage patterns
 2. **Read the security architecture** to understand security trade-offs and requirements
@@ -52,7 +52,7 @@ Follow the project's Copilot Instructions (`.github/copilot-instructions.md`) fo
 
 ### Testing
 
-Teams for Linux uses automated end-to-end testing with Playwright to ensure application stability and prevent regressions.
+Outlook for Linux uses automated end-to-end testing with Playwright to ensure application stability and prevent regressions.
 
 #### Running Tests
 

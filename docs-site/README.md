@@ -1,6 +1,6 @@
-# Teams for Linux Documentation Site
+# Outlook for Linux Documentation Site
 
-This directory contains the Docusaurus-based documentation website for Teams for Linux.
+This directory contains the Docusaurus-based documentation website for Outlook for Linux.
 
 ## Quick Start
 
@@ -63,9 +63,9 @@ docs-site/
 ## GitHub Pages Configuration
 
 The site is configured to deploy to GitHub Pages with:
-- **URL**: `https://ismaelmartinez.github.io/teams-for-linux/`
+- **URL**: `https://ismaelmartinez.github.io/outlook-for-linux/`
 - **Source**: GitHub Actions deployment
-- **Base URL**: `/teams-for-linux/`
+- **Base URL**: `/outlook-for-linux/`
 
 ## Features
 

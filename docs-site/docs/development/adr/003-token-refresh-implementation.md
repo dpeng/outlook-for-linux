@@ -15,7 +15,7 @@ Following the successful implementation of secure token cache storage (ADR-002),
 
 ## Problem
 
-Microsoft Teams tokens have a 24-hour lifespan and are typically refreshed by the native Teams web application approximately 1 hour before expiry. However, for a desktop wrapper application like Teams for Linux, we need the ability to:
+Microsoft Teams tokens have a 24-hour lifespan and are typically refreshed by the native Teams web application approximately 1 hour before expiry. However, for a desktop wrapper application like Outlook for Linux, we need the ability to:
 
 1. **Proactively refresh tokens** at configurable intervals (not just before expiry)
 2. **Force fresh token retrieval** (bypass cached tokens when needed)

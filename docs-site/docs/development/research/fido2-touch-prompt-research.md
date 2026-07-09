@@ -5,12 +5,12 @@ Feasibility explored, not yet scheduled. FIDO2 / WebAuthn support is an opt-in b
 :::
 
 **Date**: 2026-06-09
-**Issue**: [#2631 - FIDO2: missing UI prompt when waiting for authenticator touch](https://github.com/IsmaelMartinez/teams-for-linux/issues/2631)
+**Issue**: [#2631 - FIDO2: missing UI prompt when waiting for authenticator touch](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2631)
 **Status**: Research / feasibility (treated as an enhancement, not a regression)
 
 ## Summary
 
-[#2631](https://github.com/IsmaelMartinez/teams-for-linux/issues/2631) reports that while the authenticator waits for a physical touch (the user-presence check), Teams for Linux shows no on-screen prompt, so the app appears frozen. This is a missing-UX gap in the opt-in FIDO2 beta, not a regression: authentication completes correctly if the user knows to touch the key. Adding a "touch your security key now" prompt is feasible and low-risk, with one honest limitation, namely that we can show the prompt for the duration of the security-key call but cannot pinpoint the exact instant the key starts waiting for touch.
+[#2631](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2631) reports that while the authenticator waits for a physical touch (the user-presence check), Outlook for Linux shows no on-screen prompt, so the app appears frozen. This is a missing-UX gap in the opt-in FIDO2 beta, not a regression: authentication completes correctly if the user knows to touch the key. Adding a "touch your security key now" prompt is feasible and low-risk, with one honest limitation, namely that we can show the prompt for the duration of the security-key call but cannot pinpoint the exact instant the key starts waiting for touch.
 
 ## Current behaviour
 
@@ -25,7 +25,7 @@ During that touch wait the PIN dialog has already closed and no other window is 
 
 ## Why this is a feature request, not a bug
 
-The FIDO2 beta (PR [#2357](https://github.com/IsmaelMartinez/teams-for-linux/pull/2357), [ADR-021](../adr/021-webauthn-fido2-linux.md)) deliberately scoped its UI to PIN entry. A touch prompt was never built. Nothing broke; the flow works for a user who knows to touch the key. The honest framing is a missing-UX polish step in an opt-in beta.
+The FIDO2 beta (PR [#2357](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2357), [ADR-021](../adr/021-webauthn-fido2-linux.md)) deliberately scoped its UI to PIN entry. A touch prompt was never built. Nothing broke; the flow works for a user who knows to touch the key. The honest framing is a missing-UX polish step in an opt-in beta.
 
 ## Feasibility and approach
 

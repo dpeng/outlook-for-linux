@@ -5,7 +5,7 @@ import { execFileSync as run } from "node:child_process";
 import { existsSync } from "node:fs";
 
 const PR_NUMBER = process.env.PR_NUMBER;
-const REPO = process.env.GITHUB_REPOSITORY || "IsmaelMartinez/teams-for-linux";
+const REPO = process.env.GITHUB_REPOSITORY || "IsmaelMartinez/outlook-for-linux";
 const MAINTAINER = (process.env.MAINTAINER_LOGIN || "IsmaelMartinez").toLowerCase();
 
 const THANKS_HEADING = "### Thanks";

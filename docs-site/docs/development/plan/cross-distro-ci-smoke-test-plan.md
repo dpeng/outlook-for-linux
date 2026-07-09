@@ -315,7 +315,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          URL=$(gh release view --repo IsmaelMartinez/teams-for-linux --json assets \
+          URL=$(gh release view --repo IsmaelMartinez/outlook-for-linux --json assets \
             --jq '.assets[] | select(.name | endswith(".AppImage")) | .url' | head -1)
           if [ -z "$URL" ]; then
             echo "::error::Could not resolve AppImage URL from latest release"

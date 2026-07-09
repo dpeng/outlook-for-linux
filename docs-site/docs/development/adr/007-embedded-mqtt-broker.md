@@ -79,7 +79,7 @@ mosquitto_pub -h localhost -t teams/command -m '{"action":"toggle-mute"}'
 
 ✅ Right: Centralized broker, multiple clients
     Mosquitto :1883 (or Home Assistant MQTT add-on)
-        ├─ Teams for Linux (client)
+        ├─ Outlook for Linux (client)
         ├─ Home Assistant (client)
         ├─ Node-RED (client)
         └─ IoT devices (clients)

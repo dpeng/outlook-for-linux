@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-Issue [#2109](https://github.com/IsmaelMartinez/teams-for-linux/issues/2109) (originally [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984)) requested quick access to chat functionality without requiring full navigation through the Teams UI.
+Issue [#2109](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2109) (originally [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984)) requested quick access to chat functionality without requiring full navigation through the Teams UI.
 
 **Investigation Date:** January 2025
 **Requested Features:**
@@ -139,9 +139,9 @@ Use `msteams://` protocol URLs to open Teams native client.
 **Cons:**
 - Opens external application
 - May not work if native Teams not installed
-- Poor experience for Linux users (Teams for Linux IS their Teams client)
+- Poor experience for Linux users (Outlook for Linux IS their Teams client)
 
-**Why rejected:** Users want to stay within Teams for Linux, not open external applications.
+**Why rejected:** Users want to stay within Outlook for Linux, not open external applications.
 
 ## Implementation
 
@@ -189,8 +189,8 @@ Use `msteams://` protocol URLs to open Teams native client.
 
 ## Related
 
-- Issue [#2109](https://github.com/IsmaelMartinez/teams-for-linux/issues/2109) - Quick Chat Access feature request
-- Issue [#1984](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984) - Original multiple windows request
+- Issue [#2109](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2109) - Quick Chat Access feature request
+- Issue [#1984](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984) - Original multiple windows request
 - [ADR 010](010-multiple-windows-support.md) - Multiple windows support rejection
 - Chat Modal Investigation (removed — see git history for original research)
 - Chat Modal Spike Results (removed — Chat API blocked, Deep Links validated)

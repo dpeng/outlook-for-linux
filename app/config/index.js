@@ -11,7 +11,7 @@ function getConfigFilePath(configPath) {
 }
 
 function getSystemConfigFilePath() {
-  return "/etc/teams-for-linux/config.json";
+  return "/etc/outlook-for-linux/config.json";
 }
 
 function checkConfigFileExistence(configPath) {
@@ -42,7 +42,7 @@ function populateConfigObjectFromFile(configObject, configPath) {
       systemConfig = getSystemConfigFile();
       hasSystemConfig = true;
       console.info(
-        "System-wide config loaded from /etc/teams-for-linux/config.json"
+        "System-wide config loaded from /etc/outlook-for-linux/config.json"
       );
     } catch (e) {
       console.warn(

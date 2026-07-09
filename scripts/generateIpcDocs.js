@@ -15,7 +15,7 @@ const { execSync } = require('node:child_process');
 
 const APP_DIR = path.join(__dirname, '..', 'app');
 const DOCS_OUTPUT = path.join(__dirname, '..', 'docs-site', 'docs', 'development', 'ipc-api-generated.md');
-const GITHUB_REPO = 'https://github.com/IsmaelMartinez/teams-for-linux';
+const GITHUB_REPO = 'https://github.com/IsmaelMartinez/outlook-for-linux';
 
 // IPC channel categories based on file location
 const CATEGORIES = {

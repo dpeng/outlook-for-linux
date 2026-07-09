@@ -2,31 +2,13 @@ const { shell } = require("electron");
 const buildProfilesMenu = require("./profilesMenu");
 
 exports = module.exports = (Menus) => ({
-  label: "Teams for Linux",
+  label: "Outlook for Linux",
   submenu: [
     {
       label: "Open",
       accelerator: "ctrl+O",
       click: () => Menus.open(),
     },
-    {
-      label: "Join Meeting",
-      accelerator: "ctrl+J",
-      click: () => Menus.joinMeeting(),
-    },
-    {
-      label: "Return to Teams",
-      click: () => Menus.returnToTeams(),
-    },
-    ...(Menus.configGroup.startupConfig.quickChat?.enabled
-      ? [
-          {
-            label: "Quick Chat",
-            accelerator: Menus.configGroup.startupConfig.quickChat?.shortcut || undefined,
-            click: () => Menus.showQuickChat(),
-          },
-        ]
-      : []),
     {
       label: "Refresh",
       accelerator: "ctrl+R",
@@ -76,14 +58,6 @@ exports = module.exports = (Menus) => ({
       click: () => Menus.about(),
     },
     getHelpMenu(Menus),
-    ...(Menus.configGroup.startupConfig.media?.video?.menuEnabled
-      ? [
-          {
-            type: "separator",
-          },
-          getVideoMenu(Menus),
-        ]
-      : []),
     {
       type: "separator",
     },
@@ -201,7 +175,7 @@ function getHelpMenu(Menus) {
     label: "Help",
     submenu: [
       {
-        label: "Teams for Linux Documentation",
+        label: "Outlook for Linux Documentation",
         click: () => Menus.showDocumentation(),
       },
       {
@@ -210,41 +184,19 @@ function getHelpMenu(Menus) {
       {
         label: "Online Documentation",
         click: () =>
-          shell.openExternal("https://support.office.com/en-us/teams"),
+          shell.openExternal("https://support.microsoft.com/outlook"),
       },
       {
         label: "Github Project",
         click: () =>
           shell.openExternal(
-            "https://github.com/IsmaelMartinez/teams-for-linux"
+            "https://github.com/dpeng/outlook-for-linux"
           ),
       },
       {
-        label: "Microsoft Teams Support",
+        label: "Microsoft Outlook Support",
         click: () =>
-          shell.openExternal(
-            "https://answers.microsoft.com/en-us/msteams/forum"
-          ),
-      },
-    ],
-  };
-}
-
-function getVideoMenu(Menus) {
-  return {
-    label: "Video",
-    submenu: [
-      {
-        label: "Force enable PiP mode for shared screen",
-        click: () => {
-          Menus.forcePip();
-        },
-      },
-      {
-        label: "Force toggle controls for all video elements",
-        click: () => {
-          Menus.forceVideoControls();
-        },
+          shell.openExternal("https://answers.microsoft.com/en-us/outlook_com/forum"),
       },
     ],
   };

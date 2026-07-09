@@ -1,16 +1,16 @@
 # Microsoft Graph API Integration Research
 
 :::info Phase 1 Shipped
-Graph API integration is in production since v2.7.4. Token acquisition, People API, and calendar/mail endpoints are used by Quick Chat Access (PR [#2119](https://github.com/IsmaelMartinez/teams-for-linux/pull/2119)). Phase 2+ features remain unstarted — awaiting user requests.
+Graph API integration is in production since v2.7.4. Token acquisition, People API, and calendar/mail endpoints are used by Quick Chat Access (PR [#2119](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2119)). Phase 2+ features remain unstarted — awaiting user requests.
 :::
 
-**Issue**: [#1832](https://github.com/IsmaelMartinez/teams-for-linux/issues/1832)
+**Issue**: [#1832](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1832)
 **Status**: ✅ Phase 1 in production (v2.7.4) | Phase 2+ awaiting user feedback
 **Date**: 2025-11-21
 
 ## Overview
 
-This document tracks the research and implementation of Microsoft Graph API integration for Teams for Linux, enabling access to calendar, mail, presence, and user profile data using existing Teams authentication.
+This document tracks the research and implementation of Microsoft Graph API integration for Outlook for Linux, enabling access to calendar, mail, presence, and user profile data using existing Teams authentication.
 
 ## Implementation Status
 
@@ -184,5 +184,5 @@ The presence endpoint requires explicit consent that the Teams web app doesn't h
 ## References
 
 - [Microsoft Graph API Documentation](https://docs.microsoft.com/en-us/graph/)
-- [Issue #1832](https://github.com/IsmaelMartinez/teams-for-linux/issues/1832)
-- [Issue #1959 - Architecture Modernization](https://github.com/IsmaelMartinez/teams-for-linux/issues/1959)
+- [Issue #1832](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1832)
+- [Issue #1959 - Architecture Modernization](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1959)

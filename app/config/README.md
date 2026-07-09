@@ -6,7 +6,7 @@ Handles loading configuration from `config.json` and parsing command-line argume
 
 View all available options:
 ```bash
-teams-for-linux --help
+outlook-for-linux --help
 ```
 
 ## Configuration

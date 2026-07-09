@@ -1,10 +1,10 @@
 # Custom Notification System Research & Implementation Plan
 
 :::warning Phase 2 Dropped
-MVP shipped in v2.6.16. Phase 2 (chat, calendar, activity notifications) was attempted but dropped — notifications worked on the maintainer's machine but the user reported receiving no notifications at all. It remains unclear whether the implementation failed in their environment or whether the user's expectations differed from what was delivered. See [#2108](https://github.com/IsmaelMartinez/teams-for-linux/issues/2108), [#2039](https://github.com/IsmaelMartinez/teams-for-linux/issues/2039).
+Initial version shipped in v2.6.16. Phase 2 (chat, calendar, activity notifications) was attempted but dropped — notifications worked on the maintainer's machine but the user reported receiving no notifications at all. It remains unclear whether the implementation failed in their environment or whether the user's expectations differed from what was delivered. See [#2108](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2108), [#2039](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2039).
 :::
 
-**Status:** MVP Complete (v2.6.16) | Phase 2 Dropped
+**Status:** Initial version complete (v2.6.16) | Phase 2 Dropped
 **Date:** November 2025
 **Issue:** Investigation for alternative notification modal system
 **Author:** Claude AI Assistant
@@ -14,11 +14,11 @@ MVP shipped in v2.6.16. Phase 2 (chat, calendar, activity notifications) was att
 
 ## Executive Summary
 
-This document tracks the development of a **custom notification modal system** for Teams for Linux as an alternative to OS-level notifications. The MVP (toast notifications) has been successfully implemented and released in v2.6.16.
+This document tracks the development of a **custom notification modal system** for Outlook for Linux as an alternative to OS-level notifications. The initial version (toast notifications) has been successfully implemented and released in v2.6.16.
 
 ### Current Status
 
-- ✅ **MVP Complete** (v2.6.16): Toast notifications with auto-dismiss and click-to-focus
+- ✅ **Initial version complete** (v2.6.16): Toast notifications with auto-dismiss and click-to-focus
 - ✅ **Documentation**: Configuration and usage guides updated
 - ❌ **Phase 2 Dropped**: Chat/calendar/activity notification routing did not work for the requesting user
 
@@ -26,17 +26,17 @@ This document tracks the development of a **custom notification modal system** f
 
 - Custom BrowserWindow approach works well following the `IncomingCallToast` pattern for meeting notifications
 - Phase 2 notification routing worked reliably on the maintainer's machine during development and testing
-- The requesting user ([#2039](https://github.com/IsmaelMartinez/teams-for-linux/issues/2039)) reported receiving no notifications, or their expectations may have differed from what the implementation delivered
+- The requesting user ([#2039](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2039)) reported receiving no notifications, or their expectations may have differed from what the implementation delivered
 - Root cause is unclear: could be environment-specific (desktop environment, notification daemon, Teams account type) or a mismatch between what was built and what the user needed
-- Issue [#2039](https://github.com/IsmaelMartinez/teams-for-linux/issues/2039) closed as not feasible given the ambiguity
+- Issue [#2039](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2039) closed as not feasible given the ambiguity
 
 ---
 
-## 1. MVP Implementation Summary (Completed)
+## 1. initial version Implementation Summary (Completed)
 
 ### What Was Implemented
 
-The MVP delivered toast notifications as an opt-in alternative (`notificationMethod: "custom"`):
+The initial version delivered toast notifications as an opt-in alternative (`notificationMethod: "custom"`):
 
 **Files Created:**
 ```
@@ -129,7 +129,7 @@ Before proceeding with Phase 2, evaluate:
 
 ### Recommendation
 
-**Wait for user feedback** before implementing Phase 2. The MVP provides a working alternative for users with notification issues. Additional features should be driven by actual user needs rather than speculative development.
+**Wait for user feedback** before implementing Phase 2. The initial version provides a working alternative for users with notification issues. Additional features should be driven by actual user needs rather than speculative development.
 
 **Suggested approach:**
 1. Monitor GitHub issues for 2-4 weeks post-release
@@ -224,7 +224,7 @@ Users reported OS-level notifications don't work reliably, especially on Linux:
 ### Why Custom BrowserWindow Approach
 
 - **No viable third-party libraries** - All existing packages are 5-9 years old
-- **React libraries incompatible** - Teams for Linux is an Electron wrapper, not a React app
+- **React libraries incompatible** - Outlook for Linux is an Electron wrapper, not a React app
 - **Proven pattern** - `IncomingCallToast` demonstrates this approach works
 - **Full control** - Consistent experience across all platforms
 
@@ -250,7 +250,7 @@ Users reported OS-level notifications don't work reliably, especially on Linux:
 - **[Microsoft Fluent Design](https://fluent2.microsoft.design/)**
 
 ### Related Issues
-- **#1979** - Implement notifications modal MVP
+- **#1979** - Implement notifications modal initial version
 - **#1981** - Add custom notification system to docs
 - **#1935** - Build notification modal component research
 
@@ -258,7 +258,7 @@ Users reported OS-level notifications don't work reliably, especially on Linux:
 
 ## 8. Conclusion
 
-The custom notification system MVP is complete and provides a working alternative for users experiencing OS notification issues.
+The custom notification system initial version is complete and provides a working alternative for users experiencing OS notification issues.
 
 **Lessons Learned:**
 
@@ -268,10 +268,10 @@ Phase 2 highlighted the difficulty of testing notification routing end-to-end. T
 
 If custom notifications beyond meeting toasts are requested again by a different user, the recommended approach would be to first establish a shared understanding of what notifications the user expects, then provide a debug build with diagnostic logging so the user can report exactly what events fire in their environment before writing any routing logic.
 
-The shared notification pipeline (sound + native delivery) continues to receive targeted fixes outside this Phase 2 scope. The most recent in flight is [PR #2414](https://github.com/IsmaelMartinez/teams-for-linux/pull/2414) addressing [#2411](https://github.com/IsmaelMartinez/teams-for-linux/issues/2411) (double notification sound and missing dismiss event). Those fixes touch `app/notifications/service.js`, not the Phase 2 routing logic, and do not change the conclusion above.
+The shared notification pipeline (sound + native delivery) continues to receive targeted fixes outside this Phase 2 scope. The most recent in flight is [PR #2414](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2414) addressing [#2411](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2411) (double notification sound and missing dismiss event). Those fixes touch `app/notifications/service.js`, not the Phase 2 routing logic, and do not change the conclusion above.
 
 ---
 
-**Document Status:** ✅ MVP Complete | ❌ Phase 2 Dropped
+**Document Status:** ✅ Initial version complete | ❌ Phase 2 Dropped
 **Current Version:** v2.8.1 (preparing v2.9.0)
 **Last Updated:** 2026-05-06

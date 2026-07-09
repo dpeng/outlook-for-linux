@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Documentation Window module provides in-app access to the Teams for Linux documentation hosted at https://ismaelmartinez.github.io/teams-for-linux/.
+The Documentation Window module provides in-app access to the Outlook for Linux documentation hosted at https://ismaelmartinez.github.io/outlook-for-linux/.
 
 ## Features
 
@@ -17,7 +17,7 @@ The Documentation Window module provides in-app access to the Teams for Linux do
 
 The documentation window is automatically initialized when the Menus class is instantiated. Users can access it via:
 
-1. **Menu**: Help > Teams for Linux Documentation
+1. **Menu**: Help > Outlook for Linux Documentation
 
 ## Implementation Details
 

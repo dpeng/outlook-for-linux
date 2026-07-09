@@ -25,7 +25,7 @@ const path = require("node:path");
 
 // Default configuration for the screen sharing thumbnail preview (avoid magic values)
 const DEFAULT_SCREEN_SHARING_THUMBNAIL_CONFIG = {
-  enabled: true,
+  enabled: false,
   alwaysOnTop: true,
 };
 
@@ -36,7 +36,7 @@ let isControlPressed = false;
 // Menus instance can build the Profiles submenu and react to its events.
 let profilesManagerRef = null;
 // Counter for tracking about:blank navigation attempts to handle authentication flows.
-// Teams sometimes navigates to about:blank during SSO/auth redirects, and we need to
+// Microsoft web apps sometimes navigate to about:blank during SSO/auth redirects, and we need to
 // intercept these and handle them in a hidden window to complete the auth process.
 let aboutBlankRequestCount = 0;
 let config;
@@ -159,7 +159,7 @@ function createScreenSharePreviewWindow() {
   console.debug("[SCREEN_SHARE_DIAG] Creating new preview window", {
     dimensions: "320x180",
     alwaysOnTop: thumbnailConfig.alwaysOnTop || false,
-    partition: "persist:teams-for-linux-session"
+    partition: "persist:outlook-for-linux-session"
   });
 
   const newPreviewWindow = new BrowserWindow({
@@ -178,7 +178,7 @@ function createScreenSharePreviewWindow() {
         "screenSharing",
         "previewWindowPreload.js"
       ),
-      partition: "persist:teams-for-linux-session",
+      partition: "persist:outlook-for-linux-session",
     },
   });
 
@@ -210,7 +210,7 @@ function createScreenSharePreviewWindow() {
   newPreviewWindow.on("focus", () => {
     console.debug("[SCREEN_SHARE_DIAG] Preview window gained focus", {
       windowId: windowId,
-      potentialIssue: "Focus on preview might interfere with main Teams window"
+      potentialIssue: "Focus on preview might interfere with main app window"
     });
   });
 
@@ -233,10 +233,10 @@ function createScreenSharePreviewWindow() {
   });
 }
 
-// Microsoft Cloud App Security proxy suffix. Tenants that route Teams
+// Microsoft Cloud App Security proxy suffix. Tenants that route Microsoft 365 apps
 // through Defender for Cloud Apps (MCAS) load and store cookies at
 // `*.mcas.ms` rather than the underlying Microsoft domain. Strip the
-// suffix before matching against AUTH_DOMAINS / TEAMS_DOMAINS so the
+// suffix before matching against AUTH_DOMAINS so the
 // proxied flavour is treated the same as the canonical hostname.
 const MCAS_SUFFIX = '.mcas.ms';
 function stripMcasSuffix(hostname) {
@@ -249,8 +249,10 @@ function stripMcasSuffix(hostname) {
 const AUTH_DOMAINS = [
   'login.microsoftonline.com',
   'login.microsoft.com',
-  'teams.microsoft.com',
-  'teams.cloud.microsoft',
+  'outlook.office.com',
+  'outlook.office365.com',
+  'outlook.live.com',
+  'outlook.cloud.microsoft',
   'microsoft.com',
   'office.com',
   'office365.com',
@@ -278,7 +280,7 @@ const AUTH_COOKIE_NAMES = new Set([
 // account chooser stays prefilled after session expiry (issue #2364).
 const PRESERVE_ON_RECOVERY = new Set(['ESTSAUTHPERSISTENT']);
 
-// localStorage key patterns for MSAL/Teams auth tokens
+// localStorage key patterns for MSAL/Microsoft auth tokens
 const AUTH_LOCAL_STORAGE_PATTERNS = [
   'tmp.auth.v1.', 'refresh_token', 'msal.token', 'msal.',
   'EncryptionKey', 'authSessionId', 'LogoutState',
@@ -349,7 +351,7 @@ async function cleanExpiredAuthCookies(windowSession, forceCleanAll = false) {
 // (the lowercase form thrown by token warming as an unhandled rejection — wired
 // into detection by the unhandled-rejection handler in app/index.js).
 const AUTH_FAILURE_PATTERNS = ['InteractionRequired', 'interaction_required'];
-// Opt-in, correlation-only auth-failure signature. The Teams worker can die with
+// Opt-in, correlation-only auth-failure signature. Microsoft web workers can die with
 // an uncaught "UPR: <reason>" error, and a genuinely stale session emits these
 // (sometimes without ever logging InteractionRequired, #2480). But the worker
 // emits the same "UPR:" shape for routine transient failures (pinned channels,
@@ -361,8 +363,14 @@ const AUTH_FAILURE_PATTERNS = ['InteractionRequired', 'interaction_required'];
 // clear-and-reload on its own. Recovery from a UPR happens only through an
 // explicit user action (the banner click, or the mid-call prompt).
 const OPT_IN_AUTH_FAILURE_PATTERNS = ['Uncaught Error: UPR:'];
-// Only trust auth failure signals from Teams/Microsoft origins
-const TRUSTED_AUTH_SOURCES = ['teams.cloud.microsoft', 'teams.microsoft.com', 'login.microsoftonline.com'];
+// Only trust auth failure signals from Outlook/Microsoft origins
+const TRUSTED_AUTH_SOURCES = [
+  'outlook.office.com',
+  'outlook.office365.com',
+  'outlook.live.com',
+  'outlook.cloud.microsoft',
+  'login.microsoftonline.com',
+];
 // Loop guard for the automatic clear-and-reload. A cooldown rather than a
 // single-shot flag: a long-running app can hit a second stale session hours
 // after the first recovery (observed in the field: recovery at 10:55, the
@@ -415,7 +423,7 @@ function maybeScheduleAuthRecovery(message, sourceId) {
   // The whole in-app auth-recovery feature (#2622) is opt-in while it
   // stabilises: with auth.reauthRecovery.enabled off, renderer auth-failure
   // signals are ignored entirely and the app keeps its pre-#2622 behaviour
-  // (Teams' own stale "sign in again" banner stays up; the user relaunches to
+  // (the web app's own stale "sign in again" banner stays up; the user relaunches to
   // re-authenticate). The separate #2296 startup/after-sleep cookie cleaning is
   // unaffected and stays always-on.
   if (!config?.auth?.reauthRecovery?.enabled) return;
@@ -463,7 +471,7 @@ function scheduleAuthRecovery() {
   lastAuthRecoveryAt = Date.now();
   console.info('[AUTH_RECOVERY] Auth failure detected, scheduling recovery');
 
-  // Delay to let Teams' own retry mechanism attempt recovery first
+  // Delay to let Outlook's own retry mechanism attempt recovery first
   setTimeout(
     () =>
       triggerAuthRecovery().catch((err) => {
@@ -527,9 +535,9 @@ async function promptMidCallReauth(force) {
     const { response } = await dialog.showMessageBox(window, {
       type: 'warning',
       title: 'Sign-in required',
-      message: 'Teams needs you to sign in again.',
+      message: 'Outlook needs you to sign in again.',
       detail:
-        'Chat and other features may stop updating until you sign in again. ' +
+        'Mail and calendar features may stop updating until you sign in again. ' +
         'Signing in now reloads the app and ends your current call.',
       buttons: ['Sign in now', 'After the call', 'Not now'],
       defaultId: 1,
@@ -675,7 +683,10 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
   });
 
   window = await browserWindowManager.createWindow();
-  streamSelector = new StreamSelector(window);
+  const screenSharingEnabled = config.screenSharing?.enabled === true;
+  if (screenSharingEnabled) {
+    streamSelector = new StreamSelector(window);
+  }
 
   // Restrict WebRTC ICE candidate gathering to the interface with the default
   // route, preventing secondary interfaces (e.g. an ethernet adapter with no
@@ -686,45 +697,49 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
     window.webContents.setWebRTCIPHandlingPolicy(config.network.webRTCIPHandlingPolicy);
   }
 
-  bindDisplayMediaHandler(window.webContents.session);
+  if (screenSharingEnabled) {
+    bindDisplayMediaHandler(window.webContents.session);
+  }
 
   // #2534: when the renderer signals that screen sharing has started, make
   // sure the preview window is open and connect the two renderers with a
-  // direct MessagePort. The Teams-side script pumps VideoFrames from the
+  // direct MessagePort. The renderer-side script pumps VideoFrames from the
   // active screen-share track through it; the preview window reconstructs the
   // stream on the other end via MediaStreamTrackGenerator. This avoids a
   // second getUserMedia/portal call (which on Wayland needs a PipeWire token
-  // we cannot reuse) and means one capture feeds both Teams and the preview.
+  // we cannot reuse) and means one capture feeds both the web app and the preview.
   // The 'screen-sharing-started' / 'screen-sharing-stopped' channels are a
   // broadcast: ScreenSharingService updates internal state, MQTTMediaStatusService
   // publishes to the broker, and this listener wires the MessagePort. Adding
   // another ipcMain.on here is the established pattern, not a duplication.
-  ipcMain.on("screen-sharing-started", () => {
-    if (!window || window.isDestroyed()) return;
-    createScreenSharePreviewWindow();
-    const previewWindow = screenSharingService.getPreviewWindow();
-    if (!previewWindow || previewWindow.isDestroyed()) {
-      console.debug("[SCREEN_SHARE_DIAG] No preview window after creation (thumbnail disabled or already destroyed) - skipping port wiring");
-      return;
-    }
-    const postPorts = () => {
-      try {
-        const { port1, port2 } = new MessageChannelMain();
-        window.webContents.postMessage("screen-share-port", null, [port1]);
-        previewWindow.webContents.postMessage("screen-share-port", null, [port2]);
-        console.debug("[SCREEN_SHARE_DIAG] Posted MessagePort to Teams renderer and preview window");
-      } catch (error) {
-        console.error("[SCREEN_SHARE_DIAG] Failed to post MessagePort", {
-          error: error.message,
-        });
+  if (screenSharingEnabled) {
+    ipcMain.on("screen-sharing-started", () => {
+      if (!window || window.isDestroyed()) return;
+      createScreenSharePreviewWindow();
+      const previewWindow = screenSharingService.getPreviewWindow();
+      if (!previewWindow || previewWindow.isDestroyed()) {
+        console.debug("[SCREEN_SHARE_DIAG] No preview window after creation (thumbnail disabled or already destroyed) - skipping port wiring");
+        return;
       }
-    };
-    if (previewWindow.webContents.isLoading()) {
-      previewWindow.webContents.once("did-finish-load", postPorts);
-    } else {
-      postPorts();
-    }
-  });
+      const postPorts = () => {
+        try {
+          const { port1, port2 } = new MessageChannelMain();
+          window.webContents.postMessage("screen-share-port", null, [port1]);
+          previewWindow.webContents.postMessage("screen-share-port", null, [port2]);
+          console.debug("[SCREEN_SHARE_DIAG] Posted MessagePort to renderer and preview window");
+        } catch (error) {
+          console.error("[SCREEN_SHARE_DIAG] Failed to post MessagePort", {
+            error: error.message,
+          });
+        }
+      };
+      if (previewWindow.webContents.isLoading()) {
+        previewWindow.webContents.once("did-finish-load", postPorts);
+      } else {
+        postPorts();
+      }
+    });
+  }
 
   // Initialize connection manager
   connectionManager = new ConnectionManager();
@@ -736,7 +751,7 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
 
   addEventHandlers();
 
-  // Clean expired auth cookies before loading Teams to prevent the
+  // Clean expired auth cookies before loading Outlook to prevent the
   // "We need you to sign in again" stale banner (#2296)
   await cleanExpiredAuthCookies(window.webContents.session);
 
@@ -744,7 +759,7 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
   // correlation survives app restarts (the broken session does).
   lastAuthFailureSignalAt = Number(appConfig.settingsStore.get(AUTH_SIGNAL_STORE_KEY)) || 0;
 
-  // Monitor renderer auth-failure signals. When Teams can't refresh tokens
+  // Monitor renderer auth-failure signals. When Outlook can't refresh tokens
   // silently (e.g., after overnight idle), it logs InteractionRequired. We
   // detect this, clear stale auth state, and reload to force a clean
   // interactive login. Detection itself lives in maybeScheduleAuthRecovery
@@ -899,7 +914,7 @@ function onDidFinishLoad() {
   // navigator.mediaDevices are unavailable.
   const currentUrl = window.webContents.getURL();
   if (!currentUrl.startsWith("https://")) {
-    console.debug(`[CONNECTION] Skipping script injection on non-Teams page: ${currentUrl.split("?")[0]}`);
+    console.debug(`[CONNECTION] Skipping script injection on non-Outlook page: ${currentUrl.split("?")[0]}`);
     return;
   }
 
@@ -963,7 +978,7 @@ function onDidFrameFinishLoad(
   console.debug("did-frame-finish-load", event, isMainFrame);
 
   if (isMainFrame) {
-    return; // We want to insert CSS only into the Teams V2 content iframe
+    return; // We want to insert CSS only into the web-app content iframe
   }
 
   const wf = webFrameMain.fromId(frameProcessId, frameRoutingId);
@@ -985,18 +1000,12 @@ function restoreWindow() {
 }
 
 /**
- * Processes command line arguments to extract Teams URLs and protocol handlers.
- * Handles both msteams:// protocol links and HTTPS URLs that match the Teams domain pattern.
- * This enables deep linking into Teams conversations, meetings, and channels.
+ * Processes command line arguments to extract supported Outlook Web URLs.
  *
  * @param {string[]} args - Command line arguments to process
  * @returns {string|null} Processed URL to navigate to, or null if no valid URL found
  */
 function processArgs(args) {
-  // Legacy Teams protocol format: msteams:/l/meetup-join/...
-  const v1msTeams = new RegExp(config.msTeamsProtocols.v1);
-  // Modern Teams protocol format: msteams://teams.microsoft.com/l/...
-  const v2msTeams = new RegExp(config.msTeamsProtocols.v2);
   console.debug("processArgs:", args);
   for (const arg of args) {
     console.debug(
@@ -1009,24 +1018,14 @@ function processArgs(args) {
       window.show();
       return arg;
     }
-    if (v1msTeams.test(arg)) {
-      console.debug("A url argument received with msteams v1 protocol");
-      window.show();
-      return config.url + arg.substring(8, arg.length);
-    }
-    if (v2msTeams.test(arg)) {
-      console.debug("A url argument received with msteams v2 protocol");
-      window.show();
-      return arg.replace("msteams", "https");
-    }
   }
 }
 
-// Microsoft telemetry / beacon hosts that are not required for Teams to
+// Microsoft telemetry / beacon hosts that are not required for Outlook to
 // function. Blocking these at webRequest cancels both the network traffic
 // and the downstream sub-frame failure logs they would otherwise produce
 // in restricted-network environments. Kept deliberately narrow: anything
-// Teams needs to function (teams.cloud.microsoft, *.office.net,
+// Outlook needs to function (outlook.office.com, *.office.net,
 // login.microsoftonline.com, *.trafficmanager.net) is excluded. Start
 // with this initial set and expand as new hosts are confirmed safe to
 // drop; any new entry must also satisfy `MS_TELEMETRY_FAST_PATH` below
@@ -1112,28 +1111,30 @@ function onBeforeRequestHandler(details, callback) {
   }
 }
 
-// Teams domains whose enforcing CSP we never touch
-const TEAMS_DOMAINS = [
-  'teams.cloud.microsoft',
-  'teams.microsoft.com',
-  'teams.live.com',
-  'statics.teams.cdn.office.net',
+// Outlook domains whose enforcing CSP we never touch.
+const OUTLOOK_DOMAINS = [
+  'outlook.office.com',
+  'outlook.office365.com',
+  'outlook.live.com',
+  'outlook.cloud.microsoft',
+  'res.cdn.office.net',
+  'substrate.office.com',
 ];
 
 /**
- * Checks whether a URL belongs to a Teams domain.
+ * Checks whether a URL belongs to an Outlook domain.
  * Also handles Microsoft Cloud App Security (MCAS) proxy suffix.
  */
-function isTeamsDomain(url) {
+function isOutlookDomain(url) {
   try {
     const hostname = stripMcasSuffix(new URL(url).hostname);
-    return TEAMS_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d));
+    return OUTLOOK_DOMAINS.some(d => hostname === d || hostname.endsWith('.' + d));
   } catch {
     return false;
   }
 }
 
-// Microsoft Identity Platform login hostnames. When Teams opens a popup to
+// Microsoft Identity Platform login hostnames. When Outlook opens a popup to
 // one of these it is requesting interactive re-authentication (e.g. the
 // "sign in again" banner). Kept separate from AUTH_DOMAINS because that
 // list includes broad domains used for cookie scoping; this narrower set
@@ -1146,7 +1147,7 @@ const AUTH_LOGIN_DOMAINS = [
 
 /**
  * Returns true when the URL targets a Microsoft Identity Platform login page.
- * Used to intercept re-auth popups that Teams opens from the "sign in again"
+ * Used to intercept re-auth popups that Outlook opens from the "sign in again"
  * banner so they complete inside the Electron app instead of opening an
  * external browser window that Electron cannot observe.
  */
@@ -1160,7 +1161,7 @@ function isAuthLoginUrl(url) {
 }
 
 /**
- * Strips report-only CSP headers for non-Teams domains (#2326).
+ * Strips report-only CSP headers for non-Outlook domains (#2326).
  *
  * With contextIsolation disabled the shared V8 context erroneously
  * enforces report-only policies as blocking, breaking SSO flows
@@ -1168,7 +1169,7 @@ function isAuthLoginUrl(url) {
  * Report-only headers are safe to strip since they should never block.
  */
 function stripCspForAuthPages(responseHeaders, url) {
-  if (isTeamsDomain(url)) return;
+  if (isOutlookDomain(url)) return;
 
   for (const key of Object.keys(responseHeaders)) {
     if (key.toLowerCase() === 'content-security-policy-report-only') {
@@ -1237,12 +1238,12 @@ function onNewWindow(details) {
     aboutBlankRequestCount += 1;
     return { action: "deny" };
   } else if (isAuthLoginUrl(details.url) && shouldInterceptAuthPopup()) {
-    // Teams is opening a direct-URL Microsoft login popup from a session
+    // Outlook is opening a direct-URL Microsoft login popup from a session
     // that recently emitted auth-failure signals (see
     // shouldInterceptAuthPopup). Opening login.microsoftonline.com in an
     // external browser completes auth there but Electron never receives the
     // result, so trigger in-app recovery instead: clear stale auth state and
-    // reload Teams for a fresh interactive sign-in within the app. (The
+    // reload Outlook for a fresh interactive sign-in within the app. (The
     // stale-banner popup is usually about:blank-shaped and is handled in
     // onBeforeRequestHandler; this branch covers the direct-URL form.)
     // Login popups without a correlated failure signal (initial sign-in,
@@ -1298,7 +1299,7 @@ function addEventHandlers() {
         cleaned: result.cleaned,
         expired: result.expired,
       });
-      // Let Teams' own MSAL retry handle re-authentication rather than
+      // Let Outlook's own MSAL retry handle re-authentication rather than
       // triggering full recovery which clears all auth state (issue #2364)
     }
   });
@@ -1349,7 +1350,7 @@ function onBeforeInput(event, input) {
     return;
   }
 
-  // Keyboard history navigation, independent of the Teams DOM. The injected
+  // Keyboard history navigation, independent of the Outlook DOM. The injected
   // on-screen back/forward controls (navigationButtons.js) break whenever
   // Microsoft restructures the top bar (#2671); these accelerators are the
   // layout-independent fallback. Keys are platform-specific: on macOS,

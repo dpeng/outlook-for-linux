@@ -2,7 +2,7 @@
 
 ## Release Cadence
 
-Teams for Linux does not follow a fixed release schedule. Instead, releases are driven by what has changed and how urgent those changes are. The general approach is to batch changes into meaningful releases while keeping users safe from security issues and regressions.
+Outlook for Linux does not follow a fixed release schedule. Instead, releases are driven by what has changed and how urgent those changes are. The general approach is to batch changes into meaningful releases while keeping users safe from security issues and regressions.
 
 ### What triggers a release
 
@@ -72,7 +72,7 @@ Going forward the project follows standard [semantic versioning](https://semver.
 
 ### Releasing (merge the Release PR)
 
-1. Go to the [Pull Requests](https://github.com/IsmaelMartinez/teams-for-linux/pulls) page
+1. Go to the [Pull Requests](https://github.com/IsmaelMartinez/outlook-for-linux/pulls) page
 2. Find the auto-generated Release PR (titled like "chore(main): release X.Y.Z")
 3. Review the changelog and version bump
 4. Merge the PR
@@ -101,7 +101,7 @@ Then:
    - This triggers Flatpak
    - This triggers the **Snap Release** workflow, which builds and publishes the release version to the **candidate** channel
 2. Test the Snap candidate version
-3. Manually promote Snap candidate → stable: `snapcraft release teams-for-linux <revision> stable`
+3. Manually promote Snap candidate → stable: `snapcraft release outlook-for-linux <revision> stable`
 
 :::info Snap Channels
 - **edge** — Every push to main. Versioned with commit SHA suffix (e.g., `2.7.5-edge.g1a2b3c4`)

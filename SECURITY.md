@@ -11,10 +11,10 @@ Only the latest release in the 2.7.x series receives security updates. Users sho
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Teams for Linux, please report it responsibly:
+If you discover a security vulnerability in Outlook for Linux, please report it responsibly:
 
 1. **Do not** open a public GitHub issue for security vulnerabilities.
-2. Instead, use [GitHub's private vulnerability reporting](https://github.com/IsmaelMartinez/teams-for-linux/security/advisories/new) to submit details confidentially.
+2. Instead, use [GitHub's private vulnerability reporting](https://github.com/IsmaelMartinez/outlook-for-linux/security/advisories/new) to submit details confidentially.
 3. Include a description of the vulnerability, steps to reproduce, and any potential impact.
 4. You can expect an initial response within 7 days.
 5. We will work with you to understand the issue and coordinate a fix and disclosure timeline.

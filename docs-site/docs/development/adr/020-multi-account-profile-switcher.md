@@ -10,7 +10,7 @@ id: 020-multi-account-profile-switcher
 
 ## Context
 
-Community demand for hosting multiple Microsoft 365 tenants inside a single running app instance has been consistent for 7+ years across issues [#72](https://github.com/IsmaelMartinez/teams-for-linux/issues/72), [#438](https://github.com/IsmaelMartinez/teams-for-linux/issues/438), [#1656](https://github.com/IsmaelMartinez/teams-for-linux/issues/1656), and [#1830](https://github.com/IsmaelMartinez/teams-for-linux/issues/1830). Users — typically consultants, MSPs, and multi-org employees — need to be logged into 3–10 tenants during a working day, and want parity with the official Windows Teams client's top-right avatar account switcher.
+Community demand for hosting multiple Microsoft 365 tenants inside a single running app instance has been consistent for 7+ years across issues [#72](https://github.com/IsmaelMartinez/outlook-for-linux/issues/72), [#438](https://github.com/IsmaelMartinez/outlook-for-linux/issues/438), [#1656](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1656), and [#1830](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1830). Users — typically consultants, MSPs, and multi-org employees — need to be logged into 3–10 tenants during a working day, and want parity with the official Windows Teams client's top-right avatar account switcher.
 
 **Investigation Date:** 2026-04-16
 
@@ -22,7 +22,7 @@ Community demand for hosting multiple Microsoft 365 tenants inside a single runn
 - Higher total memory than a shared process
 - No in-app UX — the user's mental model is "six separate apps"
 
-**Distinction from ADR-010:** ADR-010 rejected **multiple `BrowserWindow`s for a single account** (pop-out chats, floating meetings). This ADR proposes **multiple accounts inside a single `BrowserWindow`** — a fundamentally different problem with a compatible solution. The maintainer anticipated this distinction in [#72](https://github.com/IsmaelMartinez/teams-for-linux/issues/72):
+**Distinction from ADR-010:** ADR-010 rejected **multiple `BrowserWindow`s for a single account** (pop-out chats, floating meetings). This ADR proposes **multiple accounts inside a single `BrowserWindow`** — a fundamentally different problem with a compatible solution. The maintainer anticipated this distinction in [#72](https://github.com/IsmaelMartinez/outlook-for-linux/issues/72):
 
 > "Ideally we use BrowserViews inside one single BrowserWindow (to avoid memory going up to the roof), and have some sort of tabs"
 
@@ -43,7 +43,7 @@ The `BrowserView` API has since been superseded by `WebContentsView` (Electron 3
 
 2. **Modern, supported Electron API.** `WebContentsView` was introduced in Electron 30 and is the current recommendation for in-window embedded web content, replacing the deprecated `BrowserView` and `<webview>` tag. It is stable in the Electron 41 baseline this project runs on.
 
-3. **Proven production pattern.** ElectronIM (`manusa/electronim`, Apache-2.0) and Ferdium both ship this exact model. ElectronIM's `service-manager` is the closest reference implementation for teams-for-linux's architecture.
+3. **Proven production pattern.** ElectronIM (`manusa/electronim`, Apache-2.0) and Ferdium both ship this exact model. ElectronIM's `service-manager` is the closest reference implementation for outlook-for-linux's architecture.
 
 4. **Keeps sessions warm like the native Teams Windows client.** Switching is show/hide, not reload — matches Microsoft's own account-switcher UX so closely that users do not need a tutorial.
 
@@ -104,7 +104,7 @@ In Phase 1, only four fields live on each `Profile` record in `settingsStore`; e
 
 Tray behavior, tray icon, notification sound, MQTT broker, custom background service URL, global shortcuts, proxy server, certificate fingerprints, custom user agent, all Electron command-line flags (`--user-data-dir`, `--class`, `--appIcon`, etc.).
 
-This is a conscious MVP narrowing. Making any of the shared fields per-profile is deferred to a future phase if user feedback asks for it.
+This is a conscious initial version narrowing. Making any of the shared fields per-profile is deferred to a future phase if user feedback asks for it.
 
 ## User Experience
 
@@ -228,7 +228,7 @@ ADR-010 raised seven concrete blockers for multi-window support. Each is resolve
 
 5. **"How to handle call state across windows?"** → There is still only one window. Call state and the power save blocker (`app/mainAppWindow/browserWindowManager.js:237-259`) live on the active `WebContentsView`. Microsoft's own Windows client does not support concurrent meetings across tenants, so there is no new semantic to invent.
 
-6. **"How to manage screen sharing state?"** → Active view only, matching today. The in-app source picker (`setDisplayMediaRequestHandler`) is rebound on each profile partition session (shipped in #2533). The screen-preview window keeps its own `persist:teams-for-linux-session` partition, but this is no longer a cross-profile concern: since #2534 the preview no longer loads Teams content or re-captures the screen — it renders `ImageBitmap` snapshots forwarded from the active profile's renderer over a `MessagePort`, so it carries no Teams session to leak (see "Shared-state audit").
+6. **"How to manage screen sharing state?"** → Active view only, matching today. The in-app source picker (`setDisplayMediaRequestHandler`) is rebound on each profile partition session (shipped in #2533). The screen-preview window keeps its own `persist:outlook-for-linux-session` partition, but this is no longer a cross-profile concern: since #2534 the preview no longer loads Teams content or re-captures the screen — it renders `ImageBitmap` snapshots forwarded from the active profile's renderer over a `MessagePort`, so it carries no Teams session to leak (see "Shared-state audit").
 
 7. **"Potential authentication/session conflicts"** → Electron `session.fromPartition` provides hard isolation of cookies, tokens, localStorage, IndexedDB, and service workers. ElectronIM and Ferdium have shipped this partition-per-account pattern in production for years against Microsoft, Google, and Slack web apps.
 
@@ -293,23 +293,23 @@ Several module-level singletons today assume a single account. Each must be scop
 | Location | Symptom if not migrated |
 |----------|------------------------|
 | `app/login/index.js` (`isFirstLoginTry`, module-level `let`) | Switching profile mid-login produces a false "already logged in" state; the second profile's first 401 is mistaken for a retry and triggers an app relaunch |
-| `app/mainAppWindow/index.js` (screen-preview window partition `persist:teams-for-linux-session`) | **Resolved / moot since #2534.** Originally flagged as a cross-profile leak (a preview opened from profile A showing profile A's session even when profile B started the share). After the #2534 rework the preview window no longer loads Teams or re-captures the screen — it paints `ImageBitmap` snapshots forwarded over a `MessagePort` from the active profile's renderer — so it carries no Teams session and its partition string is inert. No code change needed. |
+| `app/mainAppWindow/index.js` (screen-preview window partition `persist:outlook-for-linux-session`) | **Resolved / moot since #2534.** Originally flagged as a cross-profile leak (a preview opened from profile A showing profile A's session even when profile B started the share). After the #2534 rework the preview window no longer loads Teams or re-captures the screen — it paints `ImageBitmap` snapshots forwarded over a `MessagePort` from the active profile's renderer — so it carries no Teams session and its partition string is inert. No code change needed. |
 | `app/mainAppWindow/index.js` (`setDisplayMediaRequestHandler` registered on the root window's session only) | Profile views running against `persist:teams-profile-{uuid}` get no in-app picker — share-screen requests fall through to a silent no-op on Linux or the OS-native picker on macOS, bypassing preview, lock inhibition, and source-selection wiring (#2529) |
 | `app/mainAppWindow/index.js` (`cleanExpiredAuthCookies` called once at startup against a single partition) | Other profiles' expired auth cookies are never cleaned; only the startup-active profile benefits |
 | Call state + power-save blocker (`app/mainAppWindow/browserWindowManager.js:237-259`) | Blocker outlives the profile that started the call — switching away from an in-call profile leaves the OS pinned awake under the new profile |
 | Incoming call toast (`app/incomingCallToast/index.js`) | Toast raised from profile A can be dismissed (or answered) by profile B, because the toast has no notion of which partition produced it |
 
-Phase 1 migrates the first entry (`isFirstLoginTry` → per-`webContents` `WeakMap`, landed) and the third (`setDisplayMediaRequestHandler` rebound per profile session — discovered post-MVP and shipped via #2529/#2533). The second entry (screen-preview partition) turned out to need no migration: the #2534 preview rework removed the session it would otherwise have leaked (see the audit note above). Phases 2–3 address the remaining three as their corresponding features (aggregated unread, cross-profile call handling) come online.
+Phase 1 migrates the first entry (`isFirstLoginTry` → per-`webContents` `WeakMap`, landed) and the third (`setDisplayMediaRequestHandler` rebound per profile session — discovered post-initial version and shipped via #2529/#2533). The second entry (screen-preview partition) turned out to need no migration: the #2534 preview rework removed the session it would otherwise have leaked (see the audit note above). Phases 2–3 address the remaining three as their corresponding features (aggregated unread, cross-profile call handling) come online.
 
 ## Phased Delivery
 
-- **Phase 1 — MVP:** new `multiAccount.enabled` config flag (default `false`) with startup-time mutual-exclusion check against `auth.intune.enabled`, per-profile `WebContentsView`s, top-right dropdown switcher, `Profiles` menu bar entry with Add / Switch / Manage flows, `Ctrl+Shift+1…5` keyboard shortcuts for pinned profiles, first-run Profile 0 migration (gated on flag flip), the six Phase 1 `profile-*` IPC channels, migration of the relevant shared-state items from the audit above (the `isFirstLoginTry` → per-`webContents` `WeakMap` conversion in `app/login/index.js`, and rebinding `setDisplayMediaRequestHandler` on each profile session — discovered post-MVP and shipped via #2529/#2533; the screen-preview partition entry needed no change after the #2534 preview rework), a small refactor of `CustomBackground` so `customBGServiceUrl` lives on a private instance field rather than at module scope, and an E2E smoke test covering the byte-identical-when-disabled regression case. The remaining three audit entries (`cleanExpiredAuthCookies`, power-save blocker, incoming-call toast) defer to Phases 2–3 as their corresponding features (aggregated unread, cross-profile call handling) come online.
+- **Phase 1 — initial version:** new `multiAccount.enabled` config flag (default `false`) with startup-time mutual-exclusion check against `auth.intune.enabled`, per-profile `WebContentsView`s, top-right dropdown switcher, `Profiles` menu bar entry with Add / Switch / Manage flows, `Ctrl+Shift+1…5` keyboard shortcuts for pinned profiles, first-run Profile 0 migration (gated on flag flip), the six Phase 1 `profile-*` IPC channels, migration of the relevant shared-state items from the audit above (the `isFirstLoginTry` → per-`webContents` `WeakMap` conversion in `app/login/index.js`, and rebinding `setDisplayMediaRequestHandler` on each profile session — discovered post-initial version and shipped via #2529/#2533; the screen-preview partition entry needed no change after the #2534 preview rework), a small refactor of `CustomBackground` so `customBGServiceUrl` lives on a private instance field rather than at module scope, and an E2E smoke test covering the byte-identical-when-disabled regression case. The remaining three audit entries (`cleanExpiredAuthCookies`, power-save blocker, incoming-call toast) defer to Phases 2–3 as their corresponding features (aggregated unread, cross-profile call handling) come online.
 - **Phase 2 — Background notifications:** per-partition preload notification shim and unread-count tagging, aggregated tray badge, per-profile unread dots, `disableNotifications` and `muted` plumbing.
 - **Phase 3 — Power features:** `--profile-id` CLI flag end-to-end, keyboard shortcut to cycle profiles, pinned-profile sidebar (max 5, exposing the `Ctrl+Shift+1…5` shortcuts introduced in Phase 1), drag-to-reorder.
 
 ## Related
 
-- Issues: [#72](https://github.com/IsmaelMartinez/teams-for-linux/issues/72), [#438](https://github.com/IsmaelMartinez/teams-for-linux/issues/438), [#689/#690 `customUserDir`](https://github.com/IsmaelMartinez/teams-for-linux/pull/690), [#1656](https://github.com/IsmaelMartinez/teams-for-linux/issues/1656), [#1830](https://github.com/IsmaelMartinez/teams-for-linux/issues/1830), [#1984 ADR-010](https://github.com/IsmaelMartinez/teams-for-linux/issues/1984)
+- Issues: [#72](https://github.com/IsmaelMartinez/outlook-for-linux/issues/72), [#438](https://github.com/IsmaelMartinez/outlook-for-linux/issues/438), [#689/#690 `customUserDir`](https://github.com/IsmaelMartinez/outlook-for-linux/pull/690), [#1656](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1656), [#1830](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1830), [#1984 ADR-010](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1984)
 - ADRs: ADR-010 (scope distinction — this ADR does not revisit its rejection of pop-out windows)
 - Files to be touched:
   - `app/config/defaults.js` — add the `multiAccount.enabled` default (`false`) plus any sub-keys (currently none)

@@ -4,7 +4,7 @@ const path = require("node:path");
 const electron = require("electron");
 
 /**
- * Cache Management Module for Teams for Linux
+ * Cache Management Module for Outlook for Linux
  * Addresses issue #1756: Daily logout due to cache overflow
  *
  * This module provides automatic cache cleanup to prevent OAuth token corruption
@@ -74,7 +74,7 @@ class CacheManager {
   }
 
   /**
-   * Get the total size of the Teams for Linux cache directory
+   * Get the total size of the Outlook for Linux cache directory
    */
   async getCacheSize() {
     try {

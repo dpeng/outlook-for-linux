@@ -1,7 +1,7 @@
-# Design: custom stickers (#2476) — MVP
+# Design: custom stickers (#2476) — initial version
 
 **Status:** approved (user sign-off: 2026-05-20)
-**Issue:** [#2476](https://github.com/IsmaelMartinez/teams-for-linux/issues/2476)
+**Issue:** [#2476](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2476)
 **Spike:** [SPIKE.md](./SPIKE.md) — Phase 1 succeeded; renderer-only synthetic-paste path is viable
 
 ## Goal
@@ -10,7 +10,7 @@ Let users keep a folder of image files (stickers/reactions/whatever) on disk and
 
 ## Scope
 
-In scope for MVP:
+In scope for initial version:
 
 - A floating toggle button overlaid on Teams (visible only when the feature is enabled) that opens and closes a sticker panel.
 - A panel that lists every supported image file from a configured folder.
@@ -18,7 +18,7 @@ In scope for MVP:
 - Zero-config happy path: feature enable flag flips the folder into `<userData>/stickers/`, which is auto-created on first run. User drops PNGs in and they appear.
 - Optional folder override via config so power users can point at a synced folder (Dropbox, Syncthing, etc.).
 
-Out of scope for MVP, deliberately:
+Out of scope for initial version, deliberately:
 
 - Drag-and-drop to add stickers from the UI. (User can use the file manager.)
 - Tagging, categorization, search box.
@@ -41,7 +41,7 @@ A `CustomStickers` class. Constructor takes `(app, config)`. If `config.customSt
 - Creates the folder if it does not exist (recursive mkdir, mode default).
 - Registers `ipcMain.handle('get-sticker-list', this.handleGetStickerList)`. The handler reads the folder, filters by extension against `config.customStickers.formats`, and for each match reads the file and returns `{ name, path, mimeType, dataUrl }`. The `dataUrl` is a base64 `data:image/...;base64,...` string built from the file bytes — that's how thumbnails reach the renderer without exposing a `file://` URL or registering a custom protocol.
 
-The `dataUrl` strategy (option 1 from brainstorming) is chosen explicitly. Trade-off: holds image bytes in memory during the IPC round-trip. Acceptable for tens-to-low-hundreds of stickers; the issue's use case is a personal collection, not a library of thousands. If anyone hits memory pressure later, the upgrade path is a `sticker://` custom protocol — but YAGNI for MVP.
+The `dataUrl` strategy (option 1 from brainstorming) is chosen explicitly. Trade-off: holds image bytes in memory during the IPC round-trip. Acceptable for tens-to-low-hundreds of stickers; the issue's use case is a personal collection, not a library of thousands. If anyone hits memory pressure later, the upgrade path is a `sticker://` custom protocol — but YAGNI for initial version.
 
 ### `app/customStickers/README.md`
 
@@ -62,7 +62,7 @@ When enabled, on init:
 ### Touch-ups to existing files
 
 - `app/config/index.js` — add the `customStickers` config object (schema below).
-- `app/security/ipcValidator.js` — allowlist `get-sticker-list`. (One channel for MVP.)
+- `app/security/ipcValidator.js` — allowlist `get-sticker-list`. (One channel for initial version.)
 - `app/browser/preload.js` — add `{ name: 'customStickers', path: './tools/customStickers' }` to the `modules` array; add `'customStickers'` to the `modulesRequiringIpc` set since it needs `ipcRenderer.invoke`.
 - `docs-site/docs/configuration.md` — document the new config keys.
 - The IPC docs file `docs-site/docs/development/ipc-api-generated.md` regenerates via `npm run generate-ipc-docs`.
@@ -108,13 +108,13 @@ The module logs through `console.*` per the project's `[CUSTOM_STICKERS]`-style 
 - Folder missing on init: created. If creation fails (permissions): error logged with the resolved path, IPC handler still registered but returns `[]`.
 - IPC handler called, folder missing or unreadable: warn-logged, empty array returned.
 - File listed but read fails mid-scan: that single file is skipped, warn-logged, other stickers still returned.
-- File extension matches but bytes are not actually image data: included; the renderer's `<img>` will fail to render and show a broken-image icon. Acceptable for MVP; the user can remove the file. (Validating image headers is a small enhancement but adds dependencies; skipped.)
-- Renderer cannot find the compose element on click: warn-logged, panel shows a transient inline message "Click into a chat compose box first" for 2-3 seconds, then clears. No toast notification (avoids depending on the notification system for this MVP edge case).
+- File extension matches but bytes are not actually image data: included; the renderer's `<img>` will fail to render and show a broken-image icon. Acceptable for initial version; the user can remove the file. (Validating image headers is a small enhancement but adds dependencies; skipped.)
+- Renderer cannot find the compose element on click: warn-logged, panel shows a transient inline message "Click into a chat compose box first" for 2-3 seconds, then clears. No toast notification (avoids depending on the notification system for this initial version edge case).
 - Synthetic-paste dispatch fails or `event.defaultPrevented === false` and no image inserted: warn-logged. UX is the same — user notices nothing happened, re-focuses compose, retries.
 
 ## Testing
 
-Manual is the load-bearing test path for MVP. The spike's existing pasteable harness is unchanged; this design's renderer code reuses the same compose-discovery selectors and the same synthetic-paste construction, so the harness remains a useful debugging tool if anything regresses.
+Manual is the load-bearing test path for initial version. The spike's existing pasteable harness is unchanged; this design's renderer code reuses the same compose-discovery selectors and the same synthetic-paste construction, so the harness remains a useful debugging tool if anything regresses.
 
 E2E: Teams login is gated behind real auth, so a full happy-path Playwright test is out of scope. The existing e2e suite (validates clean-state launch and Microsoft login redirect) continues to pass — verified before merge. Adding a smoke test that asserts the floating button mounts when `customStickers.enabled === true` is feasible from the renderer's own DOM without needing Teams login, and would catch regressions in preload registration; pencilled in as a stretch goal during implementation.
 
@@ -122,7 +122,7 @@ Lint (`npm run lint`) passes. IPC docs regenerated via `npm run generate-ipc-doc
 
 ## Out of scope and follow-ups
 
-The optional features from issue #2476 (drag/drop, categories, recently-used, search) are deliberately excluded from MVP per the requester's confirmation. They are well-defined future enhancements that can be opened as separate issues if anyone asks for them. Because the architecture is renderer-only and folder-scan-based, all of them are additive without touching the paste path:
+The optional features from issue #2476 (drag/drop, categories, recently-used, search) are deliberately excluded from initial version per the requester's confirmation. They are well-defined future enhancements that can be opened as separate issues if anyone asks for them. Because the architecture is renderer-only and folder-scan-based, all of them are additive without touching the paste path:
 
 - Drag/drop: add a drop-zone overlay on the panel, write incoming files to the configured folder, re-scan.
 - Categories: change the scanner to recurse one level, use subfolder names as tabs.

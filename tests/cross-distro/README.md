@@ -1,6 +1,6 @@
 # Cross-Distro Testing
 
-Docker-based manual testing for Teams for Linux across distributions and display servers.
+Docker-based manual testing for Outlook for Linux across distributions and display servers.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ cd tests/cross-distro
 ./run.sh ubuntu x11 --latest
 
 # From local AppImage
-./run.sh ubuntu x11 --appimage ../../dist/teams-for-linux-*.AppImage
+./run.sh ubuntu x11 --appimage ../../dist/outlook-for-linux-*.AppImage
 
 # Open in browser
 # http://localhost:6081/vnc.html
@@ -93,11 +93,11 @@ With `--no-launch`, start the app from the terminal inside VNC:
 
 ```bash
 # X11 / XWayland
-/home/tester/app-local/teams-for-linux.AppImage --appimage-extract-and-run \
+/home/tester/app-local/outlook-for-linux.AppImage --appimage-extract-and-run \
     --no-sandbox --disable-gpu --disable-dev-shm-usage
 
 # Wayland (native)
-/home/tester/app-local/teams-for-linux.AppImage --appimage-extract-and-run \
+/home/tester/app-local/outlook-for-linux.AppImage --appimage-extract-and-run \
     --no-sandbox --disable-gpu --disable-dev-shm-usage \
     --enable-features=UseOzonePlatform --ozone-platform=wayland
 ```
@@ -108,8 +108,8 @@ AppImage binaries cannot execute under Docker's Rosetta 2 emulation. Use a `.deb
 
 ```bash
 # Download the amd64 .deb (replace VERSION with the actual release tag)
-curl -fSL -o app/teams-for-linux.deb \
-  "https://github.com/IsmaelMartinez/teams-for-linux/releases/latest/download/teams-for-linux_VERSION_amd64.deb"
+curl -fSL -o app/outlook-for-linux.deb \
+  "https://github.com/IsmaelMartinez/outlook-for-linux/releases/latest/download/outlook-for-linux_VERSION_amd64.deb"
 
 # Run normally -- the entrypoint detects and extracts the .deb
 ./run.sh ubuntu x11
@@ -118,8 +118,8 @@ curl -fSL -o app/teams-for-linux.deb \
 For Fedora, use the `.rpm` equivalent:
 
 ```bash
-curl -fSL -o app/teams-for-linux.rpm \
-  "https://github.com/IsmaelMartinez/teams-for-linux/releases/latest/download/teams-for-linux-VERSION.x86_64.rpm"
+curl -fSL -o app/outlook-for-linux.rpm \
+  "https://github.com/IsmaelMartinez/outlook-for-linux/releases/latest/download/outlook-for-linux-VERSION.x86_64.rpm"
 
 ./run.sh fedora x11
 ```
@@ -167,7 +167,7 @@ The entrypoint handles these automatically:
 
 **Sway won't start:** Try `docker compose run --privileged ubuntu-wayland` (last resort, weakens isolation).
 
-**AppImage fails:** Extract manually: `./teams-for-linux.AppImage --appimage-extract && ./squashfs-root/teams-for-linux --no-sandbox`
+**AppImage fails:** Extract manually: `./outlook-for-linux.AppImage --appimage-extract && ./squashfs-root/outlook-for-linux --no-sandbox`
 
 **Black screen:** Wait a few seconds. Check `ps aux | grep Xvfb` (X11) or `/tmp/sway.log` (Wayland).
 

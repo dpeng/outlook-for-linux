@@ -1,59 +1,5 @@
 const { ipcRenderer } = require("electron");
 
-// #2677: Electron removed the non-standard `File.path` from dropped files, so
-// Teams (which uploads by native path) rejects them as "File is missing data".
-// Restore it via webUtils.getPathForFile before Teams's drop handler reads it,
-// scoped to Teams hosts so the SSO/auth pages this window also loads can't read
-// local paths off dropped files.
-try {
-  const { webUtils } = require("electron");
-  const TEAMS_HOSTS = ["teams.cloud.microsoft", "teams.microsoft.com", "teams.live.com"];
-  const isTeamsHost = (hostname) => {
-    if (hostname.endsWith(".mcas.ms")) {
-      hostname = hostname.slice(0, -".mcas.ms".length);
-    }
-    return TEAMS_HOSTS.some(
-      (domain) =>
-        hostname === domain ||
-        (hostname.endsWith("." + domain) &&
-          !hostname.slice(0, -(domain.length + 1)).includes(".")),
-    );
-  };
-  globalThis.addEventListener(
-    "drop",
-    (event) => {
-      if (!isTeamsHost(globalThis.location.hostname)) {
-        return;
-      }
-      const files = event.dataTransfer?.files;
-      if (!files?.length) {
-        return;
-      }
-      for (const file of files) {
-        if (file.path) {
-          continue;
-        }
-        try {
-          const path = webUtils.getPathForFile(file);
-          if (path) {
-            Object.defineProperty(file, "path", {
-              value: path,
-              writable: true,
-              enumerable: true,
-              configurable: true,
-            });
-          }
-        } catch {
-          // leave the file untouched if the path can't be resolved
-        }
-      }
-    },
-    true,
-  );
-} catch {
-  // webUtils unavailable
-}
-
 // #2534: forward the MessagePort that main posts on 'screen-share-port' into
 // the main world. Using window.postMessage with transfer is the supported way
 // to hand a MessagePort across to the renderer; the port cannot be returned
@@ -185,21 +131,6 @@ globalThis.electronAPI = {
     getMailMessages: (options) => ipcRenderer.invoke("graph-api-get-mail-messages", options),
   },
 
-  // Chat deep link navigation (for quick chat access feature)
-  openChatWithUser: (email) => {
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      console.error('Invalid email for chat deep link');
-      return false;
-    }
-    // Use the current Teams base URL (could be teams.cloud.microsoft or teams.microsoft.com)
-    const currentOrigin = globalThis.location.origin;
-    const chatPath = `/l/chat/0/0?users=${encodeURIComponent(email)}`;
-    const chatUrl = `${currentOrigin}${chatPath}`;
-    console.debug('[CHAT_LINK] Navigating to chat via deep link');
-    globalThis.location.href = chatUrl;
-    return true;
-  },
-
   // System information (safe to expose)
   sessionType: process.env.XDG_SESSION_TYPE || "x11",
 };
@@ -217,8 +148,8 @@ ipcRenderer.invoke("get-config").then((config) => {
   console.error("Preload: Failed to load config for notifications:", err);
 });
 
-// Create a Notification-like stub so Teams can manage lifecycle without errors.
-// Without addEventListener/close/dispatchEvent, Teams' internal state machine
+// Create a Notification-like stub so the web app can manage lifecycle without errors.
+// Without addEventListener/close/dispatchEvent, some web app notification state machines
 // breaks after the first notification, causing subsequent ones to stop firing.
 function createNotificationStub() {
   const stub = {
@@ -274,7 +205,7 @@ function createWebNotification(classicNotification, title, options) {
   };
   playNotificationSound(notifSound);
 
-  // Return actual native notification object (critical for Teams to manage lifecycle)
+  // Return actual native notification object (critical for the web app lifecycle)
   console.debug("Continues to default notification workflow");
   if (classicNotification) {
     try {
@@ -291,7 +222,7 @@ function createElectronNotification(options) {
   const notificationId = crypto.randomUUID();
   const stub = createNotificationStub();
   let closed = false;
-  // Bridge the close event from the main process so Teams knows when
+  // Bridge the close event from the main process so the web app knows when
   // the system dismisses the notification (e.g. GNOME timeout).
   // Idempotent so stub.close() and the IPC arrival can each trigger it.
   const finalizeClose = () => {
@@ -350,7 +281,7 @@ function createCustomNotification(title, options) {
   return createNotificationStub();
 }
 
-// Override window.Notification immediately before Teams loads
+// Override window.Notification immediately before the web app loads
 // Using factory function pattern instead of class to avoid "return in constructor" anti-pattern
 (function() {
   const ICON_BASE64 =
@@ -362,7 +293,7 @@ function createCustomNotification(title, options) {
   function CustomNotification(title, options) {
     // Use config from closure scope (will be null initially, populated async)
     if (notificationConfig?.disableNotifications) {
-      // Return dummy object to avoid Teams errors
+      // Return dummy object to avoid web app errors
       return { onclick: null, onclose: null, onerror: null };
     }
 
@@ -439,26 +370,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: "shortcuts", path: "./tools/shortcuts" },
       { name: "settings", path: "./tools/settings" },
       { name: "theme", path: "./tools/theme" },
-      { name: "emulatePlatform", path: "./tools/emulatePlatform" },
       { name: "webauthnOverride", path: "./tools/webauthnOverride" },
-      { name: "timestampCopyOverride", path: "./tools/timestampCopyOverride" },
       { name: "trayIconRenderer", path: "./tools/trayIconRenderer" },
-      { name: "mqttStatusMonitor", path: "./tools/mqttStatusMonitor" },
-      { name: "overrideMicConstraints", path: "./tools/overrideMicConstraints" },
-      { name: "disableAutogain", path: "./tools/disableAutogain" },
-      { name: "ignoreSystemMute", path: "./tools/ignoreSystemMute" },
-      { name: "speakingIndicator", path: "./tools/speakingIndicator" },
-      { name: "cameraResolution", path: "./tools/cameraResolution" },
-      { name: "cameraAspectRatio", path: "./tools/cameraAspectRatio" },
       { name: "navigationButtons", path: "./tools/navigationButtons" },
-      { name: "framelessTweaks", path: "./tools/frameless" },
-      { name: "customStickers", path: "./tools/customStickers" },
-      { name: "dockIconRenderer", path: "./tools/dockIconRenderer" },
-      { name: "preventDeviceSwitching", path: "./tools/preventDeviceSwitching" }
+      { name: "framelessTweaks", path: "./tools/frameless" }
     ];
 
-    // CRITICAL: These modules need ipcRenderer for IPC communication (see CLAUDE.md)
-    const modulesRequiringIpc = new Set(["settings", "theme", "trayIconRenderer", "mqttStatusMonitor", "webauthnOverride", "speakingIndicator", "customStickers", "dockIconRenderer"]);
+    // These modules need ipcRenderer for IPC communication.
+    const modulesRequiringIpc = new Set(["settings", "theme", "trayIconRenderer", "webauthnOverride"]);
 
     let successCount = 0;
     for (const module of modules) {
@@ -476,14 +395,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     console.info(`Preload: ${successCount}/${modules.length} browser modules initialized successfully`);
-
-    // Initialize ActivityManager
-    try {
-      const ActivityManager = require("./notifications/activityManager");
-      new ActivityManager(ipcRenderer, config).start();
-    } catch (err) {
-      console.error("Preload: ActivityManager failed to initialize:", err.message);
-    }
 
     // Listen for config changes from the main process (e.g., when menu toggles are clicked)
     ipcRenderer.on("config-changed", (_event, configChanges) => {

@@ -1,7 +1,7 @@
 /**
  * spike/2476-stickers/devtools-paste-test.js
  *
- * Paste this entire file into the DevTools Console of a running teams-for-linux
+ * Paste this entire file into the DevTools Console of a running outlook-for-linux
  * session, with a 1:1 chat open and the compose box visible. It mounts a small
  * floating panel in the bottom-right of the window with three buttons:
  *

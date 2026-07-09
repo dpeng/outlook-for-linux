@@ -1,12 +1,12 @@
 # spike/2476-stickers
 
-Feasibility spike for [#2476 Custom stickers support](https://github.com/IsmaelMartinez/teams-for-linux/issues/2476).
+Feasibility spike for [#2476 Custom stickers support](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2476).
 
 See [`SPIKE.md`](./SPIKE.md) for the plan, findings from the research phase, and the decision tree.
 
 ## Quick start
 
-1. Launch teams-for-linux as normal (`npm start` from repo root) and sign in.
+1. Launch outlook-for-linux as normal (`npm start` from repo root) and sign in.
 2. Open a 1:1 chat. Focus the compose box once so the editor is rendered.
 3. Open DevTools (`Cmd/Ctrl+Shift+I`).
 4. Paste the entire contents of [`devtools-paste-test.js`](./devtools-paste-test.js) into the Console and hit Enter.

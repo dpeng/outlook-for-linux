@@ -7,7 +7,7 @@ Microsoft Teams now supports custom backgrounds natively in the browser. This wo
 :::
 
 :::tip
-See the [example README](https://github.com/IsmaelMartinez/teams-for-linux/tree/main/app/customBackground/example/README.md) for a complete implementation example.
+See the [example README](https://github.com/IsmaelMartinez/outlook-for-linux/tree/main/app/customBackground/example/README.md) for a complete implementation example.
 :::
 
 ## Important Considerations
@@ -108,8 +108,8 @@ cd /path/to/your/images
 # Start a simple HTTP server
 python3 -m http.server 8080
 
-# Configure Teams for Linux
-teams-for-linux --isCustomBackgroundEnabled=true --customBGServiceBaseUrl=http://localhost:8080
+# Configure Outlook for Linux
+outlook-for-linux --isCustomBackgroundEnabled=true --customBGServiceBaseUrl=http://localhost:8080
 ```
 
 #### Using Node.js HTTP Server
@@ -123,14 +123,14 @@ cd /path/to/your/images
 # Start server with CORS enabled
 http-server -p 8080 --cors
 
-# Configure Teams for Linux
-teams-for-linux --isCustomBackgroundEnabled=true --customBGServiceBaseUrl=http://localhost:8080
+# Configure Outlook for Linux
+outlook-for-linux --isCustomBackgroundEnabled=true --customBGServiceBaseUrl=http://localhost:8080
 ```
 
 ### Advanced Configuration
 
 #### Persistent Configuration
-Add to your `~/.config/teams-for-linux/config.json`:
+Add to your `~/.config/outlook-for-linux/config.json`:
 
 ```json
 {
@@ -167,14 +167,14 @@ For corporate environments with existing web infrastructure:
 
 #### Configuration Not Updating
 1. **Check fetch interval**: Ensure `customBGServiceConfigFetchInterval` is set appropriately
-2. **Restart application**: Changes may require restarting Teams for Linux
+2. **Restart application**: Changes may require restarting Outlook for Linux
 3. **Verify JSON syntax**: Validate your config.json file syntax
 
 ### Debug Mode
 Enable debug logging to troubleshoot custom background issues:
 
 ```bash
-teams-for-linux --logConfig='{"level":"debug"}' --isCustomBackgroundEnabled=true
+outlook-for-linux --logConfig='{"level":"debug"}' --isCustomBackgroundEnabled=true
 ```
 
 ## Security Considerations

@@ -2,7 +2,7 @@
 
 ## Problem
 
-Electron upgrades are the main pain point for Teams for Linux. They can break
+Electron upgrades are the main pain point for Outlook for Linux. They can break
 screen sharing, display server compatibility, and other complex features. Today,
 validating these requires fully manual testing. The existing Playwright smoke
 tests only cover the pre-auth flow (app launch → MS login redirect) because
@@ -60,7 +60,7 @@ a summary of pass/fail results.
 The session MUST be created by the same Electron binary that runs the tests.
 `--password-store=basic` is required so cookies are not tied to a specific D-Bus
 session. `E2E_TESTING=true` is needed to bypass the code-evaluation override
-in browserWindowManager.js. Teams never reaches `networkidle` due to constant
+in browserWindowManager.js. The web app never reaches `networkidle` due to constant
 WebSocket activity, so all tests use `domcontentloaded`. The `desktopCapturer`
 test is skipped on pure Wayland because it needs an X11 display.
 
@@ -74,7 +74,7 @@ Phase 1: Manual Login (one-time per session expiry, any distro)
 |  Docker container starts             |
 |  > npm ci + Electron install         |
 |  > noVNC available in browser        |
-|  > User logs into Teams via noVNC    |
+|  > User logs into Outlook via noVNC    |
 |  > Ctrl+C saves session to ./session |
 +--------------------------------------+
 
@@ -95,8 +95,8 @@ Phase 2: Automated Tests (repeatable, all configs)
 
 ### app-ready.spec.js (2 tests)
 
-1. App loads Teams without redirecting to login --- validates session persistence
-2. Teams UI loads to a usable state --- verifies no crash indicators
+1. App loads Outlook without redirecting to login --- validates session persistence
+2. Outlook UI loads to a usable state --- verifies no crash indicators
 
 ### screen-sharing.spec.js (2 tests)
 
@@ -106,7 +106,7 @@ Phase 2: Automated Tests (repeatable, all configs)
 ### window-management.spec.js (2 tests)
 
 1. Main window has a reasonable size --- validates viewport dimensions
-2. App is responsive and has no crash indicators --- verifies Teams URL and no crash text
+2. App is responsive and has no crash indicators --- verifies Outlook URL and no crash text
 
 ### Total: 6-7 tests per configuration (1 skipped on pure Wayland)
 

@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-When implementing screen sharing preview windows in Teams for Linux, we need to identify which screen or window the user selected for sharing. There are two potential identifiers available:
+When implementing screen sharing preview windows in Outlook for Linux, we need to identify which screen or window the user selected for sharing. There are two potential identifiers available:
 
 1. **desktopCapturer source ID**: Format `screen:x:y` or `window:x:y` (e.g., `screen:602:0`)
    - Provided by Electron's `desktopCapturer.getSources()` API
@@ -100,7 +100,7 @@ On X11, the system is more permissive and accepts various formats, which masked 
 
 ## Notes
 
-- Bug reported in [teams-for-linux Issue #1853](https://github.com/IsmaelMartinez/teams-for-linux/issues/1853)
+- Bug reported in [outlook-for-linux Issue #1853](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1853)
 - Fix implemented in v2.5.13
 - The StreamSelector module (app/screenSharing/index.js:73-74) already expected this format
 - Console logging with `[SCREEN_SHARE_DIAG]` prefix helps verify correct format
@@ -111,4 +111,4 @@ On X11, the system is more permissive and accepts various formats, which masked 
 - [xdg-desktop-portal ScreenCast API](https://flatpak.github.io/xdg-desktop-portal/#gdbus-org.freedesktop.portal.ScreenCast)
 - [Electron Issue #33613](https://github.com/electron/electron/issues/33613)
 - [Chromium Bug #1343766](https://bugs.chromium.org/p/chromium/issues/detail?id=1343766)
-- [teams-for-linux Issue #1853](https://github.com/IsmaelMartinez/teams-for-linux/issues/1853)
+- [outlook-for-linux Issue #1853](https://github.com/IsmaelMartinez/outlook-for-linux/issues/1853)

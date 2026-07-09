@@ -77,7 +77,7 @@ class BrowserWindowManager {
 
   createNewBrowserWindow(windowState) {
     return new BrowserWindow({
-      title: "Teams for Linux",
+      title: "Outlook for Linux",
       x: windowState.x,
       y: windowState.y,
 
@@ -96,8 +96,8 @@ class BrowserWindowManager {
         plugins: true,
         spellcheck: true,
         webviewTag: true,
-        // SECURITY: Disabled for Teams DOM access, compensated by IPC validation
-        contextIsolation: false,  // Required for ReactHandler DOM access
+        // SECURITY: Disabled for inherited DOM access, compensated by IPC validation
+        contextIsolation: false,  // Required for DOM access
         nodeIntegration: false,   // Secure: preload scripts don't need this
         sandbox: false,           // Required for system API access
       },

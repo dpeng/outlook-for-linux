@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Teams for Linux token cache system provides persistent authentication by implementing the missing `_tokenCache` interface that Microsoft Teams' authentication provider expects. This eliminates frequent re-authentication prompts and enables silent token refresh capabilities.
+The Outlook for Linux token cache system provides persistent authentication by implementing the missing `_tokenCache` interface that Microsoft Teams' authentication provider expects. This eliminates frequent re-authentication prompts and enables silent token refresh capabilities.
 
 ## Problem Statement
 

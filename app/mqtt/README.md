@@ -1,6 +1,6 @@
 # MQTT Module
 
-This module provides bidirectional MQTT integration for Teams for Linux, allowing you to:
+This module provides bidirectional MQTT integration for Outlook for Linux, allowing you to:
 - **Publish** your Teams status to an MQTT broker for home automation
 - **Receive** action commands from MQTT to control Teams (toggle mute, video, etc.)
 
@@ -30,14 +30,14 @@ The MQTT module is configured through the main application configuration. Add th
     "brokerUrl": "mqtt://your-mqtt-broker:1883",
     "username": "your-username",
     "password": "your-password",
-    "clientId": "teams-for-linux",
+    "clientId": "outlook-for-linux",
     "topicPrefix": "teams",
     "statusTopic": "status",
     "commandTopic": "command",
     "homeAssistant": {
       "enabled": true,
       "discoveryPrefix": "homeassistant",
-      "deviceName": "Teams for Linux"
+      "deviceName": "Outlook for Linux"
     }
   }
 }
@@ -49,13 +49,13 @@ The MQTT module is configured through the main application configuration. Add th
 - **brokerUrl**: `string` - MQTT broker URL (e.g., `mqtt://192.168.1.100:1883`)
 - **username**: `string` - MQTT username (optional)
 - **password**: `string` - MQTT password (optional)
-- **clientId**: `string` - Unique client identifier (default: "teams-for-linux")
+- **clientId**: `string` - Unique client identifier (default: "outlook-for-linux")
 - **topicPrefix**: `string` - Topic prefix for all messages (default: "teams")
 - **statusTopic**: `string` - Topic name for status messages (default: "status")
 - **commandTopic**: `string` - Topic name for receiving commands (default: "" - disabled). Set to "command" to enable bidirectional mode.
 - **homeAssistant.enabled**: `boolean` - Enable Home Assistant MQTT auto-discovery (default: false)
 - **homeAssistant.discoveryPrefix**: `string` - HA discovery topic prefix (default: "homeassistant")
-- **homeAssistant.deviceName**: `string` - Device name shown in Home Assistant (default: "Teams for Linux")
+- **homeAssistant.deviceName**: `string` - Device name shown in Home Assistant (default: "Outlook for Linux")
 
 ## MQTT Topics
 
@@ -80,7 +80,7 @@ Status messages are published as JSON with the following structure:
   "status": "available",
   "statusCode": 1,
   "timestamp": "2023-01-15T10:30:00.000Z",
-  "clientId": "teams-for-linux"
+  "clientId": "outlook-for-linux"
 }
 ```
 
@@ -135,7 +135,7 @@ mosquitto_pub -h localhost -t "teams/command" -m '{"action":"toggle-hand-raise"}
 
 ## Home Assistant Auto-Discovery
 
-When `mqtt.homeAssistant.enabled` is `true`, Teams for Linux publishes MQTT discovery messages that automatically create the following entities in Home Assistant:
+When `mqtt.homeAssistant.enabled` is `true`, Outlook for Linux publishes MQTT discovery messages that automatically create the following entities in Home Assistant:
 
 ### Sensors
 
@@ -153,7 +153,7 @@ When `mqtt.homeAssistant.enabled` is `true`, Teams for Linux publishes MQTT disc
 | Teams Toggle Video | `button` | Toggle camera on/off |
 | Teams Toggle Hand Raise | `button` | Toggle hand raise in meeting |
 
-All entities are grouped under a single **Teams for Linux** device in Home Assistant and respect the `availability_topic` (`{topicPrefix}/connected`) — entities show as unavailable when Teams for Linux is not running.
+All entities are grouped under a single **Outlook for Linux** device in Home Assistant and respect the `availability_topic` (`{topicPrefix}/connected`) — entities show as unavailable when Outlook for Linux is not running.
 
 Discovery configurations are published with `retain: true` and re-published on every broker connection, so entities survive broker restarts.
 
@@ -215,7 +215,7 @@ mosquitto_pub -h localhost -t "teams/command" -m '{"action":"toggle-hand-raise",
    - Check spelling and case sensitivity (use lowercase with hyphens)
 
 3. **Window Not Available**:
-   - Ensure Teams for Linux window is open
+   - Ensure Outlook for Linux window is open
    - Check logs for "window not available" messages
 
 Enable debug logging to see MQTT activity in the application logs.

@@ -52,7 +52,7 @@ Stickers are sent into Teams by dispatching a synthetic `ClipboardEvent('paste')
 
 ## What's out of scope
 
-The MVP keeps the surface small. The following were considered and intentionally deferred:
+The initial version keeps the surface small. The following were considered and intentionally deferred:
 
 - Drag/drop to add stickers via the UI (use the file manager instead).
 - Tagging, categorization, search box.

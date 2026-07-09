@@ -1,10 +1,10 @@
-# GitHub Copilot Instructions for Teams for Linux
+# GitHub Copilot Instructions for Outlook for Linux
 
 > [!NOTE]
 > **This is a quick reference for GitHub Copilot.** For comprehensive developer documentation including architecture, code standards, testing strategy, and detailed guidelines:
 > - **Local Documentation**: See markdown files in `docs-site/docs/` directory (these are the source files)
-> - **Web Documentation**: [Teams for Linux Documentation Site](https://ismaelmartinez.github.io/teams-for-linux/) (for human reference)
-> - **Development Guide**: `docs-site/docs/development/contributing.md` ([web](https://ismaelmartinez.github.io/teams-for-linux/development/contributing))
+> - **Web Documentation**: [Outlook for Linux Documentation Site](https://ismaelmartinez.github.io/outlook-for-linux/) (for human reference)
+> - **Development Guide**: `docs-site/docs/development/contributing.md` ([web](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing))
 > - **Claude Code Instructions**: See `CLAUDE.md` in the root directory for detailed code patterns and AI agent workflows
 > - **Markdown Standards**: `docs-site/docs/development/contributing.md` (Markdown Standards section)
 >
@@ -12,7 +12,7 @@
 
 ## Project Overview
 
-Teams for Linux is an Electron-based desktop application that wraps the Microsoft Teams web app, providing a native desktop experience for Linux users with enhanced features like custom CSS, system notifications, and deep desktop integration.
+Outlook for Linux is an Electron-based desktop application that wraps the Microsoft Teams web app, providing a native desktop experience for Linux users with enhanced features like custom CSS, system notifications, and deep desktop integration.
 
 ## Quick Reference
 
@@ -153,8 +153,8 @@ The project uses **Docusaurus** for documentation:
 - **IPC API**: `docs-site/docs/development/ipc-api.md`
 
 **Community:**
-- **Matrix Space**: [#teams-for-linux-space:matrix.org](https://matrix.to/#/#teams-for-linux-space:matrix.org)
-- **Documentation Site**: https://ismaelmartinez.github.io/teams-for-linux/ (web version for humans)
+- **Matrix Space**: [#outlook-for-linux-space:matrix.org](https://matrix.to/#/#outlook-for-linux-space:matrix.org)
+- **Documentation Site**: https://ismaelmartinez.github.io/outlook-for-linux/ (web version for humans)
 
 ---
 

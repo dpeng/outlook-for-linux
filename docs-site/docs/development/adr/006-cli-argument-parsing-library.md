@@ -10,15 +10,15 @@ id: 006-cli-argument-parsing-library
 
 ## Context
 
-Teams for Linux uses `yargs` for CLI argument parsing. We evaluated whether to:
-1. Add CLI-based action commands (`teams-for-linux action toggle-mute`)
+Outlook for Linux uses `yargs` for CLI argument parsing. We evaluated whether to:
+1. Add CLI-based action commands (`outlook-for-linux action toggle-mute`)
 2. Migrate to `commander.js` for better subcommand support
 3. Keep current `yargs` implementation
 
 ### Requirements
 - Support 30+ configuration options
 - Parse config files and environment variables
-- Handle meeting URLs as positional arguments (`teams-for-linux https://teams.cloud.microsoft/...`)
+- Handle meeting URLs as positional arguments (`outlook-for-linux https://teams.cloud.microsoft/...`)
 - Low risk of breaking existing functionality
 
 ### Considered Options

@@ -1,4 +1,4 @@
-# Contributing to Teams for Linux
+# Contributing to Outlook for Linux
 
 Thank you for considering contributing! This guide will help you get started with development.
 
@@ -6,7 +6,7 @@ Thank you for considering contributing! This guide will help you get started wit
 > New to Electron? This project is a great starting point for learning!
 
 > [!NOTE]
-> **This is a quick reference guide.** For comprehensive developer documentation including architecture, code standards, testing strategy, and detailed guidelines, see the [**Full Contributing Guide**](https://ismaelmartinez.github.io/teams-for-linux/development/contributing).
+> **This is a quick reference guide.** For comprehensive developer documentation including architecture, code standards, testing strategy, and detailed guidelines, see the [**Full Contributing Guide**](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing).
 
 ## Quick Start
 
@@ -32,7 +32,7 @@ You can test PR changes without building from source by downloading pre-built ar
 
 **Note:** You need to be logged into GitHub to download artifacts. Artifacts are retained for 30 days.
 
-See the [full guide](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#testing-pull-requests) for more details.
+See the [full guide](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#testing-pull-requests) for more details.
 
 ## Development Setup
 
@@ -40,8 +40,8 @@ See the [full guide](https://ismaelmartinez.github.io/teams-for-linux/developmen
 
 ```bash
 # Clone and setup
-git clone https://github.com/your-username/teams-for-linux.git
-cd teams-for-linux
+git clone https://github.com/your-username/outlook-for-linux.git
+cd outlook-for-linux
 npm install
 
 # Run from source
@@ -54,13 +54,13 @@ npm run lint
 npm run test:e2e
 ```
 
-For detailed setup, building, testing, and code standards, see the [**Full Contributing Guide**](https://ismaelmartinez.github.io/teams-for-linux/development/contributing).
+For detailed setup, building, testing, and code standards, see the [**Full Contributing Guide**](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing).
 
 ## Additional Resources
 
-- **[Building Guide](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#building)** - Local, Docker, and Snap builds
-- **[Testing Guide](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#testing)** - E2E tests with Playwright
-- **[Code Standards](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#code-standards)** - Style guidelines and patterns
-- **[Pull Request Guidelines](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#pull-request-guidelines)** - PR requirements and checklist
-- **[Release Process](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#release-process)** - Version management and release notes
-- **[Documentation](https://ismaelmartinez.github.io/teams-for-linux/)** - Full project documentation
+- **[Building Guide](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#building)** - Local, Docker, and Snap builds
+- **[Testing Guide](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#testing)** - E2E tests with Playwright
+- **[Code Standards](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#code-standards)** - Style guidelines and patterns
+- **[Pull Request Guidelines](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#pull-request-guidelines)** - PR requirements and checklist
+- **[Release Process](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#release-process)** - Version management and release notes
+- **[Documentation](https://ismaelmartinez.github.io/outlook-for-linux/)** - Full project documentation

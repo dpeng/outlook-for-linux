@@ -149,7 +149,7 @@ The system performs validation and provides helpful error messages:
 ### Manual Generation
 
 ```bash
-cd /path/to/teams-for-linux
+cd /path/to/outlook-for-linux
 npm run generate-release-info
 ```
 
@@ -169,7 +169,7 @@ npm run generate-release-info
   "releaseDate": "2025-06-05"
 }
 
-💾 Release info saved to: /path/to/teams-for-linux/release-info.json
+💾 Release info saved to: /path/to/outlook-for-linux/release-info.json
 ```
 
 ### Build Integration

@@ -1,18 +1,18 @@
 # Smartcard / NSS PIN Dialog for Client-Certificate Authentication (Issue #2639)
 
 :::info Research Context
-Issue [#2639](https://github.com/IsmaelMartinez/teams-for-linux/issues/2639) requests support for password-protected NSS cryptographic providers — most importantly smartcards exposed through PKCS#11 — by implementing the PIN dialog that Chromium delegates to the application on Linux. This document captures the feasibility analysis, the relevant Electron APIs, how the feature fits the existing codebase, and a phased implementation recommendation.
+Issue [#2639](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2639) requests support for password-protected NSS cryptographic providers — most importantly smartcards exposed through PKCS#11 — by implementing the PIN dialog that Chromium delegates to the application on Linux. This document captures the feasibility analysis, the relevant Electron APIs, how the feature fits the existing codebase, and a phased implementation recommendation.
 :::
 
 Date: 2026-06-09
-Issue: [#2639](https://github.com/IsmaelMartinez/teams-for-linux/issues/2639)
+Issue: [#2639](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2639)
 Status: Research complete; small SoftHSM2 spike recommended before implementation
 
 ## Background
 
 Corporate and government users authenticate to Teams with client certificates stored on smartcards (eID cards, PIV/CAC cards, YubiKey PIV, etc.). On Linux, Chromium reaches these through NSS: the card is registered as a PKCS#11 module (typically under `/etc/pkcs11/modules/` or in an `nssdb` profile), and NSS cannot read the certificates until the token is unlocked with a PIN.
 
-On Windows and macOS, Chromium ships native PIN dialogs. On Linux there is no native UI layer, so Chromium exposes a callback and expects the embedding application to provide the dialog. Electron did not surface that callback for years; Electron 33 added it via [`app.setClientCertRequestPasswordHandler`](https://www.electronjs.org/docs/latest/api/app#appsetclientcertrequestpasswordhandlerhandler-linux) ([electron/electron#41205](https://github.com/electron/electron/pull/41205)). Without it, smartcard-backed client-certificate auth in Teams for Linux fails silently: NSS never gets the PIN, the certificate is never presented, and the user sees a generic auth failure.
+On Windows and macOS, Chromium ships native PIN dialogs. On Linux there is no native UI layer, so Chromium exposes a callback and expects the embedding application to provide the dialog. Electron did not surface that callback for years; Electron 33 added it via [`app.setClientCertRequestPasswordHandler`](https://www.electronjs.org/docs/latest/api/app#appsetclientcertrequestpasswordhandlerhandler-linux) ([electron/electron#41205](https://github.com/electron/electron/pull/41205)). Without it, smartcard-backed client-certificate auth in Outlook for Linux fails silently: NSS never gets the PIN, the certificate is never presented, and the user sees a generic auth failure.
 
 The reporter provided a working proof-of-concept gist (drop-in Electron main file) demonstrating both the PIN handler and certificate selection against the test page `https://prod.idrix.eu/secure/`.
 
@@ -22,7 +22,7 @@ Two APIs are relevant, and the repo's Electron 42.3.3 has both.
 
 **`app.setClientCertRequestPasswordHandler(handler)`** (Linux only, Electron ≥ 33). The handler is called whenever NSS needs a password to unlock a client certificate. It receives `{ hostname, tokenName, isRetry }` — the site requesting the certificate, the PKCS#11 token (slot) name, and whether a previous attempt failed — and must return a `Promise<string>` resolving to the password/PIN. This is the missing piece for password-protected providers.
 
-**`select-client-certificate` app event.** Emitted when a server requests a client certificate and more than one is available. Without a listener, Electron auto-selects the first certificate from the store. Teams for Linux currently has no listener, which is fine for the single-cert PKCS#12 path but wrong for smartcards: eID cards routinely carry multiple certificates (authentication vs. signature), and picking the wrong one fails enrollment-specific policies. Calling `event.preventDefault()` and invoking the callback with a user-chosen entry fixes this.
+**`select-client-certificate` app event.** Emitted when a server requests a client certificate and more than one is available. Without a listener, Electron auto-selects the first certificate from the store. Outlook for Linux currently has no listener, which is fine for the single-cert PKCS#12 path but wrong for smartcards: eID cards routinely carry multiple certificates (authentication vs. signature), and picking the wrong one fails enrollment-specific policies. Calling `event.preventDefault()` and invoking the callback with a user-chosen entry fixes this.
 
 ## Current state in this codebase
 
@@ -61,14 +61,14 @@ The `select-client-certificate` event hands the listener the requesting `webCont
 
 ## UI integration feasibility
 
-"Integrating with the Teams for Linux UI" can mean four different things, and the codebase already contains an example of each:
+"Integrating with the Outlook for Linux UI" can mean four different things, and the codebase already contains an example of each:
 
 1. **In-page DOM injection** (`app/browser/tools/` scripts rendering UI inside the Teams page). Ruled out for PIN entry on two independent grounds. Security: the Teams page runs with `contextIsolation: false`, so anything injected there is readable by page and third-party scripts — this is exactly why the WebAuthn module's Strategy B (dom-inject) was built and then removed (`app/webauthn/pinDialog.js` header documents the removal). Timing: the client-cert PIN request fires during a TLS handshake, often mid-navigation in the login redirect chain, when the Teams SPA is not loaded and there is no stable document to inject into.
 2. **Modal child window attached to the main window** (`app/_shared/createDialogWindow.js`, used by Add Profile and Join Meeting). Right scaffolding, wrong modality for this trigger: a modal parented to a window that is actively navigating is the WebAuthn "Strategy C" failure mode (dialog flashes and closes during page transitions). The handshake-time trigger makes this likely here.
 3. **Standalone always-on-top window** (WebAuthn pinDialog "Strategy A"). Survives parent navigation, isolated context, proven in the FIDO2 beta. This is the right *mechanism*, but today it looks bare — a framed default window with no app styling.
 4. **Frameless styled toast** (`app/incomingCallToast/`, `app/notificationSystem/` — frameless, `alwaysOnTop`, `skipTaskbar`, positioned via `app/utils/windowPositioner`). These are what make UI "feel" native to the app. Fine for notices; wrong for secret input, because a frameless window with no chrome gives the user nothing to verify the prompt's origin against, and PIN entry deserves a recognizable window.
 
-Recommendation: a standalone window (option 3 semantics) built on a small generalization of `createDialogWindow` (allow `modal: false` + `alwaysOnTop`), sharing the visual language of the existing dialogs (app icon, same CSS as `app/login/login.html` / the profile dialogs) so it reads as a Teams for Linux surface rather than a naked Chromium window. Deeper integration than that — rendering inside the Teams page — is not feasible for secret input and should not be attempted. The phase-2 certificate picker has the same handshake-time trigger, so the same standalone-window reasoning applies to it.
+Recommendation: a standalone window (option 3 semantics) built on a small generalization of `createDialogWindow` (allow `modal: false` + `alwaysOnTop`), sharing the visual language of the existing dialogs (app icon, same CSS as `app/login/login.html` / the profile dialogs) so it reads as a Outlook for Linux surface rather than a naked Chromium window. Deeper integration than that — rendering inside the Teams page — is not feasible for secret input and should not be attempted. The phase-2 certificate picker has the same handshake-time trigger, so the same standalone-window reasoning applies to it.
 
 ## Overlap with the FIDO2 prompt work (#2631 / #2634)
 
@@ -77,7 +77,7 @@ This feature is the third entry in what is becoming a family of authentication p
 | Prompt | Status | Input | Lifecycle |
 |---|---|---|---|
 | WebAuthn security-key PIN (`app/webauthn/pinDialog.js`) | Shipped (beta) | Secret (password field) | Settled by user (submit/cancel) |
-| FIDO2 touch prompt ([#2631](https://github.com/IsmaelMartinez/teams-for-linux/issues/2631), feasibility note [PR #2634](https://github.com/IsmaelMartinez/teams-for-linux/pull/2634)) | Researched | None (notice only) | Dismissed programmatically when the backend call returns |
+| FIDO2 touch prompt ([#2631](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2631), feasibility note [PR #2634](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2634)) | Researched | None (notice only) | Dismissed programmatically when the backend call returns |
 | Smartcard/NSS PIN (this document) | Researched | Secret + retry/lockout warning | Settled by user |
 | Certificate picker (phase 2, this document) | Proposed | List selection | Settled by user |
 
@@ -93,7 +93,7 @@ The maintainer does not need a physical smartcard to develop this. [SoftHSM2](ht
 
 ## Spike script and reporter validation protocol
 
-The maintainer's environment has no smartcard and no display for an interactive Electron session, so the spike is packaged as a runnable script for anyone with the right setup — primarily the issue reporter, who offered to test: [`testing/spikes/smartcard-pin-spike/main.mjs`](https://github.com/IsmaelMartinez/teams-for-linux/blob/main/testing/spikes/smartcard-pin-spike/main.mjs). It is a standalone Electron main script (no Teams for Linux app code involved) that registers both the PIN handler and a `select-client-certificate` listener with verbose logging, and offers three settle paths in the PIN window — **Submit**, **Cancel → `resolve("")`**, **Cancel → `reject()`** — so each spike question maps to a button press plus a counter check.
+The maintainer's environment has no smartcard and no display for an interactive Electron session, so the spike is packaged as a runnable script for anyone with the right setup — primarily the issue reporter, who offered to test: [`testing/spikes/smartcard-pin-spike/main.mjs`](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/testing/spikes/smartcard-pin-spike/main.mjs). It is a standalone Electron main script (no Outlook for Linux app code involved) that registers both the PIN handler and a `select-client-certificate` listener with verbose logging, and offers three settle paths in the PIN window — **Submit**, **Cancel → `resolve("")`**, **Cancel → `reject()`** — so each spike question maps to a button press plus a counter check.
 
 Run from a repo checkout:
 
@@ -149,11 +149,11 @@ modutil -dbdir sql:$HOME/.pki/nssdb -add softhsm -libfile /usr/lib/softhsm/libso
 
 ## Related
 
-- Issue [#2639](https://github.com/IsmaelMartinez/teams-for-linux/issues/2639) — feature request with PoC gist
+- Issue [#2639](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2639) — feature request with PoC gist
 - [Electron `app.setClientCertRequestPasswordHandler` docs](https://www.electronjs.org/docs/latest/api/app#appsetclientcertrequestpasswordhandlerhandler-linux) / [electron/electron#41205](https://github.com/electron/electron/pull/41205)
 - [Reporter's proof-of-concept gist](https://gist.github.com/agemuend/8fd859ee074517188744f8c6fc11c9a4)
 - `app/webauthn/pinDialog.js` and [ADR-021](../adr/021-webauthn-fido2-linux.md) — secure PIN window pattern and opt-in beta precedent
-- Issue [#2631](https://github.com/IsmaelMartinez/teams-for-linux/issues/2631) / [PR #2634](https://github.com/IsmaelMartinez/teams-for-linux/pull/2634) — FIDO2 touch prompt, the sibling prompt this should share UI infrastructure with
+- Issue [#2631](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2631) / [PR #2634](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2634) — FIDO2 touch prompt, the sibling prompt this should share UI infrastructure with
 - `app/_shared/createDialogWindow.js` — existing shared dialog scaffolding, candidate base for the shared prompt helper
 - [WebAuthn / FIDO2 Implementation Plan](webauthn-fido2-implementation-plan.md) — adjacent hardware-authenticator work
 - [Configuration Organization Research](configuration-organization-research.md) — nested config pattern for new options

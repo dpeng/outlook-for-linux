@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   startApp,
-  findMainTeamsWindow,
+  findMainOutlookWindow,
   waitForLoginRedirect,
   getRegisteredHandlers,
   closeAndCleanup,
@@ -22,7 +22,7 @@ test('multi-account disabled = byte-identical launch (no profile-* IPC handlers)
   // so this test fails loudly if the default ever changes — that itself
   // would be a regression worth flagging.
   const ctx = await startApp({
-    prefix: 'teams-e2e-disabled-',
+    prefix: 'outlook-e2e-disabled-',
     config: { multiAccount: { enabled: false } },
     // Need `electronApp.evaluate` to introspect ipcMain._invokeHandlers.
     allowEval: true,
@@ -31,7 +31,7 @@ test('multi-account disabled = byte-identical launch (no profile-* IPC handlers)
   try {
     expect(ctx.electronApp.windows().length).toBeGreaterThan(0);
 
-    const mainWindow = findMainTeamsWindow(ctx.electronApp);
+    const mainWindow = findMainOutlookWindow(ctx.electronApp);
     expect(mainWindow).toBeTruthy();
     await waitForLoginRedirect(mainWindow);
 

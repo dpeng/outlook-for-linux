@@ -109,7 +109,7 @@ describe('Mixed message types', () => {
 	});
 });
 
-describe('Teams for Linux realistic scenarios', () => {
+describe('Outlook for Linux realistic scenarios', () => {
 	test('MQTT connection log', () => {
 		const result = sanitizeLogData([
 			'MQTT connecting to:',
@@ -148,7 +148,7 @@ describe('Teams for Linux realistic scenarios', () => {
 	test('Config file path log', () => {
 		const result = sanitizeLogData([
 			'Loading config from:',
-			'/home/realusername/.config/teams-for-linux/config.json'
+			'/home/realusername/.config/outlook-for-linux/config.json'
 		]);
 		assert.ok(result[1].includes('/home/[USER]'), `Expected username redacted: ${result[1]}`);
 	});

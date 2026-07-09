@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Teams for Linux - Screen Share Preview</title>
+    <title>Outlook for Linux - Screen Share Preview</title>
     <style>
         body {
             font-family: sans-serif;
@@ -55,7 +55,7 @@
             const statusOverlay = document.querySelector('.status-overlay');
 
             statusOverlay.textContent = 'Screen Share Active';
-            document.title = 'Teams for Linux - Screen is being shared';
+            document.title = 'Outlook for Linux - Screen is being shared';
 
             let bitmapCtx = null;
             try {
@@ -140,7 +140,7 @@
                     const isActive = await globalThis.electronAPI.getScreenSharingStatus();
                     if (!isActive) {
                         statusOverlay.textContent = 'Screen Share Inactive';
-                        document.title = 'Teams for Linux - Nothing is being shared';
+                        document.title = 'Outlook for Linux - Nothing is being shared';
                         if (port) {
                             try { port.close(); } catch { /* noop */ }
                             port = null;

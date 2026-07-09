@@ -1,9 +1,9 @@
 # History
 
 This project originated as a fork of
-[JamieMagee teams-for-linux](https://github.com/JamieMagee/teams-for-linux)
+[JamieMagee outlook-for-linux](https://github.com/JamieMagee/outlook-for-linux)
 repository, which itself was forked from
-[Ivelkov teams-for-linux](https://github.com/ivelkov/teams-for-linux).
+[Ivelkov outlook-for-linux](https://github.com/ivelkov/outlook-for-linux).
 
 Jamie expressed interest in refactoring the project to use TypeScript and
 supporting it long-term. However, he eventually archived his fork. I attempted
@@ -13,7 +13,7 @@ fixes and added features has grown considerably, addressing many bugs and
 expanding functionality.
 
 To unlock additional GitHub functionalities, we eventually unforked the project
-[#87](https://github.com/IsmaelMartinez/teams-for-linux/issues/87).
+[#87](https://github.com/IsmaelMartinez/outlook-for-linux/issues/87).
 
 Initially, the plan was to let the project die once Microsoft implemented a
 native Linux client, as suggested on the
@@ -21,7 +21,7 @@ native Linux client, as suggested on the
 Microsoft did release an official Linux client in early 2020.
 
 However, by the
-[end of 2022](https://learn.microsoft.com/en-us/answers/questions/1791839/where-is-teams-for-linux),
+[end of 2022](https://learn.microsoft.com/en-us/answers/questions/1791839/where-is-outlook-for-linux),
 Microsoft stopped its support for that client, forcing users to switch to the
 [Progressive Web App (PWA) version](https://techcommunity.microsoft.com/blog/microsoftteamsblog/microsoft-teams-progressive-web-app-now-available-on-linux/3669846).
 

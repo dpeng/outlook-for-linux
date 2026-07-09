@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > [!NOTE]
-> **For comprehensive documentation**, see the markdown files in `docs-site/docs/` directory. These files are the source for the [Teams for Linux Documentation Site](https://ismaelmartinez.github.io/teams-for-linux/). This file contains essential quick reference information and critical warnings specific to Claude Code workflows.
+> **For comprehensive documentation**, see the markdown files in `docs-site/docs/` directory. These files are the source for the [Outlook for Linux Documentation Site](https://ismaelmartinez.github.io/outlook-for-linux/). This file contains essential quick reference information and critical warnings specific to Claude Code workflows.
 >
 > **Important for AI agents**: Always read documentation from the local markdown files in `docs-site/docs/` rather than fetching from the web. The URLs are provided for human reference only.
 
@@ -29,7 +29,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Architecture
 
-Teams for Linux is an Electron-based desktop application that wraps the Microsoft Teams web app. The architecture follows a modular pattern with the main process coordinating various specialized modules.
+Outlook for Linux is an Electron-based desktop application that wraps the Microsoft Teams web app. The architecture follows a modular pattern with the main process coordinating various specialized modules.
 
 **Key file locations:**
 - **Entry Point:** `app/index.js` - Main Electron process (being refactored incrementally)
@@ -44,8 +44,8 @@ Teams for Linux is an Electron-based desktop application that wraps the Microsof
 - Module-specific README.md files in `app/` subdirectories
 
 **Web references (for humans):**
-- https://ismaelmartinez.github.io/teams-for-linux/development/contributing#architecture-overview
-- https://ismaelmartinez.github.io/teams-for-linux/development/ipc-api
+- https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#architecture-overview
+- https://ismaelmartinez.github.io/outlook-for-linux/development/ipc-api
 
 ## Development Patterns
 
@@ -119,9 +119,9 @@ If you need to log sensitive data for debugging during development:
 3. Remove ALL debug logs with PII before the PR is merged
 4. Never merge PII-containing logs to main branch
 
-**For detailed logging research**, see `docs-site/docs/development/adr/013-pii-log-sanitization.md` ([web version](https://ismaelmartinez.github.io/teams-for-linux/development/adr/013-pii-log-sanitization)).
+**For detailed logging research**, see `docs-site/docs/development/adr/013-pii-log-sanitization.md` ([web version](https://ismaelmartinez.github.io/outlook-for-linux/development/adr/013-pii-log-sanitization)).
 
-**For complete development patterns and guidelines**, see `docs-site/docs/development/contributing.md` ([web version](https://ismaelmartinez.github.io/teams-for-linux/development/contributing)).
+**For complete development patterns and guidelines**, see `docs-site/docs/development/contributing.md` ([web version](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing)).
 
 ## Testing and Quality
 
@@ -138,7 +138,7 @@ The project uses Playwright for end-to-end testing:
 - Tests start with completely clean state (no cookies, cache, storage)
 - Validates complete app launch flow and Microsoft login redirect
 
-**For full testing strategy**, see `docs-site/docs/development/adr/009-automated-testing-strategy.md` ([web version](https://ismaelmartinez.github.io/teams-for-linux/development/adr/009-automated-testing-strategy)).
+**For full testing strategy**, see `docs-site/docs/development/adr/009-automated-testing-strategy.md` ([web version](https://ismaelmartinez.github.io/outlook-for-linux/development/adr/009-automated-testing-strategy)).
 
 ### Quality Checks
 
@@ -152,7 +152,7 @@ When contributing:
 ### Documentation Site
 
 The project documentation is built with Docusaurus and deployed to GitHub Pages:
-- **URL**: https://ismaelmartinez.github.io/teams-for-linux/
+- **URL**: https://ismaelmartinez.github.io/outlook-for-linux/
 - **Platform**: Docusaurus 3.9.2
 - **Local Development**: `cd docs-site && npm run start`
 - **Deployment**: Automated via GitHub Actions
@@ -162,7 +162,7 @@ The project documentation is built with Docusaurus and deployed to GitHub Pages:
 ### Markdown Standards
 
 **All markdown files in this project** should follow the project's markdown standards:
-- See `docs-site/docs/development/contributing.md` (Markdown Standards section) for comprehensive guidelines ([web version](https://ismaelmartinez.github.io/teams-for-linux/development/contributing#markdown-standards))
+- See `docs-site/docs/development/contributing.md` (Markdown Standards section) for comprehensive guidelines ([web version](https://ismaelmartinez.github.io/outlook-for-linux/development/contributing#markdown-standards))
 - Applies to documentation, README files, task lists, PRDs, and all markdown content
 
 ### Documentation Updates
@@ -227,7 +227,7 @@ Without this, the release notes will show the PR but not the originating issue, 
 
 When a PR has review comments, address them proactively:
 
-1. Fetch PR comments using `gh api repos/IsmaelMartinez/teams-for-linux/pulls/{PR_NUMBER}/comments`
+1. Fetch PR comments using `gh api repos/IsmaelMartinez/outlook-for-linux/pulls/{PR_NUMBER}/comments`
 2. For each actionable review comment (not automated bots like changelog, build artifacts, SonarQube):
    - Make the requested code changes
    - Commit and push the changes
@@ -252,7 +252,7 @@ When a PR has review comments, address them proactively:
 
 **Roadmap sections:**
 - **Ready for Implementation** - Features with completed research, ready to build
-- **User Feedback Received** - MVP shipped, user feedback identifies gaps to address
+- **User Feedback Received** - Initial version shipped, user feedback identifies gaps to address
 - **Requires Validation First** - Features needing spikes/validation before implementation
 - **Stalled** - Work started but blocked (e.g., awaiting user validation)
 - **Awaiting User Feedback** - Shipped features, waiting for requests before expanding
@@ -282,21 +282,21 @@ When a PR has review comments, address them proactively:
 - **IPC API Documentation**: `docs-site/docs/development/ipc-api.md`
 
 **Web versions (for human reference):**
-- https://ismaelmartinez.github.io/teams-for-linux/development/plan/roadmap
-- https://ismaelmartinez.github.io/teams-for-linux/quick-reference
-- https://ismaelmartinez.github.io/teams-for-linux/development/module-index
-- https://ismaelmartinez.github.io/teams-for-linux/development/adr/
-- https://ismaelmartinez.github.io/teams-for-linux/development/research/
-- https://ismaelmartinez.github.io/teams-for-linux/development/contributing
-- https://ismaelmartinez.github.io/teams-for-linux/configuration
-- https://ismaelmartinez.github.io/teams-for-linux/troubleshooting
-- https://ismaelmartinez.github.io/teams-for-linux/development/ipc-api
+- https://ismaelmartinez.github.io/outlook-for-linux/development/plan/roadmap
+- https://ismaelmartinez.github.io/outlook-for-linux/quick-reference
+- https://ismaelmartinez.github.io/outlook-for-linux/development/module-index
+- https://ismaelmartinez.github.io/outlook-for-linux/development/adr/
+- https://ismaelmartinez.github.io/outlook-for-linux/development/research/
+- https://ismaelmartinez.github.io/outlook-for-linux/development/contributing
+- https://ismaelmartinez.github.io/outlook-for-linux/configuration
+- https://ismaelmartinez.github.io/outlook-for-linux/troubleshooting
+- https://ismaelmartinez.github.io/outlook-for-linux/development/ipc-api
 
 ## Repo Butler
 
 This repo is monitored by [Repo Butler](https://github.com/IsmaelMartinez/repo-butler), a portfolio health agent that observes repo health daily and generates dashboards, governance proposals, and tier classifications.
 
-**Your report:** https://ismaelmartinez.github.io/repo-butler/teams-for-linux.html
+**Your report:** https://ismaelmartinez.github.io/repo-butler/outlook-for-linux.html
 **Portfolio dashboard:** https://ismaelmartinez.github.io/repo-butler/
 **Consumer guide:** https://github.com/IsmaelMartinez/repo-butler/blob/main/docs/consumer-guide.md
 

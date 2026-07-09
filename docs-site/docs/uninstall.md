@@ -1,6 +1,6 @@
 # Uninstall Guide
 
-This guide covers how to remove Teams for Linux from your system, including the application itself, package repositories, and user data.
+This guide covers how to remove Outlook for Linux from your system, including the application itself, package repositories, and user data.
 
 :::tip
 The uninstall steps depend on how you originally installed the application. If you're unsure, check your package manager's installed packages list.
@@ -12,13 +12,13 @@ The uninstall steps depend on how you originally installed the application. If y
 
 ```bash
 # Remove the application, its configuration, and any orphaned dependencies
-sudo apt purge --autoremove teams-for-linux
+sudo apt purge --autoremove outlook-for-linux
 
 # Remove the repository source
-sudo rm /etc/apt/sources.list.d/teams-for-linux-packages.sources
+sudo rm /etc/apt/sources.list.d/outlook-for-linux-packages.sources
 
 # Remove the signing key
-sudo rm /etc/apt/keyrings/teams-for-linux.asc
+sudo rm /etc/apt/keyrings/outlook-for-linux.asc
 
 # Update package lists
 sudo apt update
@@ -28,13 +28,13 @@ sudo apt update
 
 ```bash
 # Remove the application
-sudo dnf remove teams-for-linux
+sudo dnf remove outlook-for-linux
 
 # Clean up orphaned dependencies
 sudo dnf autoremove
 
 # Remove the repository configuration
-sudo rm /etc/yum.repos.d/teams-for-linux.repo
+sudo rm /etc/yum.repos.d/outlook-for-linux.repo
 ```
 
 ## Distribution-Specific Packages
@@ -43,31 +43,31 @@ sudo rm /etc/yum.repos.d/teams-for-linux.repo
 
 ```bash
 # Using yay
-yay -Rs teams-for-linux
+yay -Rs outlook-for-linux
 
 # Using paru
-paru -Rs teams-for-linux
+paru -Rs outlook-for-linux
 
 # Using pacman directly
-sudo pacman -Rs teams-for-linux
+sudo pacman -Rs outlook-for-linux
 ```
 
 ### Ubuntu (Pacstall)
 
 ```bash
-pacstall -R teams-for-linux-deb
+pacstall -R outlook-for-linux-deb
 ```
 
 ### Vylen Linux
 
 ```bash
-sudo emerald purge teams-for-linux
+sudo emerald purge outlook-for-linux
 ```
 
 ### Snap
 
 ```bash
-sudo snap remove --purge teams-for-linux
+sudo snap remove --purge outlook-for-linux
 ```
 
 ### Flatpak
@@ -81,13 +81,13 @@ flatpak uninstall --delete-data com.github.IsmaelMartinez.teams_for_linux
 ### Debian/Ubuntu (.deb installed via dpkg)
 
 ```bash
-sudo dpkg -P teams-for-linux
+sudo dpkg -P outlook-for-linux
 ```
 
 ### Red Hat/Fedora (.rpm installed via rpm)
 
 ```bash
-sudo rpm -e teams-for-linux
+sudo rpm -e outlook-for-linux
 ```
 
 ### AppImage
@@ -95,7 +95,7 @@ sudo rpm -e teams-for-linux
 AppImage files are standalone executables with no system-level installation. Delete the AppImage file you downloaded:
 
 ```bash
-rm teams-for-linux_*.AppImage
+rm outlook-for-linux_*.AppImage
 ```
 
 If you used [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher), also remove the desktop integration it created.
@@ -105,7 +105,7 @@ If you used [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher),
 Delete the extracted directory:
 
 ```bash
-rm -rf teams-for-linux/
+rm -rf outlook-for-linux/
 ```
 
 ## Removing User Data
@@ -114,9 +114,9 @@ Uninstalling the application does not remove your user data and configuration. T
 
 | Installation type | Configuration directory |
 |-------------------|----------------------|
-| Standard installations (deb, rpm, AUR, etc.) | `~/.config/teams-for-linux` |
-| Snap | `~/snap/teams-for-linux/current/.config/teams-for-linux/` |
-| Flatpak (user install) | `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/teams-for-linux` |
+| Standard installations (deb, rpm, AUR, etc.) | `~/.config/outlook-for-linux` |
+| Snap | `~/snap/outlook-for-linux/current/.config/outlook-for-linux/` |
+| Flatpak (user install) | `~/.var/app/com.github.IsmaelMartinez.teams_for_linux/config/outlook-for-linux` |
 | From source | `~/.config/Electron/` |
 
 :::warning
@@ -125,6 +125,6 @@ Removing user data deletes your cached login sessions, configuration, and any lo
 
 ## Related Documentation
 
-- [Installation Guide](installation.md) — Install Teams for Linux
+- [Installation Guide](installation.md) — Install Outlook for Linux
 - [Configuration](configuration.md) — Configuration reference
 - [Troubleshooting](troubleshooting.md) — Common issues and solutions

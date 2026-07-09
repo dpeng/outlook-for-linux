@@ -1,4 +1,4 @@
-# Contributing to Teams for Linux
+# Contributing to Outlook for Linux
 
 Thank you for considering contributing! This guide will help you get started with development.
 
@@ -44,8 +44,8 @@ Artifacts require GitHub login and are retained for 30 days.
 
 ```bash
 # Clone your fork
-git clone https://github.com/your-username/teams-for-linux.git
-cd teams-for-linux
+git clone https://github.com/your-username/outlook-for-linux.git
+cd outlook-for-linux
 
 # Install dependencies
 npm install
@@ -86,7 +86,7 @@ podman run -it --rm --volume .:/var/mnt:z -w /var/mnt/ node:20 /bin/bash -c \
 
 ```bash
 npm run dist:linux:snap
-cd dist && sudo snap install teams-for-linux_*.snap --dangerous
+cd dist && sudo snap install outlook-for-linux_*.snap --dangerous
 ```
 
 ## Architecture Overview
@@ -320,7 +320,7 @@ When updating standards, update this section only. All other files should refere
 
 ### End-to-End (E2E) Tests
 
-Teams for Linux uses Playwright for automated end-to-end testing. These tests ensure the application launches correctly and validates core functionality.
+Outlook for Linux uses Playwright for automated end-to-end testing. These tests ensure the application launches correctly and validates core functionality.
 
 #### Running E2E Tests
 
@@ -411,11 +411,11 @@ npm start -- --user-data-dir=/tmp/test-profile
 ```bash
 # Test production build
 npm run pack
-./dist/linux-unpacked/teams-for-linux
+./dist/linux-unpacked/outlook-for-linux
 
 # Test package installation
-sudo dpkg -i dist/teams-for-linux_*.deb
-teams-for-linux
+sudo dpkg -i dist/outlook-for-linux_*.deb
+outlook-for-linux
 ```
 
 ## Pull Request Guidelines
@@ -481,9 +481,9 @@ See [Manual Release Process](manual-release-process.md) for detailed instruction
 
 ### Community Support
 
-- **Matrix Space**: [#teams-for-linux-space:matrix.org](https://matrix.to/#/#teams-for-linux-space:matrix.org)
-- **GitHub Discussions**: [Project discussions](https://github.com/IsmaelMartinez/teams-for-linux/discussions)
-- **GitHub Issues**: [Bug reports and feature requests](https://github.com/IsmaelMartinez/teams-for-linux/issues)
+- **Matrix Space**: [#outlook-for-linux-space:matrix.org](https://matrix.to/#/#outlook-for-linux-space:matrix.org)
+- **GitHub Discussions**: [Project discussions](https://github.com/IsmaelMartinez/outlook-for-linux/discussions)
+- **GitHub Issues**: [Bug reports and feature requests](https://github.com/IsmaelMartinez/outlook-for-linux/issues)
 
 ## Code of Conduct
 
@@ -491,7 +491,7 @@ We are committed to providing a welcoming and inspiring community for all. Pleas
 
 ## License
 
-By contributing to Teams for Linux, you agree that your contributions will be licensed under the GPL-3.0 license.
+By contributing to Outlook for Linux, you agree that your contributions will be licensed under the GPL-3.0 license.
 
 ## Related Documentation
 

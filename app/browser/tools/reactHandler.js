@@ -290,12 +290,13 @@ class ReactHandler {
   _isAllowedTeamsDomain(hostname) {
     // List of valid Teams domains
     const allowedDomains = [
-      'teams.cloud.microsoft',
-      'teams.microsoft.com',
-      'teams.live.com'
+      'outlook.office.com',
+      'outlook.office365.com',
+      'outlook.live.com',
+      'outlook.cloud.microsoft'
     ];
 
-    // Handle Microsoft Cloud App Security (MCAS) suffix. eg: teams.cloud.microsoft.mcas.ms
+    // Handle Microsoft Cloud App Security (MCAS) suffix. eg: outlook.office.com.mcas.ms
     const MCAS_SUFFIX = '.mcas.ms';
     if (hostname.endsWith(MCAS_SUFFIX)) {
       hostname = hostname.slice(0, -MCAS_SUFFIX.length);
@@ -304,7 +305,7 @@ class ReactHandler {
     for (const domain of allowedDomains) {
       // Exact match
       if (hostname === domain) return true;
-      // Immediate subdomain match (prevents evil.com.teams.cloud.microsoft / evil.com.teams.microsoft.com attacks)
+      // Immediate subdomain match (prevents evil.com.outlook.office.com attacks)
       if (hostname.endsWith('.' + domain)) {
         const subdomainPart = hostname.substring(0, hostname.length - (domain.length + 1));
         if (!subdomainPart.includes('.')) {

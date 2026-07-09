@@ -8,7 +8,7 @@ tags: [adr, architecture, decisions]
 
 # Architecture Decision Records (ADRs)
 
-This directory contains Architecture Decision Records documenting significant technical decisions made in the Teams for Linux project.
+This directory contains Architecture Decision Records documenting significant technical decisions made in the Outlook for Linux project.
 
 ## What are ADRs?
 

@@ -17,7 +17,7 @@ class DocumentationWindow {
 
     // Create new documentation window
     this.window = new BrowserWindow({
-      title: 'Teams for Linux - Documentation',
+      title: 'Outlook for Linux - Documentation',
       width: 1200,
       height: 800,
       minWidth: 800,

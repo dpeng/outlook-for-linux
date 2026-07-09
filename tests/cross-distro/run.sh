@@ -83,7 +83,7 @@ get_vnc_port() {
 
 show_help() {
     cat <<'EOF'
-Cross-Distro Testing for Teams for Linux
+Cross-Distro Testing for Outlook for Linux
 
 Usage:
   ./run.sh <distro> <display-server> [options]
@@ -117,10 +117,10 @@ Examples:
   ./run.sh ubuntu x11 --latest
 
   # Local AppImage (manual testing via noVNC)
-  ./run.sh ubuntu x11 --appimage ../../dist/teams-for-linux.AppImage
+  ./run.sh ubuntu x11 --appimage ../../dist/outlook-for-linux.AppImage
 
   # Download from specific URL
-  ./run.sh fedora wayland --url https://github.com/.../teams-for-linux.AppImage
+  ./run.sh fedora wayland --url https://github.com/.../outlook-for-linux.AppImage
 
   # All display servers for one distro (3 containers in parallel)
   ./run.sh --run-distro ubuntu --url https://github.com/.../teams.AppImage
@@ -231,8 +231,8 @@ setup_appimage() {
             exit 1
         fi
         echo "[*] Copying AppImage to mount directory..."
-        cp "$APPIMAGE_PATH" "${app_dir}/teams-for-linux.AppImage"
-        chmod +x "${app_dir}/teams-for-linux.AppImage"
+        cp "$APPIMAGE_PATH" "${app_dir}/outlook-for-linux.AppImage"
+        chmod +x "${app_dir}/outlook-for-linux.AppImage"
     fi
     return 0
 }
@@ -422,7 +422,7 @@ if [[ "$APP_LATEST" == "true" ]]; then
         exit 1
     fi
     echo "[*] Fetching latest release URL from GitHub..."
-    GITHUB_REPO="IsmaelMartinez/teams-for-linux"
+    GITHUB_REPO="IsmaelMartinez/outlook-for-linux"
     # Skip arm64/armv7l assets — containers run --platform linux/amd64.
     APP_URL=$(curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/releases/latest" \
         | grep -o '"browser_download_url": *"[^"]*\.AppImage"' \

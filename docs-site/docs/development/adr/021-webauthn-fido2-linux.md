@@ -10,11 +10,11 @@ id: 021-webauthn-fido2-linux
 
 ## Context
 
-Hardware security keys (YubiKey, SoloKeys, Nitrokey, Feitian, etc.) have been unusable on `teams-for-linux` for years, tracked in the long-running umbrella issue [#802](https://github.com/IsmaelMartinez/teams-for-linux/issues/802) and a steady stream of duplicates (#1407, #1546, #1338, #1824, #2011, #2038, #1875, #2152, #2332, #2409).
+Hardware security keys (YubiKey, SoloKeys, Nitrokey, Feitian, etc.) have been unusable on `outlook-for-linux` for years, tracked in the long-running umbrella issue [#802](https://github.com/IsmaelMartinez/outlook-for-linux/issues/802) and a steady stream of duplicates (#1407, #1546, #1338, #1824, #2011, #2038, #1875, #2152, #2332, #2409).
 
 The root cause is upstream: Electron/Chromium on Linux does not ship a native FIDO2 authenticator backend. The WebAuthn JavaScript API surface (`navigator.credentials.create` / `.get`) is present in the renderer and the ceremony starts, but there is no OS-level platform authenticator implementation to complete it against a USB key. The tracking ticket is [electron/electron#24573](https://github.com/electron/electron/issues/24573), which has seen no movement for years. macOS and Windows are unaffected because Chromium on those platforms delegates to the OS WebAuthn stack.
 
-A previous attempt to ship a fix ([PR #2353](https://github.com/IsmaelMartinez/teams-for-linux/pull/2353)) was reverted by [PR #2356](https://github.com/IsmaelMartinez/teams-for-linux/pull/2356) after merge, because it had not been validated against real hardware with a real Microsoft tenant. Community testers (@rafajunio, @machadofelipe, @marcovr, @rlavriv) then iterated on a replacement ([PR #2357](https://github.com/IsmaelMartinez/teams-for-linux/pull/2357)) which has been end-to-end validated on YubiKey + Arch Linux + Microsoft 365 with `fido2-tools` 1.16.0.
+A previous attempt to ship a fix ([PR #2353](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2353)) was reverted by [PR #2356](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2356) after merge, because it had not been validated against real hardware with a real Microsoft tenant. Community testers (@rafajunio, @machadofelipe, @marcovr, @rlavriv) then iterated on a replacement ([PR #2357](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2357)) which has been end-to-end validated on YubiKey + Arch Linux + Microsoft 365 with `fido2-tools` 1.16.0.
 
 ## Decision
 
@@ -46,7 +46,7 @@ Preferred in principle, but electron/electron#24573 has been idle for years and 
 
 ### Native Node.js FIDO2 library
 
-Evaluated `@vivokey/fido2`, `node-fido2-manager`, and `fido2-lib`. All of these either implement only the server side of FIDO2 (relying-party verification of assertions) or require native HID I/O that we would have to bundle as a compiled addon. `fido2-lib` is server-only. `node-fido2-manager` is a thin libfido2 binding that would make teams-for-linux responsible for distributing prebuilt binaries across four package formats (deb, rpm, AppImage, snap) for at least three architectures (x86_64, arm64, armv7l). Rejected: build/distribution burden is disproportionate to the benefit over shelling out to the distro-shipped `fido2-tools` binaries.
+Evaluated `@vivokey/fido2`, `node-fido2-manager`, and `fido2-lib`. All of these either implement only the server side of FIDO2 (relying-party verification of assertions) or require native HID I/O that we would have to bundle as a compiled addon. `fido2-lib` is server-only. `node-fido2-manager` is a thin libfido2 binding that would make outlook-for-linux responsible for distributing prebuilt binaries across four package formats (deb, rpm, AppImage, snap) for at least three architectures (x86_64, arm64, armv7l). Rejected: build/distribution burden is disproportionate to the benefit over shelling out to the distro-shipped `fido2-tools` binaries.
 
 ### Chromium virtual authenticator API
 
@@ -64,7 +64,7 @@ Users on Linux can finally sign in to Microsoft accounts that require a hardware
 
 ### Negative
 
-Teams for Linux becomes responsible for a CLI-scraping integration that is sensitive to `fido2-tools` output format. Current implementation handles both libfido2 versions that echo input back on stdout (1.16.0+) and versions that do not, but new versions may introduce fresh quirks. See § "Known limitations" below.
+Outlook for Linux becomes responsible for a CLI-scraping integration that is sensitive to `fido2-tools` output format. Current implementation handles both libfido2 versions that echo input back on stdout (1.16.0+) and versions that do not, but new versions may introduce fresh quirks. See § "Known limitations" below.
 
 Per-ceremony process spawn has latency cost (a few hundred milliseconds) compared to an in-process authenticator. Acceptable for an authentication flow, noticeable but tolerable for ambient passkey autofill (which we disable anyway by passing `mediation === "conditional"` through to the native path).
 
@@ -79,10 +79,10 @@ The v1 implementation uses only the first connected FIDO2 device. Users with mul
 
 ## References
 
-- [#802 umbrella tracking ticket](https://github.com/IsmaelMartinez/teams-for-linux/issues/802)
-- [PR #2357 current implementation](https://github.com/IsmaelMartinez/teams-for-linux/pull/2357)
-- [PR #2353 initial attempt, reverted](https://github.com/IsmaelMartinez/teams-for-linux/pull/2353)
-- [PR #2356 revert](https://github.com/IsmaelMartinez/teams-for-linux/pull/2356)
+- [#802 umbrella tracking ticket](https://github.com/IsmaelMartinez/outlook-for-linux/issues/802)
+- [PR #2357 current implementation](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2357)
+- [PR #2353 initial attempt, reverted](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2353)
+- [PR #2356 revert](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2356)
 - [electron/electron#24573 upstream tracking](https://github.com/electron/electron/issues/24573)
 - [libfido2 / fido2-tools upstream](https://github.com/Yubico/libfido2)
 - [Ferdium electron-webauthn-linux precedent](https://github.com/ferdium/ferdium-app/pull/2337)

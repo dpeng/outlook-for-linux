@@ -1,11 +1,11 @@
 # Join Meeting Window Takeover (Issue #2322)
 
 :::info Iterative Implementation
-Issue [#2322](https://github.com/IsmaelMartinez/teams-for-linux/issues/2322) reports that the "Join Meeting" action from the tray/app menu replaces the whole window content, leaving the user stranded on the "meeting ended" screen with no visible way back to chat. The first iteration of the fix lands alongside this research. Further iterations are possible once we have user feedback from non-enforced-anonymous orgs.
+Issue [#2322](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2322) reports that the "Join Meeting" action from the tray/app menu replaces the whole window content, leaving the user stranded on the "meeting ended" screen with no visible way back to chat. The first iteration of the fix lands alongside this research. Further iterations are possible once we have user feedback from non-enforced-anonymous orgs.
 :::
 
 Date: 2026-04-20
-Issue: [#2322](https://github.com/IsmaelMartinez/teams-for-linux/issues/2322)
+Issue: [#2322](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2322)
 Status: First iteration shipped; follow-up options documented below
 
 ## Background
@@ -52,7 +52,7 @@ A keyboard accelerator for `Return to Teams` (for example `Ctrl+Shift+T`) would 
 
 ## Related
 
-- Issue [#2322](https://github.com/IsmaelMartinez/teams-for-linux/issues/2322) — Join Meeting replaces whole window content
-- PR [#1856](https://github.com/IsmaelMartinez/teams-for-linux/pull/1856) — original Join Meeting feature
+- Issue [#2322](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2322) — Join Meeting replaces whole window content
+- PR [#1856](https://github.com/IsmaelMartinez/outlook-for-linux/pull/1856) — original Join Meeting feature
 - [ADR 014](../adr/014-quick-chat-deep-link-approach.md) — same-origin deep link pattern reused here
 - [ADR 010](../adr/010-multiple-windows-support.md) — relevant if a meeting popup is ever proposed

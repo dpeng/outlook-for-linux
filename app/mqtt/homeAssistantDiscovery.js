@@ -2,10 +2,10 @@
  * Home Assistant MQTT Auto-Discovery
  *
  * Publishes MQTT discovery configurations for Home Assistant, automatically
- * creating entities for Teams status, media states, and controls.
+ * creating entities for web app status, media states, and controls.
  *
  * Entities created:
- * - sensor:        Teams presence status (plain text), Microphone state
+ * - sensor:        Outlook presence status (plain text), Microphone state
  * - binary_sensor: In-Call, Incoming Call, Screen Sharing, Camera
  * - button:        Toggle Mute, Toggle Video, Toggle Hand Raise (requires commandTopic)
  *
@@ -32,7 +32,7 @@ class HomeAssistantDiscovery {
 		this.#topicPrefix = config.mqtt.topicPrefix;
 		this.#discoveryPrefix = config.mqtt.homeAssistant?.discoveryPrefix || 'homeassistant';
 		this.#deviceId = config.mqtt.clientId;
-		this.#deviceName = config.mqtt.homeAssistant?.deviceName || 'Teams for Linux';
+		this.#deviceName = config.mqtt.homeAssistant?.deviceName || 'Outlook for Linux';
 		this.#mediaTopics = getMediaTopics(config.mqtt);
 		this.#commandTopic = config.mqtt.commandTopic
 			? `${config.mqtt.topicPrefix}/${config.mqtt.commandTopic}`
@@ -54,8 +54,8 @@ class HomeAssistantDiscovery {
 		return {
 			identifiers: [this.#deviceId],
 			name: this.#deviceName,
-			model: 'Teams for Linux',
-			manufacturer: 'teams-for-linux',
+			model: 'Outlook for Linux',
+			manufacturer: 'outlook-for-linux',
 		};
 	}
 
@@ -69,11 +69,11 @@ class HomeAssistantDiscovery {
 
 	#buildSensorConfig() {
 		return {
-			name: 'Teams Status',
+			name: 'Outlook Status',
 			unique_id: `${this.#deviceId}_status`,
 			state_topic: `${this.#topicPrefix}/${this.#mqttConfig.statusTopic}`,
 			value_template: '{{ value_json.status }}',
-			icon: 'mdi:microsoft-teams',
+			icon: 'mdi:email-outline',
 			availability: this.#getAvailability(),
 			device: this.#getDevice(),
 		};
@@ -94,7 +94,7 @@ class HomeAssistantDiscovery {
 
 	#buildMicrophoneSensorConfig() {
 		return {
-			name: 'Teams Microphone',
+			name: 'Outlook Microphone',
 			unique_id: `${this.#deviceId}_microphone`,
 			state_topic: `${this.#topicPrefix}/${this.#mediaTopics.microphone}`,
 			icon: 'mdi:microphone',
@@ -123,37 +123,37 @@ class HomeAssistantDiscovery {
 			{
 				component: 'binary_sensor',
 				objectId: 'in_call',
-				config: this.#buildBinarySensorConfig('Teams In Call', 'in_call', this.#mediaTopics.inCall, 'mdi:phone-in-talk')
+				config: this.#buildBinarySensorConfig('Outlook In Call', 'in_call', this.#mediaTopics.inCall, 'mdi:phone-in-talk')
 			},
 			{
 				component: 'binary_sensor',
 				objectId: 'screen_sharing',
-				config: this.#buildBinarySensorConfig('Teams Screen Sharing', 'screen_sharing', this.#mediaTopics.screenSharing, 'mdi:monitor-share')
+				config: this.#buildBinarySensorConfig('Outlook Screen Sharing', 'screen_sharing', this.#mediaTopics.screenSharing, 'mdi:monitor-share')
 			},
 			{
 				component: 'binary_sensor',
 				objectId: 'camera',
-				config: this.#buildBinarySensorConfig('Teams Camera', 'camera', this.#mediaTopics.camera, 'mdi:camera')
+				config: this.#buildBinarySensorConfig('Outlook Camera', 'camera', this.#mediaTopics.camera, 'mdi:camera')
 			},
 			{
 				component: 'binary_sensor',
 				objectId: 'incoming_call',
-				config: this.#buildBinarySensorConfig('Teams Incoming Call', 'incoming_call', this.#mediaTopics.incomingCall, 'mdi:phone-ring')
+				config: this.#buildBinarySensorConfig('Outlook Incoming Call', 'incoming_call', this.#mediaTopics.incomingCall, 'mdi:phone-ring')
 			},
 			{
 				component: 'button',
 				objectId: 'toggle_mute',
-				config: this.#buildButtonConfig('Teams Toggle Mute', 'toggle_mute', 'toggle-mute', 'mdi:microphone')
+				config: this.#buildButtonConfig('Outlook Toggle Mute', 'toggle_mute', 'toggle-mute', 'mdi:microphone')
 			},
 			{
 				component: 'button',
 				objectId: 'toggle_video',
-				config: this.#buildButtonConfig('Teams Toggle Video', 'toggle_video', 'toggle-video', 'mdi:video')
+				config: this.#buildButtonConfig('Outlook Toggle Video', 'toggle_video', 'toggle-video', 'mdi:video')
 			},
 			{
 				component: 'button',
 				objectId: 'toggle_hand_raise',
-				config: this.#buildButtonConfig('Teams Toggle Hand Raise', 'toggle_hand_raise', 'toggle-hand-raise', 'mdi:hand-back-left')
+				config: this.#buildButtonConfig('Outlook Toggle Hand Raise', 'toggle_hand_raise', 'toggle-hand-raise', 'mdi:hand-back-left')
 			},
 		];
 

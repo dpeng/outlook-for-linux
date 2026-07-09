@@ -8,8 +8,8 @@ import { join } from 'node:path';
  * Notification lifecycle tests.
  *
  * Verifies that the preload.js Notification override returns objects with
- * the lifecycle methods Teams expects (addEventListener, removeEventListener,
- * close, dispatchEvent). Without these, Teams' internal state machine breaks
+ * the lifecycle methods the web app expects (addEventListener, removeEventListener,
+ * close, dispatchEvent). Without these, some internal state machines break
  * after the first notification call, causing subsequent ones to silently fail.
  *
  * These tests launch the app with a clean profile (no login session), so they
@@ -19,7 +19,7 @@ import { join } from 'node:path';
  */
 
 async function launchApp(notificationMethod) {
-  const userDataDir = mkdtempSync(join(tmpdir(), 'teams-e2e-notif-'));
+  const userDataDir = mkdtempSync(join(tmpdir(), 'outlook-e2e-notif-'));
   const electronApp = await electron.launch({
     args: [
       './app/index.js',
@@ -32,8 +32,8 @@ async function launchApp(notificationMethod) {
   return { electronApp, userDataDir };
 }
 
-const TEAMS_HOSTNAMES = new Set(['teams.cloud.microsoft', 'teams.microsoft.com',
-  'teams.live.com', 'login.microsoftonline.com']);
+const OUTLOOK_HOSTNAMES = new Set(['outlook.office.com', 'outlook.office365.com',
+  'outlook.live.com', 'outlook.cloud.microsoft', 'login.microsoftonline.com']);
 
 async function getMainWindow(electronApp) {
   await electronApp.firstWindow({ timeout: 30000 });
@@ -41,7 +41,7 @@ async function getMainWindow(electronApp) {
 
   while (Date.now() < deadline) {
     const mainWindow = electronApp.windows().find(w => {
-      try { return TEAMS_HOSTNAMES.has(new URL(w.url()).hostname); }
+      try { return OUTLOOK_HOSTNAMES.has(new URL(w.url()).hostname); }
       catch { return false; }
     });
     if (mainWindow) return mainWindow;
