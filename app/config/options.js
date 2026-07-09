@@ -654,6 +654,22 @@ module.exports = {
         type: "boolean",
         applyMode: "restart",
       },
+      outlookUnreadCountObserver: {
+        default: {
+          enabled: true,
+        },
+        describe:
+          "Outlook-specific unread count observer. Publishes Inbox unread counts through the existing unread-count event when Outlook Web does not expose the count in the page title.",
+        type: "object",
+        fields: {
+          "enabled": {
+            type: "boolean",
+            describe:
+              "Enable extracting the Inbox unread count from Outlook Web's folder list.",
+          },
+        },
+        applyMode: "restart",
+      },
       watchConfigFile: {
         default: false,
         describe: "Watch for changes in the config file and reload the app",

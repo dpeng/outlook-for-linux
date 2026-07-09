@@ -1,8 +1,25 @@
+function getUnreadCountFromTitle(title, config = {}) {
+  if (typeof title !== 'string') {
+    return { shouldPublish: false, number: null };
+  }
+
+  if (config.outlookUnreadCountObserver?.enabled) {
+    return { shouldPublish: false, number: null };
+  }
+
+  const sanitizedTitle = title.substring(0, 200);
+  const match = /^\((\d+)\)/.exec(sanitizedTitle);
+  const number = match ? Number.parseInt(match[1], 10) : 0;
+  return { shouldPublish: true, number };
+}
+
 class MutationObserverTitle {
   #lastNumber = -1;
+  #config = {};
 
   init(config) {
     if (config.useMutationTitleLogic) {
+      this.#config = config;
       console.debug("MutationObserverTitle enabled");
       // Check if DOM is already loaded
       if (document.readyState === 'loading') {
@@ -68,14 +85,13 @@ class MutationObserverTitle {
             return;
           }
           
-          // Limit title length for security
-          const sanitizedTitle = title.substring(0, 200);
           console.debug('MutationTitle: Title changed');
           
-          // Safely extract number from title with input validation
-          const regex = /^\((\d+)\)/;
-          const match = regex.exec(sanitizedTitle);
-          const number = match ? Number.parseInt(match[1], 10) : 0;
+          const { shouldPublish, number } = getUnreadCountFromTitle(title, this.#config);
+          if (!shouldPublish) {
+            console.debug("MutationTitle: No title unread count, skipping event dispatch");
+            return;
+          }
           
           // Only dispatch if the number has actually changed
           if (number === this.#lastNumber) {
@@ -86,7 +102,6 @@ class MutationObserverTitle {
 
           // Enhanced debugging for unread count extraction
           console.debug("MutationTitle: Extracting unread count", {
-            hasMatch: !!match,
             extractedNumber: number
           });
           

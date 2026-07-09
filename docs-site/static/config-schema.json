@@ -1,7 +1,7 @@
 {
   "$generatedBy": "scripts/generateConfigDocs.js",
   "source": "app/config/options.js",
-  "optionCount": 71,
+  "optionCount": 72,
   "options": [
     {
       "name": "appActiveCheckInterval",
@@ -701,6 +701,23 @@
       "default": true,
       "description": "Use MutationObserver to update counter from title",
       "applyMode": "restart"
+    },
+    {
+      "name": "outlookUnreadCountObserver",
+      "type": "object",
+      "default": {
+        "enabled": true
+      },
+      "description": "Outlook-specific unread count observer. Publishes Inbox unread counts through the existing unread-count event when Outlook Web does not expose the count in the page title.",
+      "applyMode": "restart",
+      "fields": [
+        {
+          "path": "enabled",
+          "type": "boolean",
+          "default": true,
+          "description": "Enable extracting the Inbox unread count from Outlook Web's folder list."
+        }
+      ]
     },
     {
       "name": "watchConfigFile",

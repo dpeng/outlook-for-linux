@@ -1,5 +1,7 @@
 const { ipcRenderer } = require("electron");
 
+require("./tools/outlookBadgingApiBlocker").init();
+
 // #2534: forward the MessagePort that main posts on 'screen-share-port' into
 // the main world. Using window.postMessage with transfer is the supported way
 // to hand a MessagePort across to the renderer; the port cannot be returned
@@ -372,6 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: "theme", path: "./tools/theme" },
       { name: "webauthnOverride", path: "./tools/webauthnOverride" },
       { name: "trayIconRenderer", path: "./tools/trayIconRenderer" },
+      { name: "outlookUnreadCountObserver", path: "./tools/outlookUnreadCountObserver" },
       { name: "navigationButtons", path: "./tools/navigationButtons" },
       { name: "framelessTweaks", path: "./tools/frameless" }
     ];
