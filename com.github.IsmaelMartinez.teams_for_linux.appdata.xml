@@ -14,6 +14,16 @@
   <url type="bugtracker">https://github.com/dpeng/outlook-for-linux/issues</url>
   <launchable type="desktop-id">outlook-for-linux.desktop</launchable>
   <releases>
+    <release version="2.13.2" date="2026-07-10">
+      <description>
+        <ul>
+          <li>Show the Outlook Inbox unread count on the Dock/taskbar badge, correctly ignoring other folders' unread counts.</li>
+          <li>Add native new mail notifications showing the sender and subject by observing Outlook Web's unread mail rows.</li>
+          <li>Block Outlook Web's built-in Badging API so it can no longer override the unread badge.</li>
+          <li>Fix the Outlook header search box disappearing by disabling the injected Teams-style navigation buttons that collided with it.</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.13.0" date="2026-07-09">
       <description>
         <ul>
