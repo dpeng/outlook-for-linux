@@ -1,7 +1,7 @@
 {
  "name": "outlook-for-linux",
  "productName": "Outlook for Linux",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "main": "app/index.js",
  "description": "Unofficial client for Outlook for Linux",
  "homepage": "https://github.com/dpeng/outlook-for-linux",
