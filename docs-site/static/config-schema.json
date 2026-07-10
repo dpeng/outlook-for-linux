@@ -1,7 +1,7 @@
 {
   "$generatedBy": "scripts/generateConfigDocs.js",
   "source": "app/config/options.js",
-  "optionCount": 72,
+  "optionCount": 73,
   "options": [
     {
       "name": "appActiveCheckInterval",
@@ -716,6 +716,23 @@
           "type": "boolean",
           "default": true,
           "description": "Enable extracting the Inbox unread count from Outlook Web's folder list."
+        }
+      ]
+    },
+    {
+      "name": "outlookNewMailNotifier",
+      "type": "object",
+      "default": {
+        "enabled": true
+      },
+      "description": "Outlook-specific new mail notifier. Shows native notifications with the sender and subject by observing Outlook Web's unread mail rows.",
+      "applyMode": "restart",
+      "fields": [
+        {
+          "path": "enabled",
+          "type": "boolean",
+          "default": true,
+          "description": "Enable native new mail notifications based on Outlook Web's unread mail list rows."
         }
       ]
     },

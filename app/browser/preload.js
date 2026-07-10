@@ -374,6 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: "theme", path: "./tools/theme" },
       { name: "webauthnOverride", path: "./tools/webauthnOverride" },
       { name: "trayIconRenderer", path: "./tools/trayIconRenderer" },
+      { name: "outlookNewMailNotifier", path: "./tools/outlookNewMailNotifier" },
       { name: "outlookUnreadCountObserver", path: "./tools/outlookUnreadCountObserver" },
       { name: "navigationButtons", path: "./tools/navigationButtons" },
       { name: "framelessTweaks", path: "./tools/frameless" }

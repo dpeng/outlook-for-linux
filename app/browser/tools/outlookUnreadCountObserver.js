@@ -3,17 +3,23 @@ function extractInboxUnreadCount(text) {
   const normalized = text.replace(/\s+/g, " ").trim();
   if (!/\binbox(?![a-z])/i.test(normalized)) return null;
 
-  const unreadLabelMatch = /\binbox(?![a-z])[\s\S]*?(\d{1,4})\s*unread\b/i.exec(normalized);
-  if (unreadLabelMatch) {
-    const count = Number.parseInt(unreadLabelMatch[1], 10);
+  // Only trust the "N unread" label that belongs to Inbox. In Outlook's folder
+  // list every folder name is preceded by an icon glyph from the Unicode
+  // Private Use Area (U+E000–U+F8FF); these glyphs act as folder boundaries, so
+  // the unread match must never cross one (otherwise a fully-read Inbox would
+  // pick up the next folder's count, e.g. "Deleted Items 264 unread").
+  const match = /\binbox(?![a-z])[^\ue000-\uf8ff]*?(\d{1,4})\s*unread/i.exec(normalized);
+  if (match) {
+    const count = Number.parseInt(match[1], 10);
     return Number.isFinite(count) ? count : null;
   }
 
-  const match = /\binbox(?![a-z])\D{0,20}(\d{1,4})\b/i.exec(normalized);
-  if (!match) return null;
+  // Inbox is present without its own unread badge. If the folder list or header
+  // is actually rendered (other unread counts or an item total are visible),
+  // that means Inbox has nothing unread; otherwise it is still loading.
+  if (/\bunread\b|\bitems?\b/i.test(normalized)) return 0;
 
-  const count = Number.parseInt(match[1], 10);
-  return Number.isFinite(count) ? count : null;
+  return null;
 }
 
 function readUnreadCount(documentRef) {
@@ -108,9 +114,6 @@ function init(config = {}) {
 }
 
 module.exports = {
-  extractInboxUnreadCount,
   readUnreadCount,
-  readUnreadCountFromElements,
-  createUnreadCountPublisher,
   init,
 };

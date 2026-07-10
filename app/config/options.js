@@ -670,6 +670,22 @@ module.exports = {
         },
         applyMode: "restart",
       },
+      outlookNewMailNotifier: {
+        default: {
+          enabled: true,
+        },
+        describe:
+          "Outlook-specific new mail notifier. Shows native notifications with the sender and subject by observing Outlook Web's unread mail rows.",
+        type: "object",
+        fields: {
+          "enabled": {
+            type: "boolean",
+            describe:
+              "Enable native new mail notifications based on Outlook Web's unread mail list rows.",
+          },
+        },
+        applyMode: "restart",
+      },
       watchConfigFile: {
         default: false,
         describe: "Watch for changes in the config file and reload the app",

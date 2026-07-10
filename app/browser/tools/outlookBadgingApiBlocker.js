@@ -1,5 +1,5 @@
-function install(globalRef = globalThis) {
-  const navigatorRef = globalRef.navigator;
+function install() {
+  const navigatorRef = globalThis.navigator;
   if (!navigatorRef) return false;
 
   const noOpBadge = async () => undefined;
@@ -20,5 +20,4 @@ function install(globalRef = globalThis) {
 
 module.exports = {
   init: () => install(),
-  install,
 };
