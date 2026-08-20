@@ -150,7 +150,7 @@ Implements custom keyboard shortcuts for in-app actions like zoom control and na
 Ensures proper functionality of the top bar in frameless mode (i.e. without native window title bar).
 
 #### Global Shortcuts System (Main Process)
-System-wide keyboard shortcuts that work even when Teams is not focused. When triggered, the keyboard event is forwarded to Teams, which handles it with its built-in shortcuts. Configured via the `globalShortcuts` array in `config.json`.
+System-wide keyboard shortcuts that work even when Teams is not focused. When triggered, the keyboard event is forwarded to Teams, which handles it with its built-in shortcuts. Configured via the `shortcuts.global` array in `config.json` (the flat `globalShortcuts` is deprecated but still accepted).
 
 **Disabled by default** - opt-in by adding shortcuts to your config.
 
@@ -169,10 +169,12 @@ System-wide keyboard shortcuts that work even when Teams is not focused. When tr
 **Configuration Example** (add to config.json to enable):
 ```json
 {
-  "globalShortcuts": [
-    "Control+Shift+M",
-    "Control+Shift+O"
-  ]
+  "shortcuts": {
+    "global": [
+      "Control+Shift+M",
+      "Control+Shift+O"
+    ]
+  }
 }
 ```
 
@@ -191,6 +193,12 @@ Provides authentication token caching and management for improved login persiste
 Monitors Teams user status and sends updates to the main process via IPC for MQTT publishing to home automation systems. Uses a dual-layer detection strategy with MutationObserver for real-time DOM changes (debounced) and polling as a fallback. See the [MQTT module README](../../mqtt/README.md) for full documentation.
 
 **Configuration**: Requires `mqtt.enabled: true` in config
+**Requires**: `ipcRenderer` passed during initialization
+
+#### [meetingStartDetector.js](meetingStartDetector.js)
+Detection of a scheduled meeting starting (issue #2587). Primary path: Teams' command-reporting stream (via activityHub) carries the meeting-start banner/toast as structured, locale-independent data (intentLevel `LiveMeetingStatus`, toastType `MeetingStart`), deduplicated per callId/toastId. Fallback path: a MutationObserver scoped to toast/alert surfaces with configurable case-insensitive regex patterns (`mqtt.meetingStartDetection.patterns`). Either path notifies the main process via IPC so the `meeting-started` MQTT topic pulses. Matched toast text (which can contain a person's name) is never logged or published.
+
+**Configuration**: Requires `mqtt.enabled: true` and `mqtt.meetingStartDetection.enabled: true` in config
 **Requires**: `ipcRenderer` passed during initialization
 
 ## Architecture Patterns

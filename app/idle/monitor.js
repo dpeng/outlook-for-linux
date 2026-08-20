@@ -28,12 +28,11 @@ class IdleMonitor {
     // Get system idle state to sync with Teams presence
     ipcMain.handle("get-system-idle-state", this.#handleGetSystemIdleState.bind(this));
     
-    // Setup cleanup handler for state file
+    // State-file cleanup rides on the normal 'exit' event. Do not register
+    // SIGINT/SIGTERM handlers calling process.exit() here: app/index.js maps
+    // those signals to app.quit(), and a hard exit skips Chromium's storage
+    // flush, losing recently written settings and cookies (#2722).
     process.on('exit', this.#cleanupStateFile.bind(this));
-    
-    ['SIGINT', 'SIGTERM'].forEach(signal => {
-      process.on(signal, () => process.exit(0));
-    });
   }
 
   #cleanupStateFile() {
@@ -75,16 +74,11 @@ class IdleMonitor {
     
     // Log only on state transitions
     if (stateFileOverride !== this.#lastStateFileOverride) {
-      if (stateFileOverride === null) {
-        console.info('[IDLE] State file override: none (file absent or invalid)');
-      } else {
-        console.info(`[IDLE] State file override: ${stateFileOverride}`);
-      }
+      console.info(`[IDLE] State file override: ${stateFileOverride ?? 'none (file absent or invalid)'}`);
       this.#lastStateFileOverride = stateFileOverride;
     }
     
     if (stateFileOverride === IdleMonitor.#SYSTEM_STATE_IDLE) {
-      // Force idle state
       if (this.#idleTimeUserStatus === -1) {
         this.#idleTimeUserStatus = this.#getUserStatus();
       }
@@ -95,7 +89,6 @@ class IdleMonitor {
         userCurrent: this.#getUserStatus(),
       };
     } else if (stateFileOverride === IdleMonitor.#SYSTEM_STATE_ACTIVE) {
-      // Force active state
       if (this.#idleTimeUserStatus !== -1) {
         console.debug(`[IDLE] State file active: transitioning from idle to active`);
         this.#idleTimeUserStatus = -1;

@@ -81,7 +81,6 @@ if (process.env.E2E_USER_DATA_DIR) {
 // This must be executed before loading the config file.
 CommandLineManager.addSwitchesBeforeConfigLoad();
 
-// Load config file.
 const { AppConfiguration } = require("./appConfiguration");
 const appConfig = new AppConfiguration(
   app.getPath("userData"),
@@ -118,14 +117,15 @@ const { createPlayer } = require("./audio/player");
 const player = createPlayer();
 
 const certificateModule = require("./certificate");
+const clientCertificate = require("./clientCertificate");
+const backgroundPortal = require("./backgroundPortal");
 const CacheManager = require("./cacheManager");
 const gotTheLock = app.requestSingleInstanceLock();
 const mainAppWindow = require("./mainAppWindow");
 
-// Getter function for user status - injected into NotificationService to break coupling
+// Injected into NotificationService to break coupling
 const getUserStatus = () => userStatus;
 
-// Initialize notification service with dependencies
 const notificationService = new NotificationService(
   player,
   config,
@@ -133,10 +133,8 @@ const notificationService = new NotificationService(
   getUserStatus
 );
 
-// Initialize screen sharing service
 const screenSharingService = new ScreenSharingService();
 
-// Initialize partitions manager with dependencies
 const partitionsManager = new PartitionsManager(appConfig.settingsStore);
 
 // ADR-020: ProfilesManager owns persistence for the multi-account switcher.
@@ -145,15 +143,13 @@ const partitionsManager = new PartitionsManager(appConfig.settingsStore);
 // keeping the renderer surface byte-identical with the flag off.
 const profilesManager = new ProfilesManager(appConfig.settingsStore);
 
-// Phase 1c.1: per-profile WebContentsView lifecycle. Only constructed when
-// the multi-account flag is on; the manager is wired to the main window
+// Per-profile WebContentsView lifecycle. Only constructed when the
+// multi-account flag is on; the manager is wired to the main window
 // after `mainAppWindow.onAppReady` resolves.
 let profileViewManager = null;
 
-// Initialize idle monitor with dependencies
 const idleMonitor = new IdleMonitor(config, getUserStatus);
 
-// Initialize custom notification manager for toast notifications
 const customNotificationManager = new CustomNotificationManager(config, mainAppWindow);
 
 // Issue #2512: Electron silently saves downloads to ~/Downloads with no UI
@@ -251,7 +247,6 @@ if (gotTheLock) {
     return config;
   });
 
-  // Initialize notification service IPC handlers
   notificationService.initialize();
 
   // Initialize inherited screen sharing IPC handlers only when explicitly enabled.
@@ -262,15 +257,11 @@ if (gotTheLock) {
   // Initialize partitions manager IPC handlers
   partitionsManager.initialize();
 
-  // Initialize profiles manager IPC handlers (multi-account, ADR-020)
   if (config.multiAccount?.enabled) {
     profilesManager.initialize();
   }
 
-  // Initialize idle monitor IPC handlers
   idleMonitor.initialize();
-
-  // Initialize custom notification manager for toast notifications
   customNotificationManager.initialize();
 
   // Handle user status changes from the web app (e.g., Available, Busy, Away)
@@ -458,25 +449,8 @@ function isPreLoginAuthNoise(message) {
   return PRE_LOGIN_AUTH_NOISE_PATTERNS.some((p) => lower.includes(p));
 }
 
-/**
- * Handles the 'render-process-gone' event.
- *
- * When a renderer process (which hosts the web content, i.e., the Teams PWA)
- * crashes or becomes unresponsive, Electron emits this event.
- *
- * The decision to immediately quit the application here is a design choice.
- * A renderer process going "gone" often indicates a severe, unrecoverable
- * issue with the web content or its interaction with Electron. Attempting
- * to continue running with a crashed renderer can lead to an unstable
- * and unpredictable user experience (e.g., blank screens, unresponsive UI).
- *
- * Quitting ensures a clean restart, allowing the user to relaunch the
- * application and potentially recover from the issue.
- *
- * @param {Electron.Event} event - The event object.
- * @param {Electron.WebContents} webContents - The WebContents that crashed.
- * @param {Electron.RenderProcessGoneDetails} details - Details about the crash.
- */
+// A gone renderer (the Teams PWA) is usually unrecoverable — continuing
+// leaves a blank or unresponsive window, so quit for a clean restart.
 function onRenderProcessGone(event, webContents, details) {
   console.error(`render-process-gone ${JSON.stringify(details)}`);
   app.quit();
@@ -740,10 +714,26 @@ async function handleAppReady() {
       customStickers.initialize();
     }
 
+    // Smartcard / NSS client-certificate PIN dialog (Linux only, issue #2639).
+    // Registered before the main window loads so the handler exists before the
+    // first TLS handshake that may need a token PIN.
+    if (process.platform === "linux" && config.auth?.clientCertificate?.pinDialog?.enabled) {
+      clientCertificate.initialize();
+    }
+
+    // Custom CA allowlist (issue #2762). Installed before the main window loads
+    // so it covers the very first TLS handshake, and before profile partitions
+    // exist so their sessions are caught by the session-created listener.
+    certificateModule.installCertificateVerifyProc(config, app, session.defaultSession);
+
     await mainAppWindow.onAppReady(appConfig, customBackground, screenSharingService, profilesManager);
 
-    // Phase 1c.1: wire per-profile WebContentsView lifecycle once the main
-    // window exists. Bootstrap Profile 0 from the legacy partition so a
+    // Flatpak only: record the background permission with the desktop portal
+    // and set the Background Apps status line (issue #2815). No-op elsewhere.
+    backgroundPortal.init();
+
+    // Wire per-profile WebContentsView lifecycle once the main window
+    // exists. Bootstrap Profile 0 from the legacy partition so a
     // pre-existing Teams login survives the first flag flip (ADR-020).
     if (config.multiAccount?.enabled) {
       const mainWindow = mainAppWindow.getWindow();
@@ -763,7 +753,6 @@ async function handleAppReady() {
       }
     }
 
-    // Initialize WebAuthn/FIDO2 hardware security key support (Linux only)
     if (process.platform === "linux" && config.auth?.webauthn?.enabled) {
       await WebAuthn.initialize(mainAppWindow.getWindow(), config);
     }
@@ -819,7 +808,6 @@ async function requestMediaAccess() {
 async function userStatusChangedHandler(_event, options) {
   userStatus = options.data.status;
 
-  // Publish status to MQTT if enabled
   if (mqttClient) {
     try {
       await mqttClient.publishStatus(userStatus);

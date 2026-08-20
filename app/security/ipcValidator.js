@@ -60,6 +60,9 @@ const allowedChannels = new Set([
   // Media status (camera/microphone)
   'camera-state-changed',
   'microphone-state-changed',
+
+  // Scheduled-meeting-start toast detection for MQTT (#2587)
+  'meeting-started',
   
   // Authentication and forms
   'submitForm',
@@ -129,14 +132,35 @@ const allowedChannels = new Set([
   'webauthn:pin-submit',
   'webauthn:pin-cancel',
 
+  // Shared secure-prompt dialog (smartcard / PKCS#11 client-certificate PIN)
+  'secure-prompt:submit',
+  'secure-prompt:cancel',
+
   // Manage-profiles dialog (Phase 1c.2). Inline rename forwards to
   // `ProfilesManager.update()`; remove triggers a native confirmation
   // before calling `ProfilesManager.remove()`. Close dismisses the
   // dialog. State pushes flow main → renderer over `manage-profile-state`
   // (no allowlist needed for that direction).
   'manage-profile-rename',
+  // Pin/unpin toggle (Phase 1c.2 shortcuts). Forwards to
+  // `ProfilesManager.update(id, { pinned })`; main enforces the max-5 cap
+  // (the Ctrl+Alt+1…5 shortcut slots) and rejects past it.
+  'manage-profile-pin',
   'manage-profile-remove',
-  'manage-profile-close'
+  'manage-profile-close',
+
+  // Bottom-left switcher pill (Phase 1c.2). The pill reuses the
+  // `profile-list` / `profile-get-active` / `profile-switch` channels above
+  // for its data; these are the pill-specific additions. open-add/open-manage
+  // open the existing dialogs (handled in `Menus`); set-expanded grows the view
+  // to full-window while the dropdown is open (handled in `ProfileViewManager`).
+  // State flows main → renderer over `profile-switcher-state` (send direction,
+  // not gated; listed for an authoritative allowlist per CLAUDE.md). All are
+  // registered only when `multiAccount.enabled === true`.
+  'profile-switcher-open-add',
+  'profile-switcher-open-manage',
+  'profile-switcher-set-expanded',
+  'profile-switcher-state'
 ]);
 
 const DANGEROUS_PROPS = new Set(['__proto__', 'constructor', 'prototype']);

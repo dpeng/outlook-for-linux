@@ -2,6 +2,87 @@ const { ipcRenderer } = require("electron");
 
 require("./tools/outlookBadgingApiBlocker").init();
 
+// #2677: Electron removed the non-standard `File.path` from dropped files, so
+// Outlook (which uploads by native path) rejects them as "File is missing data".
+// Restore it via webUtils.getPathForFile before Outlook's drop handler reads it,
+// scoped to Outlook hosts so the SSO/auth pages this window also loads can't read
+// local paths off dropped files.
+//
+// The same stripping hits pasted files: when a user copies an image file
+// in their file manager and pastes into the compose box, Chromium surfaces it
+// as a File on the paste event's clipboardData, and Teams uploads by path — so
+// the paste fails the same way drag-drop used to. Restore the path on a
+// capture-phase paste listener too. Raw image-bit paste (screenshots) arrives
+// as a Blob with no path and is unaffected.
+try {
+  const { webUtils } = require("electron");
+  const OUTLOOK_HOSTS = [
+    "outlook.office.com",
+    "outlook.office365.com",
+    "outlook.live.com",
+    "outlook.cloud.microsoft",
+  ];
+  const isOutlookHost = (hostname) => {
+    if (hostname.endsWith(".mcas.ms")) {
+      hostname = hostname.slice(0, -".mcas.ms".length);
+    }
+    return OUTLOOK_HOSTS.some(
+      (domain) =>
+        hostname === domain ||
+        (hostname.endsWith("." + domain) &&
+          !hostname.slice(0, -(domain.length + 1)).includes(".")),
+    );
+  };
+  // Restore the non-standard `File.path` on every File in a FileList, in place.
+  // No-op for blob-backed files (screenshots) since webUtils only resolves a
+  // path for files that originated from the OS file list; those are left as-is.
+  const restoreFilePaths = (files) => {
+    if (!files?.length) {
+      return;
+    }
+    for (const file of files) {
+      if (file.path) {
+        continue;
+      }
+      try {
+        const path = webUtils.getPathForFile(file);
+        if (path) {
+          Object.defineProperty(file, "path", {
+            value: path,
+            writable: true,
+            enumerable: true,
+            configurable: true,
+          });
+        }
+      } catch {
+        // leave the file untouched if the path can't be resolved
+      }
+    }
+  };
+  globalThis.addEventListener(
+    "drop",
+    (event) => {
+      if (!isOutlookHost(globalThis.location.hostname)) {
+        return;
+      }
+      restoreFilePaths(event.dataTransfer?.files);
+    },
+    true,
+  );
+  globalThis.addEventListener(
+    "paste",
+    (event) => {
+      if (!isOutlookHost(globalThis.location.hostname)) {
+        return;
+      }
+      restoreFilePaths(event.clipboardData?.files);
+    },
+    true,
+  );
+} catch {
+  // webUtils unavailable
+}
+
 // #2534: forward the MessagePort that main posts on 'screen-share-port' into
 // the main world. Using window.postMessage with transfer is the supported way
 // to hand a MessagePort across to the renderer; the port cannot be returned
@@ -29,7 +110,6 @@ globalThis.electronAPI = {
     },
     cancelChooseDesktopMedia: () => ipcRenderer.send("cancel-desktop-media"),
   },
-  // Screen sharing events
   sendScreenSharingStarted: (sourceId) => {
     if (sourceId === null || (typeof sourceId === 'string' && sourceId.length < 100)) {
       return ipcRenderer.send("screen-sharing-started", sourceId);
@@ -44,10 +124,8 @@ globalThis.electronAPI = {
     return ipcRenderer.send(channel, ...args);
   },
 
-  // Configuration
   getConfig: () => ipcRenderer.invoke("get-config"),
 
-  // Notifications with input validation
   showNotification: (options) => {
     if (!options || typeof options !== 'object') {
       return Promise.reject(new Error('Invalid notification options'));
@@ -67,7 +145,6 @@ globalThis.electronAPI = {
     ipcRenderer.send("notification-show-toast", data);
   },
 
-  // Badge count with validation
   setBadgeCount: (count) => {
     if (typeof count !== 'number' || count < 0 || count > 9999) {
       console.error('Invalid badge count:', count);
@@ -76,12 +153,10 @@ globalThis.electronAPI = {
     return ipcRenderer.invoke("set-badge-count", count);
   },
 
-  // Tray icon with validation
   updateTray: (icon, flash) => {
     return ipcRenderer.send("tray-update", { icon, flash });
   },
 
-  // Theme events
   onSystemThemeChanged: (callback) => {
     if (typeof callback !== 'function') {
       console.error('Invalid callback for theme changed');
@@ -90,7 +165,6 @@ globalThis.electronAPI = {
     return ipcRenderer.on("system-theme-changed", callback);
   },
 
-  // User status with validation
   setUserStatus: (data) => {
     if (!data || typeof data !== 'object') {
       return Promise.reject(new Error('Invalid user status data'));
@@ -98,7 +172,6 @@ globalThis.electronAPI = {
     return ipcRenderer.invoke("user-status-changed", data);
   },
 
-  // Zoom with validation
   getZoomLevel: (partition) => {
     if (typeof partition !== 'string' || partition.length > 100) {
       return Promise.reject(new Error('Invalid partition'));
@@ -112,7 +185,6 @@ globalThis.electronAPI = {
     return ipcRenderer.invoke("save-zoom-level", data);
   },
 
-  // Navigation
   navigateBack: () => ipcRenderer.send("navigate-back"),
   navigateForward: () => ipcRenderer.send("navigate-forward"),
   getNavigationState: () => ipcRenderer.invoke("get-navigation-state"),
@@ -124,7 +196,6 @@ globalThis.electronAPI = {
     return ipcRenderer.on("navigation-state-changed", callback);
   },
 
-  // Microsoft Graph API
   graphApi: {
     getUserProfile: () => ipcRenderer.invoke("graph-api-get-user-profile"),
     getCalendarEvents: (options) => ipcRenderer.invoke("graph-api-get-calendar-events", options),
@@ -134,11 +205,24 @@ globalThis.electronAPI = {
   },
 
   // System information (safe to expose)
+  openChatWithUser: (email) => {
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      console.error('Invalid email for chat deep link');
+      return false;
+    }
+    // Use the current Teams base URL (could be teams.cloud.microsoft or teams.microsoft.com)
+    const currentOrigin = globalThis.location.origin;
+    const chatPath = `/l/chat/0/0?users=${encodeURIComponent(email)}`;
+    const chatUrl = `${currentOrigin}${chatPath}`;
+    console.debug('[CHAT_LINK] Navigating to chat via deep link');
+    globalThis.location.href = chatUrl;
+    return true;
+  },
+
   sessionType: process.env.XDG_SESSION_TYPE || "x11",
 };
 
-// Fetch config and override Notification immediately (matching v2.2.1 pattern)
-// Config is fetched asynchronously but notification function references it via closure
+// Config is fetched asynchronously; the Notification override below reads it via closure
 let notificationConfig = null;
 ipcRenderer.invoke("get-config").then((config) => {
   notificationConfig = config;
@@ -179,7 +263,6 @@ function createNotificationStub() {
   return stub;
 }
 
-// Helper functions for notification handling (extracted to reduce cognitive complexity)
 function playNotificationSound(notifSound) {
   // Skip renderer-side sound for "electron" method — the main process
   // notification service already plays the sound before showing the notification.
@@ -198,7 +281,6 @@ function playNotificationSound(notifSound) {
 }
 
 function createWebNotification(classicNotification, title, options) {
-  // Play notification sound
   const notifSound = {
     type: options.type,
     audio: "default",
@@ -251,7 +333,6 @@ function createElectronNotification(options) {
 }
 
 function createCustomNotification(title, options) {
-  // Send notification data to main process for custom toast notification
   const notificationData = {
     id: crypto.randomUUID(),
     timestamp: Date.now(),
@@ -260,7 +341,6 @@ function createCustomNotification(title, options) {
     icon: options.icon,
   };
 
-  // Play notification sound if enabled
   const notifSound = {
     type: options.type,
     audio: "default",
@@ -269,7 +349,6 @@ function createCustomNotification(title, options) {
   };
   playNotificationSound(notifSound);
 
-  // Send to main process to show toast
   try {
     if (globalThis.electronAPI?.sendNotificationToast) {
       globalThis.electronAPI.sendNotificationToast(notificationData);
@@ -327,7 +406,6 @@ function createCustomNotification(title, options) {
     return createElectronNotification(options);
   }
 
-  // Add static methods to factory function
   CustomNotification.requestPermission = async function() {
     return "granted";
   };
@@ -342,7 +420,6 @@ function createCustomNotification(title, options) {
   console.debug("Preload: CustomNotification factory initialized");
 })();
 
-// Initialize browser modules after DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
   console.debug("Preload: DOMContentLoaded, initializing browser modules...");
   try {
@@ -352,21 +429,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       useMutationTitleLogic: config?.useMutationTitleLogic
     });
     
-    // Initialize title monitoring using existing module
     if (config.useMutationTitleLogic) {
       const mutationTitle = require("./tools/mutationTitle");
       mutationTitle.init(config);
     }
     
-    // Initialize tray icon functionality directly in preload with secure IPC
-    if (config.trayIconEnabled) {
-      // NOTE: unread-count event is handled by trayIconRenderer.js
-      // This redundant listener was causing duplicate IPC traffic and rendering.
-    }
-    
-    console.debug("Preload: Essential tray modules initialized successfully");
-    
-    // Initialize other modules safely
+    // NOTE: the unread-count event is handled by trayIconRenderer.js; a second
+    // listener here previously caused duplicate IPC traffic and rendering.
+
     const modules = [
       { name: "zoom", path: "./tools/zoom" },
       { name: "shortcuts", path: "./tools/shortcuts" },
@@ -376,11 +446,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       { name: "trayIconRenderer", path: "./tools/trayIconRenderer" },
       { name: "outlookNewMailNotifier", path: "./tools/outlookNewMailNotifier" },
       { name: "outlookUnreadCountObserver", path: "./tools/outlookUnreadCountObserver" },
-      { name: "framelessTweaks", path: "./tools/frameless" }
+      { name: "mqttStatusMonitor", path: "./tools/mqttStatusMonitor" },
+      { name: "meetingStartDetector", path: "./tools/meetingStartDetector" },
+      { name: "overrideMicConstraints", path: "./tools/overrideMicConstraints" },
+      { name: "disableAutogain", path: "./tools/disableAutogain" },
+      { name: "ignoreSystemMute", path: "./tools/ignoreSystemMute" },
+      { name: "speakingIndicator", path: "./tools/speakingIndicator" },
+      { name: "cameraResolution", path: "./tools/cameraResolution" },
+      { name: "cameraAspectRatio", path: "./tools/cameraAspectRatio" },
+      { name: "framelessTweaks", path: "./tools/frameless" },
+      { name: "customStickers", path: "./tools/customStickers" },
+      { name: "dockIconRenderer", path: "./tools/dockIconRenderer" },
+      { name: "preventDeviceSwitching", path: "./tools/preventDeviceSwitching" }
     ];
 
-    // These modules need ipcRenderer for IPC communication.
-    const modulesRequiringIpc = new Set(["settings", "theme", "trayIconRenderer", "webauthnOverride"]);
+    // CRITICAL: These modules need ipcRenderer for IPC communication (see CLAUDE.md)
+    const modulesRequiringIpc = new Set(["settings", "theme", "trayIconRenderer", "mqttStatusMonitor", "meetingStartDetector", "webauthnOverride", "speakingIndicator", "customStickers", "dockIconRenderer"]);
 
     let successCount = 0;
     for (const module of modules) {
@@ -399,9 +480,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     console.info(`Preload: ${successCount}/${modules.length} browser modules initialized successfully`);
 
+    try {
+      const ActivityManager = require("./notifications/activityManager");
+      new ActivityManager(ipcRenderer, config).start();
+    } catch (err) {
+      console.error("Preload: ActivityManager failed to initialize:", err.message);
+    }
+
     // Listen for config changes from the main process (e.g., when menu toggles are clicked)
     ipcRenderer.on("config-changed", (_event, configChanges) => {
-      // Update the local config object with the changes
       for (const [key, value] of Object.entries(configChanges)) {
         config[key] = value;
       }
@@ -412,7 +499,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
-// Forward unhandled promise rejections and window errors to main for diagnostics with secure IPC
+// Forward unhandled promise rejections and window errors to main for diagnostics.
 // Plain objects without a `.message` (and `undefined` rejections) previously stringified to
 // the literals "[object Object]" / "undefined", which discarded all diagnostic content.
 function serializeRejectionReason(reason) {

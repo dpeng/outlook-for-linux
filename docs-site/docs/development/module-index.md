@@ -46,6 +46,7 @@ User-facing features and integrations.
 | **Speaking Indicator** | `app/browser/tools/speakingIndicator.js` | Visual overlay showing microphone state during calls (speaking/silent/muted) via RTCPeerConnection.getStats(). Also provides WebRTC-based call state fallback for reliable MQTT in-call detection ([#2358](https://github.com/IsmaelMartinez/outlook-for-linux/issues/2358)). | [PR #2299](https://github.com/IsmaelMartinez/outlook-for-linux/pull/2299) |
 | **Quick Chat** | `app/quickChat/` | Quick Chat modal with People API search and inline messaging via Graph API | [ADR-014](./adr/014-quick-chat-deep-link-approach.md), [ADR-015](./adr/015-quick-chat-inline-messaging.md) |
 | **WebAuthn / FIDO2** | `app/webauthn/` | Hardware security key support for Linux via fido2-tools interception of navigator.credentials | [ADR-021](./adr/021-webauthn-fido2-linux.md) |
+| **Client Certificate PIN** | `app/clientCertificate/` | Linux smartcard/NSS client-certificate PIN dialog built on the shared secure prompt ([#2639](https://github.com/IsmaelMartinez/teams-for-linux/issues/2639)) | [README](https://github.com/IsmaelMartinez/teams-for-linux/blob/main/app/clientCertificate/README.md) |
 | **Profiles Manager** | `app/profilesManager/` | Multi-account profile storage, switching, and lifecycle management | [ADR-020](./adr/020-multi-account-profile-switcher.md) |
 | **Profile Dialogs** | `app/profileDialogs/` | Add-profile, manage-profiles, and switch-profile UI dialogs | [ADR-020](./adr/020-multi-account-profile-switcher.md) |
 | **Join Meeting Dialog** | `app/joinMeetingDialog/` | Join Meeting dialog for deep-link navigation handling | — |
@@ -58,6 +59,7 @@ OS-level integrations and platform-specific functionality.
 |--------|------|---------|---------------|
 | **Idle Monitor** | `app/idle/` | System idle state monitoring & status correlation | [README](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/idle/README.md) |
 | **Login** | `app/login/` | Authentication and login flow management | [README](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/login/README.md) |
+| **SSO Password Pre-fill** | `app/ssoPasswordPrefill/` | Opt-in pre-fill of the Microsoft/federated web sign-in form: account, password from a command, optional auto-advance and MFA method. Distinct from `app/login/`, which drives the native HTTP Basic/NTLM dialog. | [README](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/ssoPasswordPrefill/README.md) |
 | **Menus** | `app/menus/` | Application menu bar and context menus | [README](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/menus/README.md) |
 | **Spell Check Provider** | `app/spellCheckProvider/` | Text spelling correction integration | [README](https://github.com/IsmaelMartinez/outlook-for-linux/blob/main/app/spellCheckProvider/README.md) |
 

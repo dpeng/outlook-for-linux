@@ -1,6 +1,6 @@
 {
- "name": "outlook-for-linux",
- "productName": "Outlook for Linux",
+  "name": "outlook-for-linux",
+  "productName": "Outlook for Linux",
   "version": "2.13.2",
   "main": "app/index.js",
  "description": "Unofficial client for Outlook for Linux",
@@ -55,23 +55,23 @@
     "release": "electron-builder"
   },
   "dependencies": {
-    "@homebridge/dbus-native": "0.7.6",
-    "cbor-x": "^1.6.4",
+    "@homebridge/dbus-native": "0.7.8",
+    "cbor-x": "^1.6.5",
     "electron-log": "^5.4.4",
     "electron-store": "11.0.2",
     "electron-updater": "^6.8.9",
     "electron-window-state": "5.0.3",
     "mqtt": "^5.15.2",
-    "yargs": "^18.0.0"
+    "yargs": "^18.1.0"
   },
   "devDependencies": {
     "@electron/fuses": "^2.1.3",
     "@eslint/js": "^10.0.1",
-    "electron": "42.5.1",
-    "@playwright/test": "1.61.1",
-    "electron-builder": "26.8.1",
-    "eslint": "^10.6.0",
-    "globals": "^17.7.0",
+    "@playwright/test": "1.62.1",
+    "electron": "42.8.1",
+    "electron-builder": "26.15.7",
+    "eslint": "^10.8.0",
+    "globals": "^17.9.0",
     "http-server": "^14.1.1",
     "xml2js": "^0.6.2"
   },
@@ -136,29 +136,30 @@
         "--rpm-digest=sha256"
       ]
     },
-    "snap": {
- "summary": "Outlook for Linux",
-      "confinement": "strict",
-      "grade": "stable",
-      "base": "core22",
-      "executableArgs": [
-        "--ozone-platform=x11"
-      ],
-      "plugs": [
-        "default",
-        "audio-record",
-        "camera",
-        "hardware-observe",
-        "network-bind",
-        "network-manager-observe",
-        "removable-media",
-        "screen-inhibit-control",
-        "system-observe",
-        "upower-observe"
-      ],
+    "snapcraft": {
+      "base": "core24",
       "publish": [
         "snapStore"
-      ]
+      ],
+      "core24": {
+        "summary": "Outlook for Linux",
+        "confinement": "strict",
+        "grade": "stable",
+        "useLXD": true,
+        "plugs": [
+          "default",
+          "browser-support",
+          "audio-record",
+          "camera",
+          "hardware-observe",
+          "network-bind",
+          "network-manager-observe",
+          "removable-media",
+          "screen-inhibit-control",
+          "system-observe",
+          "upower-observe"
+        ]
+      }
     },
     "mac": {
       "category": "public.app-category.productivity",

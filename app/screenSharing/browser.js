@@ -541,7 +541,7 @@ function buildWindowTile(source) {
 // replacement would be double-escaped) as defence-in-depth — CodeQL
 // flags the partial-escape pattern even when it cannot be exploited.
 function cssEscapeUrl(url) {
-  return url.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return url.replaceAll("\\", String.raw`\\`).replaceAll('"', String.raw`\"`);
 }
 
 function switchTab(tab) {
@@ -627,8 +627,10 @@ function pickClosestAligned(items, cur, aligned) {
 function shareSelection() {
   if (!state.selectedId) return;
   const quality = QUALITY_OPTIONS.find((q) => q.id === state.quality) || DEFAULT_QUALITY;
+  const selected = state.sources.find((s) => s.id === state.selectedId);
   globalThis.api.selectedSource({
     id: state.selectedId,
+    name: selected?.name || "",
     screen: { width: quality.width, height: quality.height, name: quality.label },
   });
 }

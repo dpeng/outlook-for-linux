@@ -30,23 +30,33 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    # Without this the runner default is 6 HOURS, and this workflow holds the
+    # "pages" concurrency group with cancel-in-progress: false — so one hung
+    # build blocks every docs deploy behind it for most of a working day. The
+    # site builds in ~1-2 minutes; 10 is generous. This matters more than a
+    # routine timeout because the docs build sizes local images via an
+    # unmaintained dependency with two open infinite-loop advisories
+    # (image-size <= 2.0.2, GHSA-5p2g-fcmc-qvqq / GHSA-w3rx-r6r6-pgpr) that will
+    # never be fixed — upstream is archived — so "hangs forever" is a known
+    # reachable state, not a hypothetical one.
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0  # Not needed if lastUpdatedBy and editUrl are disabled
 
       - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: docs-site/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build website
         run: npm run build
@@ -73,6 +83,9 @@ jobs:
 
     # Specify runner + deployment step
     runs-on: ubuntu-latest
+    # Holds the pages concurrency group like the others; the deploy itself is a
+    # single API-backed step, so this is a backstop rather than a real bound.
+    timeout-minutes: 10
     # Only deploy on main branch pushes
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -83,23 +96,27 @@ jobs:
   test-build:
     name: Test Build (PR/Branch)
     runs-on: ubuntu-latest
+    # Same reasoning as `build`, and this job is the one a fork PR can reach.
+    # It also backgrounds `npm run serve` and waits on a fixed sleep, which is a
+    # second way to hang independent of the build itself.
+    timeout-minutes: 10
     permissions:
       contents: read
     # Only run for PRs and non-main branch pushes
     if: github.ref != 'refs/heads/main'
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: docs-site/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Test build
         run: npm run build

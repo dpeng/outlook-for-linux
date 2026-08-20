@@ -2,7 +2,7 @@
 title: "Architecture Decision Records"
 sidebar_position: 1
 type: reference
-last_updated: 2026-03-02
+last_updated: 2026-08-11
 tags: [adr, architecture, decisions]
 ---
 
@@ -44,6 +44,12 @@ Architecture Decision Records capture important architectural decisions along wi
 | [019](019-repo-activity-dashboard.md) | Repository Activity Dashboard | ✅ Accepted | 2026-03-11 | N/A |
 | [020](020-multi-account-profile-switcher.md) | Multi-Account Profile Switcher | 🚧 Proposed | 2026-04-16 | N/A |
 | [021](021-webauthn-fido2-linux.md) | WebAuthn / FIDO2 Hardware Security Keys on Linux | 🚧 Proposed | 2026-04-21 | N/A |
+| [022](022-custom-notification-toast-scope.md) | Custom Notification Toast Scope | ✅ Accepted | 2025-11-16 | v2.6.16 |
+| [023](023-release-automation-tooling.md) | Release Automation Tooling | ✅ Implemented | 2026-03-13 | N/A |
+| [024](024-smartcard-pkcs11-pin-dialog.md) | Smartcard PKCS#11 PIN Dialog | ✅ Implemented | 2026-06-09 | v2.14.0 |
+| [025](025-config-option-naming-convention.md) | Configuration Option Naming Convention | ✅ Accepted | 2026-08-11 | N/A |
+| [026](026-performance-audit-outcomes.md) | Performance Audit Outcomes | ✅ Accepted | 2026-08-11 | N/A |
+| [028](028-third-party-idp-otc-prefill.md) | One-Time-Code Pre-fill on Third-Party IdPs | ❌ Rejected | 2026-08-19 | N/A |
 
 **Legend:**
 - ✅ **Implemented** - Decision accepted and code in production
@@ -62,6 +68,8 @@ Architecture Decision Records capture important architectural decisions along wi
 | [012](012-intune-sso-broker-compatibility.md) | Intune SSO Broker Compatibility | Direct D-Bus invocation for Microsoft Identity Broker version compatibility |
 | [013](013-pii-log-sanitization.md) | PII Log Sanitization | Custom regex sanitizer to redact sensitive data from logs |
 | [021](021-webauthn-fido2-linux.md) | WebAuthn / FIDO2 Hardware Security Keys | FIDO2 hardware key support on Linux via fido2-tools interception |
+| [024](024-smartcard-pkcs11-pin-dialog.md) | Smartcard PKCS#11 PIN Dialog | PIN collected in a hardened main-process window, never injected into the Teams page |
+| [028](028-third-party-idp-otc-prefill.md) | One-Time-Code Pre-fill on Third-Party IdPs | Rejected DOM-based OTC pre-fill for Okta and similar; Electron cannot host a password-manager extension, so contract-backed factors are the answer |
 
 **Key Outcomes:**
 - Eliminated daily re-authentication issues
@@ -99,16 +107,30 @@ Architecture Decision Records capture important architectural decisions along wi
 - 9 cross-distro configurations testable from a browser via Codespaces
 - Apple Silicon limitation documented (V8 4GB heap cap under Rosetta 2)
 
+### Performance
+
+| ADR | Title | Summary |
+|-----|-------|---------|
+| [026](026-performance-audit-outcomes.md) | Performance Audit Outcomes | Closes the system performance research: outcomes for all ten findings, timeout-budget offline detection, no instrumentation module |
+
+**Key Outcomes:**
+- All ten audit findings closed with explicit outcomes and reopen triggers
+- Offline detection bounded by a 20 s budget that assumes online on exhaustion
+- MutationObserver consolidation rejected; scope-narrowing and polling reduction reserved as first levers
+- No performance instrumentation, deliberately
+
 ### Documentation & Standards
 
 | ADR | Title | Summary |
 |-----|-------|---------|
 | [004](004-agents-md-standard-investigation.md) | agents.md Standard Investigation | Investigated and rejected agents.md standard in favor of tool-specific standards (CLAUDE.md, copilot-instructions.md) |
+| [025](025-config-option-naming-convention.md) | Configuration Option Naming Convention | Nesting criteria, positive naming, and the resolved flat-to-nested rename mapping for configuration options |
 
 **Key Outcomes:**
 - Consolidated instruction files (removed 28% duplication)
 - Centralized markdown standards in contributing.md
 - Maintained tool-specific official standards
+- Configuration option naming convention and rename mapping owned by ADR-025
 
 ### Release Process & Automation
 
@@ -117,6 +139,7 @@ Architecture Decision Records capture important architectural decisions along wi
 | [005](005-ai-powered-changelog-generation.md) | AI-Powered Changelog Generation | Use Gemini 2.0 Flash for automated changelog generation with release-pr workflow |
 | [017](017-workflow-run-pr-comments.md) | Use workflow_run for PR Artifact Comments | Move PR artifact commenting to a workflow_run-triggered workflow to support fork PRs |
 | [018](018-issue-triage-bot-github-app-migration.md) | Issue Triage Bot GitHub App Migration | Migrate triage bot from in-repo GitHub Actions to standalone Go service as a GitHub App |
+| [023](023-release-automation-tooling.md) | Release Automation Tooling | Adopt release-please for conventional-commit driven versioning, rejecting release-it and Beads |
 
 **Key Outcomes:**
 - Decoupled merging from releasing
@@ -158,6 +181,7 @@ Architecture Decision Records capture important architectural decisions along wi
 | [014](014-quick-chat-deep-link-approach.md) | Quick Chat Deep Link Approach | Use People API + Deep Links for quick chat access after Chat API was blocked |
 | [015](015-quick-chat-inline-messaging.md) | Quick Chat Inline Messaging | Hybrid Teams commanding + Graph API approach for inline message sending |
 | [020](020-multi-account-profile-switcher.md) | Multi-Account Profile Switcher | WebContentsView-based profile switching with feature-flag gating |
+| [022](022-custom-notification-toast-scope.md) | Custom Notification Toast Scope | Keep the opt-in custom toast, drop the Phase 2 notification centre as unverifiable |
 
 **Key Outcomes:**
 - Quick chat access via People API (works) instead of Chat API (blocked 403)
@@ -340,11 +364,11 @@ When referencing code in ADRs:
 
 ## ADR Statistics
 
-- **Total ADRs**: 21
+- **Total ADRs**: 22
 - **Implemented**: 12
 - **Accepted**: 3
 - **Proposed**: 2
-- **Rejected**: 4
+- **Rejected**: 5
 - **Average length**: ~500 words
 - **Topics covered**: 9 (Authentication & Security, Screen Sharing, Testing & Quality, Documentation & Standards, Release Process & Automation, Community & Metrics, MQTT & Integration, UI Features, Distribution & Packaging)
 

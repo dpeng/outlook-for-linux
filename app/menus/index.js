@@ -4,12 +4,17 @@ const {
   MenuItem,
   clipboard,
   dialog,
-  session,
   ipcMain,
 } = require("electron");
 const fs = require("node:fs"),
   path = require("node:path");
+const { fileURLToPath } = require("node:url");
 const appMenu = require("./appMenu");
+const buildProfilesMenu = require("./profilesMenu");
+const {
+  collectPartitionsToClear,
+  clearStorageForPartitions,
+} = require("../utils/storagePartitions");
 const Tray = require("./tray");
 const { SpellCheckProvider } = require("../spellCheckProvider");
 const DocumentationWindow = require("../documentationWindow");
@@ -21,6 +26,15 @@ const autoUpdaterModule = require("../autoUpdater");
 let _Menus_onSpellCheckerLanguageChanged = new WeakMap();
 class Menus {
   #profileChangeHandler = null;
+  #switcherOpenAddHandler = null;
+  #switcherOpenManageHandler = null;
+
+  #multiAccountOn() {
+    return Boolean(
+      this.profilesManager &&
+        this.configGroup.startupConfig.multiAccount?.enabled
+    );
+  }
 
   constructor(window, configGroup, iconPath, connectionManager, profilesManager = null) {
     this.window = window;
@@ -74,22 +88,20 @@ class Menus {
       }) === 0;
 
     if (clearStorage) {
-      const defSession = session.fromPartition(
-        this.configGroup.startupConfig.partition
+      // startupConfig, not configGroup: AppConfiguration keeps the parsed
+      // config behind a getter, so reading an option straight off the instance
+      // is always undefined and silently clears everything (#2860).
+      const clearOptions = this.configGroup.startupConfig.clearStorageData;
+      // Every profile owns its own partition, so clearing only the startup one
+      // left each profile's cookies and tokens on disk (#2862).
+      await clearStorageForPartitions(
+        collectPartitionsToClear(
+          this.configGroup.startupConfig.partition,
+          this.profilesManager
+        ),
+        clearOptions,
+        "on quit"
       );
-      if (this.configGroup.clearStorageData) {
-        console.debug(
-          "Clearing storage data on quit",
-          this.config.clearStorageData
-        );
-        await defSession.clearStorageData(this.configGroup.clearStorageData);
-      } else {
-        console.debug(
-          "Clearing storage on quit",
-          this.configGroup.clearStorageData
-        );
-        await defSession.clearStorageData();
-      }
     }
 
     this.window.close();
@@ -143,13 +155,46 @@ class Menus {
     this.window.hide();
   }
 
+  // Attach the menu appropriate for the menubar/multi-account configuration.
+  // With `menubar: "hidden"` AND multi-account on, a menu stays ATTACHED with
+  // only the bar hidden — the menu is the registration site for the pinned-
+  // profile switch accelerators (Ctrl+Alt+1…5, see profilesMenu.js), and
+  // `removeMenu()` would kill them along with the bar. It holds ONLY the
+  // Profiles submenu though: attaching the full menu would also arm the rest
+  // of its accelerators (Ctrl+Q, Ctrl+R, …) where a hidden menubar previously
+  // had none (#2821). Falls back to `removeMenu()` if the Profiles menu
+  // cannot be built (no profilesManager).
+  #attachMenu(menu) {
+    if (
+      this.configGroup.startupConfig.menubar == "hidden" &&
+      this.#multiAccountOn()
+    ) {
+      const template = [buildProfilesMenu(this)].filter(Boolean);
+      if (template.length === 0) {
+        this.window.removeMenu();
+        return;
+      }
+      this.window.setMenu(Menu.buildFromTemplate(template));
+      return;
+    }
+    this.window.setMenu(Menu.buildFromTemplate([menu]));
+  }
+
   initialize() {
     const menu = appMenu(this);
 
-    if (this.configGroup.startupConfig.menubar == "hidden") {
+    // With multi-account OFF the pre-feature `removeMenu()` behaviour is
+    // untouched; otherwise #attachMenu picks the full or profiles-only menu.
+    if (
+      this.configGroup.startupConfig.menubar == "hidden" &&
+      !this.#multiAccountOn()
+    ) {
       this.window.removeMenu();
     } else {
-      this.window.setMenu(Menu.buildFromTemplate([menu]));
+      this.#attachMenu(menu);
+      if (this.configGroup.startupConfig.menubar == "hidden") {
+        this.window.setMenuBarVisibility(false);
+      }
     }
 
     this.initializeEventHandlers();
@@ -169,6 +214,22 @@ class Menus {
       this.profilesManager.on("switch", this.#profileChangeHandler);
       this.profilesManager.on("update", this.#profileChangeHandler);
 
+      // The switcher pill (owned by ProfileViewManager) opens the Add / Manage
+      // dialogs via IPC rather than holding its own dialog instances — these
+      // reuse the exact same dialogs the Profiles menu uses. Both handlers
+      // verify the sender is the switcher pill itself (the only legitimate
+      // caller) so the untrusted Teams renderer can't pop these dialogs.
+      this.#switcherOpenAddHandler = (event) => {
+        if (isSwitcherPillSender(event)) this.addProfile();
+      };
+      this.#switcherOpenManageHandler = (event) => {
+        if (isSwitcherPillSender(event)) this.manageProfiles();
+      };
+      // Switcher pill "Add profile…" link opens the existing Add-profile dialog.
+      ipcMain.on("profile-switcher-open-add", this.#switcherOpenAddHandler);
+      // Switcher pill "Manage profiles…" link opens the existing Manage dialog.
+      ipcMain.on("profile-switcher-open-manage", this.#switcherOpenManageHandler);
+
       // Detach the listeners when the window is destroyed so the
       // long-lived ProfilesManager (a process-wide singleton) does not
       // hold references into a stale Menus instance if the window is
@@ -182,6 +243,18 @@ class Menus {
           this.profilesManager.off("switch", this.#profileChangeHandler);
           this.profilesManager.off("update", this.#profileChangeHandler);
           this.#profileChangeHandler = null;
+        }
+        if (this.#switcherOpenAddHandler) {
+          ipcMain.removeListener(
+            "profile-switcher-open-add",
+            this.#switcherOpenAddHandler
+          );
+          ipcMain.removeListener(
+            "profile-switcher-open-manage",
+            this.#switcherOpenManageHandler
+          );
+          this.#switcherOpenAddHandler = null;
+          this.#switcherOpenManageHandler = null;
         }
       });
     }
@@ -276,7 +349,18 @@ class Menus {
 
   updateMenu() {
     const menu = appMenu(this);
-    this.window.setMenu(Menu.buildFromTemplate([menu]));
+    this.#attachMenu(menu);
+    // Re-assert the hidden bar: profile events rebuild the menu constantly
+    // (add/update/switch/remove), and without this the rebuild would silently
+    // restore a bar the user configured away. Gated on the flag so flag-off
+    // behaviour stays byte-identical to pre-feature (where updateMenu also
+    // re-attached the menu unconditionally).
+    if (
+      this.configGroup.startupConfig.menubar == "hidden" &&
+      this.#multiAccountOn()
+    ) {
+      this.window.setMenuBarVisibility(false);
+    }
     this.tray?.setContextMenu(menu.submenu);
 
     // Notify renderer process of config changes that affect renderer behavior
@@ -370,6 +454,28 @@ class Menus {
   }
 }
 
+// The switcher pill is the only legitimate sender of the profile-switcher-*
+// open-dialog channels. Verify the sender actually loaded our local
+// switcher.html — `file:` protocol AND an exact absolute-path match — rather
+// than trusting a pathname suffix, so a remote page served at
+// `…/profileSwitcher/switcher.html` cannot pop the dialogs (#2661 review).
+const SWITCHER_HTML_PATH = path.join(
+  __dirname,
+  "..",
+  "profileSwitcher",
+  "switcher.html"
+);
+
+function isSwitcherPillSender(event) {
+  const senderUrl = event.sender?.getURL?.() || "";
+  if (!senderUrl.startsWith("file:")) return false;
+  try {
+    return fileURLToPath(senderUrl) === SWITCHER_HTML_PATH;
+  } catch {
+    return false;
+  }
+}
+
 function saveSettingsInternal(_event, arg) {
   fs.writeFileSync(
     path.join(app.getPath("userData"), "teams_settings.json"),
@@ -396,10 +502,7 @@ function assignContextMenuHandler(menus) {
   return (_event, params) => {
     const menu = new Menu();
 
-    // Add each spelling suggestion
     assignReplaceWordHandler(params, menu, menus);
-
-    // Allow users to add the misspelled word to the dictionary
     assignAddToDictionaryHandler(params, menu, menus);
 
     if (menu.items.length > 0) {
@@ -553,7 +656,7 @@ function chooseLanguage(item, menus) {
   );
 
   if (menus.onSpellCheckerLanguageChanged) {
-    menus.onSpellCheckerLanguageChanged.apply(menus, [changes]);
+    menus.onSpellCheckerLanguageChanged(changes);
   }
 }
 

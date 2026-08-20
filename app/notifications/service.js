@@ -2,6 +2,9 @@ const { Notification, nativeImage, ipcMain } = require("electron");
 const crypto = require("node:crypto");
 const path = require("node:path");
 
+const ICON_FETCH_TIMEOUT_MS = 1000;
+const MAX_ICON_BYTES = 5 * 1024 * 1024;
+
 const USER_STATUS = {
   UNKNOWN: -1,
   AVAILABLE: 1,
@@ -45,13 +48,17 @@ class NotificationService {
   }
 
   async #handlePlayNotificationSound(_event, options) {
-    return this.#playNotificationSound(options);
+    // preload's playNotificationSound only rejects non-object values, so a
+    // renderer calling it with no argument reaches us as undefined. Every use
+    // below dereferences options, so normalise at the IPC boundary. A default
+    // parameter would not cover the null case, which preload also lets through.
+    return this.#playNotificationSound(options || {});
   }
 
   async #showNotification(options) {
     const startTime = Date.now();
     console.debug("[NOTIFICATIONS] Native notification request received", {
-      title: options.title,
+      titleLength: options.title?.length || 0,
       bodyLength: options.body?.length || 0,
       hasIcon: !!options.icon,
       type: options.type,
@@ -61,14 +68,15 @@ class NotificationService {
     });
 
     try {
+      const iconPromise = this.#loadIcon(options.icon).catch(() => null);
+
       // Play notification sound if configured (await to catch any errors)
       await this.#playNotificationSound({
         type: options.type,
         audio: "default",
-        title: options.title,
-        body: options.body,
       });
 
+      const icon = await iconPromise;
       const notificationConfig = {
         title: options.title,
         body: options.body,
@@ -76,12 +84,8 @@ class NotificationService {
         timeoutType: options.timeoutType === "never" ? "never" : "default",
       };
 
-      // Only add icon if provided to avoid errors with null/undefined
-      if (options.icon) {
-        notificationConfig.icon = nativeImage.createFromDataURL(options.icon);
-      }
+      if (icon) notificationConfig.icon = icon;
 
-      // Create and show native notification
       const notification = new Notification(notificationConfig);
 
       notification.on("click", () => {
@@ -112,7 +116,6 @@ class NotificationService {
 
       const totalTime = Date.now() - startTime;
       console.debug("[NOTIFICATIONS] Native notification displayed successfully", {
-        title: options.title,
         totalTimeMs: totalTime,
         urgency: this.#config.defaultNotificationUrgency,
         performanceNote: totalTime > 500 ? "Slow notification display detected" : "Normal notification speed"
@@ -121,16 +124,93 @@ class NotificationService {
     } catch (error) {
       console.error("[NOTIFICATIONS] Failed to show native notification", {
         error: error.message,
-        title: options.title,
         elapsedMs: Date.now() - startTime,
         suggestion: "Check if notification permissions are granted or icon data is valid"
       });
     }
   }
 
+  async #loadIcon(icon) {
+    if (typeof icon !== "string" || !icon) return null;
+
+    if (icon.startsWith("data:")) {
+      return this.#nonEmptyImage(nativeImage.createFromDataURL(icon));
+    }
+
+    const win = this.#mainWindow.getWindow();
+    const url = this.#parseHttpsUrl(icon);
+    const pageUrl = this.#parseHttpsUrl(win?.webContents?.getURL?.());
+    if (!url || !pageUrl || url.origin !== pageUrl.origin) return null;
+
+    const session = win?.webContents?.session;
+    if (!session?.fetch) return null;
+
+    return this.#loadRemoteIcon(session, url);
+  }
+
+  async #loadRemoteIcon(session, url) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), ICON_FETCH_TIMEOUT_MS);
+    try {
+      const response = await session.fetch(url.href, {
+        credentials: "include",
+        redirect: "error",
+        signal: controller.signal,
+      });
+      if (!response.ok) return null;
+
+      const declaredSize = Number(response.headers.get("content-length"));
+      if (declaredSize > MAX_ICON_BYTES) return null;
+
+      const bytes = await this.#readIconBody(response.body);
+      if (!bytes) return null;
+
+      return this.#nonEmptyImage(nativeImage.createFromBuffer(bytes));
+    } catch {
+      console.warn("[NOTIFICATIONS] Could not load remote notification icon");
+      return null;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  async #readIconBody(body) {
+    const reader = body?.getReader();
+    if (!reader) return null;
+
+    const chunks = [];
+    let size = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) return Buffer.concat(chunks, size);
+
+      size += value.byteLength;
+      if (size > MAX_ICON_BYTES) {
+        await reader.cancel();
+        return null;
+      }
+      chunks.push(Buffer.from(value));
+    }
+  }
+
+  #parseHttpsUrl(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" ? url : null;
+    } catch {
+      return null;
+    }
+  }
+
+  #nonEmptyImage(image) {
+    return image.isEmpty() ? null : image;
+  }
+
   async #playNotificationSound(options) {
+    // options can carry the notification title and body (the web path forwards
+    // them over play-notification-sound), so log only the sound-relevant fields.
     console.debug(
-      `Notification => Type: ${options.type}, Audio: ${options.audio}, Title: ${options.title}, Body: ${options.body}`
+      `[NOTIFICATIONS] Sound requested => type: ${options.type}, audio: ${options.audio}`
     );
 
     // Player failed to load or notification sound disabled in config
@@ -139,7 +219,6 @@ class NotificationService {
       return;
     }
 
-    // Get current user status via injected function
     const userStatus = this.#getUserStatus();
 
     // Notification sound disabled if not available set in config and user status is not "Available" (or is unknown)
@@ -162,7 +241,7 @@ class NotificationService {
       return;
     }
 
-    console.debug("No notification sound played", this.#soundPlayer, options);
+    console.debug(`[NOTIFICATIONS] No sound configured for type: ${options.type}`);
   }
 }
 

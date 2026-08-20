@@ -21,15 +21,12 @@ class MutationObserverTitle {
     if (config.useMutationTitleLogic) {
       this.#config = config;
       console.debug("MutationObserverTitle enabled");
-      // Check if DOM is already loaded
       if (document.readyState === 'loading') {
-        // DOM is still loading, wait for DOMContentLoaded
         globalThis.addEventListener(
           "DOMContentLoaded",
           () => this._applyMutationToTitleLogic(),
         );
       } else {
-        // DOM is already loaded, apply logic immediately
         this._applyMutationToTitleLogic();
       }
     }
@@ -50,10 +47,9 @@ class MutationObserverTitle {
   }
 
   _applyMutationToTitleLogic() {
-    console.debug("Appliying MutationObserverTitle logic");
+    console.debug("Applying MutationObserverTitle logic");
     
     try {
-      // Validate DOM environment
       if (!globalThis.document || !globalThis.MutationObserver) {
         console.error("MutationTitle: Invalid DOM environment");
         return;
@@ -78,7 +74,6 @@ class MutationObserverTitle {
             return;
           }
 
-          // Validate and sanitize document title
           const title = globalThis.document.title;
           if (typeof title !== 'string') {
             console.warn("MutationTitle: Invalid title type");
@@ -100,12 +95,10 @@ class MutationObserverTitle {
           }
           this.#lastNumber = number;
 
-          // Enhanced debugging for unread count extraction
           console.debug("MutationTitle: Extracting unread count", {
             extractedNumber: number
           });
-          
-          // Validate extracted number
+
           if (Number.isNaN(number) || number < 0 || number > 9999) {
             console.warn("MutationTitle: Invalid unread count extracted:", number);
             return;

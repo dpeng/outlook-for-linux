@@ -6,7 +6,6 @@ const {
   dialog,
   webFrameMain,
   nativeImage,
-  desktopCapturer,
   ipcMain,
   MessageChannelMain,
 } = require("electron");
@@ -19,11 +18,11 @@ const { execFile } = require("node:child_process");
 const TrayIconChooser = require("../browser/tools/trayIconChooser");
 require("../appConfiguration");
 const ConnectionManager = require("../connectionManager");
+const ssoPasswordPrefill = require("../ssoPasswordPrefill");
 const BrowserWindowManager = require("../mainAppWindow/browserWindowManager");
 const os = require("node:os");
 const path = require("node:path");
 
-// Default configuration for the screen sharing thumbnail preview (avoid magic values)
 const DEFAULT_SCREEN_SHARING_THUMBNAIL_CONFIG = {
   enabled: false,
   alwaysOnTop: true,
@@ -32,8 +31,8 @@ const DEFAULT_SCREEN_SHARING_THUMBNAIL_CONFIG = {
 let iconChooser;
 let intune;
 let isControlPressed = false;
-// Phase 1c.2: ProfilesManager handle threaded through onAppReady so the
-// Menus instance can build the Profiles submenu and react to its events.
+// ProfilesManager handle threaded through onAppReady so the Menus
+// instance can build the Profiles submenu and react to its events.
 let profilesManagerRef = null;
 // Counter for tracking about:blank navigation attempts to handle authentication flows.
 // Microsoft web apps sometimes navigate to about:blank during SSO/auth redirects, and we need to
@@ -50,15 +49,8 @@ let menus = null;
 
 const isMac = os.platform() === "darwin";
 
-function findSelectedSource(sources, source) {
-  return sources.find((s) => s.id === source.id);
-}
-
 function setupScreenSharing(selectedSource) {
-  // Store the source ID in the screen sharing service
   screenSharingService.setSelectedSource(selectedSource);
-
-  // Create preview window for screen sharing
   createScreenSharePreviewWindow();
 }
 
@@ -85,47 +77,40 @@ function bindDisplayMediaHandler(targetSession) {
 }
 
 function handleScreenSourceSelection(source, callback) {
-  desktopCapturer
-    .getSources({ types: ["window", "screen"] })
-    .then((sources) => {
-      const selectedSource = findSelectedSource(sources, source);
-      if (selectedSource) {
-        setupScreenSharing(selectedSource);
-        callback({ video: selectedSource });
-      } else {
-        // Source not found - use setImmediate and try-catch to allow retry
-        setImmediate(() => {
-          try {
-            callback({});
-          } catch {
-            console.debug("[SCREEN_SHARE] Selected source not found");
-          }
-        });
-      }
-    })
-    .catch((error) => {
-      // Handle desktopCapturer failures gracefully - can crash on certain hardware
-      // configurations (USB-C docking stations, DisplayLink drivers, etc.)
-      // See issues #2058, #2041
-      console.error("[SCREEN_SHARE] Failed to get sources for selection:", {
-        error: error.message,
-        stack: error.stack,
-        sourceId: source?.id
-      });
-      setImmediate(() => {
-        try {
-          callback({});
-        } catch {
-          console.debug("[SCREEN_SHARE] Failed to complete screen selection callback");
-        }
-      });
+  try {
+    // Use the picker's source directly instead of re-querying
+    // desktopCapturer.getSources(). On Wayland/PipeWire every getSources()
+    // call opens a fresh portal session with new source IDs, so an ID from
+    // the picker's enumeration never matched a second enumeration and
+    // sharing always failed. See #2713 (and #2207 for the original attempt).
+    setupScreenSharing(source);
+  } catch (error) {
+    console.error("[SCREEN_SHARE] Failed to setup screen sharing:", {
+      error: error.message,
+      sourceId: source?.id,
     });
+    setImmediate(() => {
+      try {
+        callback({});
+      } catch {
+        console.debug("[SCREEN_SHARE] Failed to complete screen selection callback");
+      }
+    });
+    return;
+  }
+
+  // Kept out of the try above so a throwing callback is not mistaken for a
+  // setup failure and answered with a second callback.
+  try {
+    callback({ video: { id: source.id, name: source.name || "" } });
+  } catch {
+    console.debug("[SCREEN_SHARE] Failed to complete screen selection callback");
+  }
 }
 
 function createScreenSharePreviewWindow() {
   const startTime = Date.now();
 
-  // Get configuration - use the module-level config variable
   let thumbnailConfig =
     config?.screenSharing?.thumbnail ?? DEFAULT_SCREEN_SHARING_THUMBNAIL_CONFIG;
 
@@ -182,7 +167,6 @@ function createScreenSharePreviewWindow() {
     },
   });
 
-  // Store in service
   screenSharingService.setPreviewWindow(newPreviewWindow);
 
   const windowId = newPreviewWindow.id;
@@ -206,7 +190,6 @@ function createScreenSharePreviewWindow() {
     newPreviewWindow.show();
   });
 
-  // Add focus/blur event handlers to detect when preview window gets focus
   newPreviewWindow.on("focus", () => {
     console.debug("[SCREEN_SHARE_DIAG] Preview window gained focus", {
       windowId: windowId,
@@ -227,7 +210,6 @@ function createScreenSharePreviewWindow() {
       hadActiveSource: !!closedSource,
       closedSource: closedSource
     });
-    // Clear both preview window and selected source when window closes
     screenSharingService.setPreviewWindow(null);
     screenSharingService.setSelectedSource(null);
   });
@@ -274,6 +256,7 @@ const AUTH_COOKIE_NAMES = new Set([
   'CCState',
   'FedAuth',
   'rtFa',
+  'msal.cache.encryption',
 ]);
 
 // Auth cookies preserved during force-clean recovery so the Microsoft
@@ -342,6 +325,49 @@ async function cleanExpiredAuthCookies(windowSession, forceCleanAll = false) {
     console.error('[AUTH_RECOVERY] Cookie check failed:', error.message);
     return { cleaned: 0, total: 0, expired: 0 };
   }
+}
+
+// Some localStorage tokens get encrypted by a Session cookie 'msal.cache.encryption'.
+// Electron drops this cookie on process exits, so the encrypted tokens can't be decrypted anymore
+// This forces a fresh login on every start (#2681)
+// Set an expiration date for the cookie to promote it from a session cookie, so it survives restarts
+const MSAL_ENCRYPTION_COOKIE = 'msal.cache.encryption';
+function keepMsalEncryptionCookiePersistent(windowSession) {
+  if(!config?.auth?.keepMsalCacheEncryptionCookie?.enabled) return;
+  windowSession.cookies.on('changed', (_event, cookie, _cause, removed) => {
+    if (removed || cookie.name !== MSAL_ENCRYPTION_COOKIE || !cookie.session) {
+      return;
+    }
+
+    const bareDomain = (cookie.domain || '').replace(/^\./, '');
+    if (!bareDomain) return;
+    const url = `${cookie.secure ? 'https' : 'http'}://${bareDomain}${cookie.path || '/'}`;
+
+    // Get the days to keep the cookie from the config.
+    // If no value is set or the value is outside of 1 and 400 or not a number set it to 400
+    let keepMsalEncryptionDays = config?.auth?.keepMsalCacheEncryptionCookie?.days ?? 400;
+    if(keepMsalEncryptionDays > 400 || keepMsalEncryptionDays < 1 || Number.isNaN(keepMsalEncryptionDays)) keepMsalEncryptionDays = 400;
+
+    // Preserve the original attributes exactly, only add an expiry.
+    const details = {
+      url,
+      name: cookie.name,
+      value: cookie.value,
+      path: cookie.path,
+      secure: cookie.secure,
+      httpOnly: cookie.httpOnly,
+      sameSite: cookie.sameSite,
+      // Keep the Cookie for 400 days
+      expirationDate: Math.floor(Date.now() / 1000) + (keepMsalEncryptionDays * 24 * 60 * 60),
+    };
+    if ((cookie.domain || '').startsWith('.')) {
+      details.domain = cookie.domain;
+    }
+
+    windowSession.cookies.set(details)
+      .then(() => console.debug('[AUTH_RECOVERY] Promoted msal.cache.encryption cookie to persistent (survives restart)'))
+      .catch((err) => console.warn('[AUTH_RECOVERY] Failed to persist msal.cache.encryption cookie:', err.message));
+  });
 }
 
 // Always-on auth-failure signatures. MSAL reports an interaction-required error
@@ -680,6 +706,8 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
   const browserWindowManager = new BrowserWindowManager({
     config: config,
     iconChooser: iconChooser,
+    // Lets the startup clear reach every profile partition (#2866).
+    profilesManager: profilesManagerRef,
   });
 
   window = await browserWindowManager.createWindow();
@@ -741,7 +769,6 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
     });
   }
 
-  // Initialize connection manager
   connectionManager = new ConnectionManager();
 
   if (iconChooser) {
@@ -750,6 +777,10 @@ exports.onAppReady = async function onAppReady(configGroup, customBackground, sh
   }
 
   addEventHandlers();
+
+  // Keep the msal.cache.encryption cookie
+  // Run before loading Outlook so the cookie gets caught right at the start
+  keepMsalEncryptionCookiePersistent(window.webContents.session);
 
   // Clean expired auth cookies before loading Outlook to prevent the
   // "We need you to sign in again" stale banner (#2296)
@@ -927,7 +958,6 @@ function onDidFinishLoad() {
 			tryAgainLink && tryAgainLink.click()
 		`).catch(() => {});
 
-  // Inject browser functionality
   injectScreenSharingLogic();
 
   customCSS.onDidFinishLoad(window.webContents, config);
@@ -986,13 +1016,9 @@ function onDidFrameFinishLoad(
 }
 
 function restoreWindow() {
-  // If minimized, restore.
   if (window.isMinimized()) {
     window.restore();
-  }
-
-  // If closed to tray, show.
-  else if (!window.isVisible()) {
+  } else if (!window.isVisible()) {
     window.show();
   }
 
@@ -1045,7 +1071,7 @@ function isMicrosoftTelemetryHost(url) {
   // fires for every request matched by `{ urls: ["https://*/*"] }`, so
   // skipping the parse for the overwhelmingly common non-telemetry case
   // is measurable on chat-heavy sessions.
-  if (!url || !url.includes(MS_TELEMETRY_FAST_PATH)) return false;
+  if (!url?.includes(MS_TELEMETRY_FAST_PATH)) return false;
   try {
     const hostname = new URL(url).hostname;
     return MS_TELEMETRY_HOSTS.some(
@@ -1067,10 +1093,7 @@ function onBeforeRequestHandler(details, callback) {
 
   if (customBackgroundRedirect) {
     callback(customBackgroundRedirect);
-  }
-  // Check if the counter was incremented
-  else if (aboutBlankRequestCount < 1) {
-    // Proceed normally
+  } else if (aboutBlankRequestCount < 1) {
     callback({});
   } else if (details.resourceType === "mainFrame") {
     // A top-level navigation is never the about:blank popup's own request, so
@@ -1105,7 +1128,6 @@ function onBeforeRequestHandler(details, callback) {
       child.destroy();
     });
 
-    // decrement the counter
     aboutBlankRequestCount -= 1;
     callback({ cancel: true });
   }
@@ -1234,7 +1256,6 @@ function onNewWindow(details) {
     details.url === "about:blank" ||
     details.url === "about:blank#blocked"
   ) {
-    // Increment the counter for about:blank authentication flow
     aboutBlankRequestCount += 1;
     return { action: "deny" };
   } else if (isAuthLoginUrl(details.url) && shouldInterceptAuthPopup()) {
@@ -1326,6 +1347,10 @@ function addEventHandlers() {
   // Navigation state change handlers
   window.webContents.on("did-navigate", onNavigationChanged);
   window.webContents.on("did-navigate-in-page", onNavigationChanged);
+
+  // Pre-fill/advance the Microsoft/federated web login page (no-op unless one
+  // of auth.webLogin.user / auth.webLogin.passwordCommand / auth.webLogin.verifyMethod is set).
+  ssoPasswordPrefill.attach(window, config);
 }
 
 function getWebRequestFilterFromURL() {

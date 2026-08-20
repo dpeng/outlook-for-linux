@@ -5,6 +5,8 @@ const { ipcMain } = require("electron");
 const logger = require("./logger");
 const configOptions = require("./options");
 const { validateConfigFile } = require("./validator");
+const { buildDeprecationWarning } = require("./deprecation");
+const { applyRenamedOptions } = require("./renames");
 
 function getConfigFilePath(configPath) {
   return path.join(configPath, "config.json");
@@ -102,23 +104,18 @@ function extractYargConfig(configObject, appVersion) {
 
 function checkUsedDeprecatedValues(yargsInstance, configObject, config) {
   // yargs v18: getDeprecatedOptions() must be called on the instance
-  const deprecatedOptions = yargsInstance.getDeprecatedOptions();
-  const warnings = [];
+  const message = buildDeprecationWarning(
+    yargsInstance.getDeprecatedOptions(),
+    configObject.configFile
+  );
+  if (!message) return;
 
-  for (const option in deprecatedOptions) {
-    if (option in configObject.configFile) {
-      const deprecatedWarningMessage = `Option \`${option}\` is deprecated and will be removed in future version. \n ${deprecatedOptions[option]}.`;
-      console.warn(deprecatedWarningMessage);
-      warnings.push(deprecatedWarningMessage);
-    } else {
-      console.debug(`all good with ${option} you aren't using them`);
-    }
-  }
-
-  // Accumulate all warnings instead of overwriting
-  if (warnings.length > 0) {
-    config["warnings"] = warnings;
-  }
+  console.warn(message);
+  // Single entry on purpose; see app/config/deprecation.js for why.
+  // `warnings` is not a declared option, so a config file containing that key
+  // lands here verbatim; only extend it when it is already a list.
+  const existing = Array.isArray(config["warnings"]) ? config["warnings"] : [];
+  config["warnings"] = [...existing, message];
 }
 
 function argv(configPath, appVersion) {
@@ -138,8 +135,10 @@ function argv(configPath, appVersion) {
     config["error"] = configObject.configError;
   }
 
-  // Pass yargs instance to access getDeprecatedOptions() in v18
-  checkUsedDeprecatedValues(yargsInstance, configObject, config);
+  // ADR-025: project any nested value the user supplied onto the flat key that
+  // modules still read. Must run before anything consumes the config. The raw
+  // config file is the presence oracle; see app/config/renames.js for why.
+  applyRenamedOptions(config, configObject.configFile);
 
   if (configObject.isConfigFile && config.watchConfigFile) {
     fs.watch(getConfigFilePath(configPath), (event, filename) => {
@@ -157,6 +156,11 @@ function argv(configPath, appVersion) {
   config.disableGpuExplicitlySet = wasSetInCli || wasSetInFile;
 
   logger.init(config.logConfig);
+
+  // Runs after logger.init so the warning reaches the log file and not just
+  // stdout; users attaching a log to a bug report need to see it.
+  // Pass yargs instance to access getDeprecatedOptions() in v18
+  checkUsedDeprecatedValues(yargsInstance, configObject, config);
 
   // Warn-only schema validation of the merged (system + user) config file
   // contents (issue #2597). Runs after logger.init so warnings reach the log.

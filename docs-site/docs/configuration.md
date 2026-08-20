@@ -115,7 +115,7 @@ Each option's **Apply** mode (whether a change takes effect immediately or after
 |--------|------|---------|-------------|
 | `customCSSName` | `string` | `""` | Custom CSS name. Options: "compactDark", "compactLight", "tweaks", "condensedDark", "condensedLight" |
 | `customCSSLocation` | `string` | `""` | Custom CSS styles file location |
-| `followSystemTheme` | `boolean` | `true` | Follow the operating-system dark/light theme preference. Set `false` to keep Teams's own theme regardless of OS changes. |
+| `followSystemTheme` | `boolean` | `false` | Follow the operating-system dark/light theme preference. Set `true` to drive Teams's theme from the OS preference. |
 
 ### Tray Icon
 
@@ -205,6 +205,70 @@ rm /tmp/outlook-for-linux-idle-state-$USER
 
 The state file is automatically cleaned up when the app exits.
 
+:::note Requires `awayOnSystemIdle`
+The state file only controls what the app *believes* the system idle state is. Presence is
+still only changed when `awayOnSystemIdle` is `true`, so set both:
+
+```json
+{
+  "awayOnSystemIdle": true,
+  "idleDetection": { "forceState": true }
+}
+```
+:::
+
+#### Driving the state file automatically (Wayland)
+
+Under Wayland, `powerMonitor` cannot see user input, so nothing populates the state file on its
+own. Any idle daemon that can run a command on timeout and on resume will do. On a compositor
+implementing `ext-idle-notify-v1` (KWin, sway, Hyprland, and most wlroots compositors), `swayidle`
+works well as a user service:
+
+`~/.config/systemd/user/teams-idle-watcher.service`
+
+```ini
+[Unit]
+Description=Teams for Linux presence idle watcher (swayidle -> state file)
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Type=simple
+Environment=STATEFILE=/tmp/teams-for-linux-idle-state-%u
+ExecStartPre=/bin/sh -c 'echo active > "$STATEFILE"'
+ExecStart=/usr/bin/swayidle -w \
+  timeout 300 'echo inactive > "$STATEFILE"' \
+  resume 'echo active > "$STATEFILE"' \
+  before-sleep 'echo inactive > "$STATEFILE"'
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target
+```
+
+Enable it with `systemctl --user enable --now teams-idle-watcher.service`.
+
+Three things are worth knowing before you rely on this:
+
+**The daemon's timeout is the idle delay, not `appIdleTimeout`.** When the state file says
+`inactive` the app reports idle straight away and never consults `powerMonitor`, so
+`appIdleTimeout` has no effect on this path. Set the delay you want in the `timeout` line above.
+`appIdleTimeout` still applies when the state file is absent and detection falls back to
+`powerMonitor`.
+
+**The app deletes the state file when it exits.** `swayidle` only writes on a transition, so after
+restarting Teams for Linux the file stays missing until the next idle or resume. The
+`ExecStartPre` line above re-seeds it, which means restarting the watcher alongside the app
+restores a known state.
+
+**A stale `inactive` pins you idle.** If the watcher stops while the file still reads `inactive`,
+the app keeps reporting idle indefinitely with nothing to correct it. Removing the file returns
+you to automatic detection.
+
+Content other than `active` or `inactive` is logged as a warning and ignored, falling through to
+`powerMonitor`.
+
 ### Authentication & SSO
 
 | Option | Type | Default | Description |
@@ -218,6 +282,37 @@ The state file is automatically cleaned up when the app exits.
 |--------|------|---------|-------------|
 | `ssoBasicAuthUser` | `string` | `""` | User to use for SSO basic auth |
 | `ssoBasicAuthPasswordCommand` | `string` | `""` | Command to execute to retrieve password for SSO basic auth |
+
+#### Web Login Password Pre-fill
+
+If your organisation expires the Teams session frequently (short-lived tokens, sign-in-frequency policies), you land on the Microsoft/federated **web** login page most launches. Microsoft remembers your account (email) but never the password, so you retype it every time.
+
+Set `auth.webLogin.passwordCommand` to a command that prints your password (first line of stdout); the app pre-fills it into the password field on the login page. It runs in a shell, so use your own password manager — the app itself stores no secret. Set `auth.webLogin.user` to also pre-fill the email/username field when it is blank (useful when the account isn't remembered and you land on the "Enter your email" step).
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `auth.webLogin.user` | `string` | `""` | Email/username pre-filled into the account field when it is empty. Empty disables it. |
+| `auth.webLogin.passwordCommand` | `string` | `""` | Command whose first stdout line is pre-filled into the web login password field. Empty disables the feature. |
+| `auth.webLogin.extraHosts` | `array` | `[]` | Extra host suffixes to treat as login pages, in addition to the built-in Microsoft hosts (`login.microsoftonline.com`, `login.microsoft.com`, `login.live.com`). Add your federated IdP host if sign-in happens off the Microsoft hosts. |
+| `auth.webLogin.autoSubmit` | `boolean` | `false` | Automatically advance each step: click Next after the email and Sign in after the password. Off by default so you review and submit yourself. |
+| `auth.webLogin.verifyMethod` | `string` | `""` | On the "Verify your identity" (MFA) page, click the option whose label starts with this text, e.g. `Text` for SMS. Empty disables it. Best-effort text match. |
+
+```json
+{
+  "auth": {
+    "webLogin": {
+      "user": "you@example.org",
+      "passwordCommand": "pass show work/teams",
+      "autoSubmit": true,
+      "verifyMethod": "Text"
+    }
+  }
+}
+```
+
+With the example above, the app fills the email and clicks Next, fills the password and clicks Sign in, then on the MFA "Verify your identity" page clicks the **Text** (SMS) option — leaving you only to enter the texted code. Drop `auth.webLogin.autoSubmit`/`auth.webLogin.verifyMethod` if you prefer to click through the steps yourself.
+
+This is separate from **Basic Authentication** above: `ssoBasicAuthPasswordCommand` feeds the native HTTP Basic/NTLM dialog, whereas `auth.webLogin.passwordCommand` fills the browser login form. The password is passed only to the login page (never logged or persisted) and only on the configured login hosts. If your sign-in page is a company-branded `login.microsoftonline.com` page (a logo/background on the standard Microsoft page), the defaults already cover it; only add `auth.webLogin.extraHosts` if the password page is served from a different hostname.
 
 #### InTune SSO
 
@@ -278,9 +373,60 @@ Requires the `fido2-tools` system package: `sudo apt install fido2-tools` (Debia
 | `clientCertPath` | `string` | `""` | Custom Client Certs for corporate authentication (certificate must be in pkcs12 format) |
 | `clientCertPassword` | `string` | `""` | Custom Client Certs password for corporate authentication |
 
+#### Smartcard / Client Certificate PIN (Linux)
+
+When a client certificate lives on a smartcard or other PKCS#11 token, NSS needs the token PIN before it can present the certificate. On Linux, Chromium delegates that PIN prompt to the application, so without a handler the certificate is never presented and sign-in fails silently. Enabling this shows a PIN dialog when a token needs unlocking. The feature is Linux only and off by default; macOS and Windows provide native PIN prompts. Changing it requires a restart. See issue #2639.
+
+```json
+{
+  "auth": {
+    "clientCertificate": {
+      "pinDialog": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `auth.clientCertificate.pinDialog.enabled` | `boolean` | `false` | Show a PIN dialog for smartcard / PKCS#11 client certificates on Linux. No effect on macOS or Windows. |
+
+Configuring the PKCS#11 module itself is your responsibility. A typical OpenSC setup registers the card with the NSS database Chromium uses (paths vary by distro):
+
+```bash
+sudo apt install opensc                       # or distro equivalent
+modutil -dbdir sql:$HOME/.pki/nssdb -add opensc -libfile /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so
+```
+
+The token name and requesting hostname appear in the dialog but are never logged, and the entered PIN is never logged or written to disk.
+
+#### Cookies
+
+Some localStorage tokens get encrypted by a Session cookie 'msal.cache.encryption'. Electron drops this cookie on process exits, so the encrypted tokens can't be decrypted anymore. This forces a fresh login on every start and clears all local settings, like selected camera, microphone, meeting backgrounds or "Keep my current status when I'm active outside of Teams on the web". This sets an expiration date for the cookie to promote it from a session cookie, so it survives restarts.
+
+This is on by default. Microsoft mints the cookie as session-scoped deliberately, so keeping it means the token-decryption key stays on disk for longer than Microsoft intended. If you prefer that tradeoff the other way around, set `enabled` to `false` and sign in again after each restart.
+
+```json
+{
+  "auth": {
+    "keepMsalCacheEncryptionCookie": {
+      "enabled": false,
+      "days": 400
+    }
+  }
+}
+```
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `auth.keepMsalCacheEncryptionCookie.enabled` | `boolean` | `true` | Sets an expiration date for the 'msal.cache.encryption' cookie to keep it after restarts. |
+| `auth.keepMsalCacheEncryptionCookie.days` | `number` | `400` | Sets the amount of days the 'msal.cache.encryption' cookie should be kept for. Between 1 and 400. |
+
 ### Multi-Account Profile Switcher (Experimental)
 
-> **Status:** Phase 1 partially shipped. With the flag enabled you get a **Profiles** menu (Add / Switch / Manage / Remove profiles), first-run migration of your existing session into a default "My account" profile, and per-profile session isolation — each profile runs against its own `persist:teams-profile-{uuid}` partition so cookies, tokens, and storage never cross tenants. Still in progress: the top-right dropdown switcher overlay and `Ctrl+Shift+1…5` shortcuts for pinned profiles. See [ADR-020](development/adr/020-multi-account-profile-switcher) for the full design and remaining phases.
+> **Status:** Phase 1 shipped. With the flag enabled you get a bottom-left **account switcher pill** (dropdown with every profile + Add/Manage), a **Profiles** menu (Add / Switch / Manage / Remove profiles), `Ctrl+Alt+1…5` shortcuts for pinned profiles (pin via **Manage profiles…**, up to 5; Linux/Windows), first-run migration of your existing session into a default "My account" profile, and per-profile session isolation — each profile runs against its own `persist:teams-profile-{uuid}` partition so cookies, tokens, and storage never cross tenants. See [ADR-020](development/adr/020-multi-account-profile-switcher) for the full design and later phases (background notifications, power features).
 
 Opt-in configuration for the single-window multi-tenant account switcher:
 
@@ -434,8 +580,10 @@ A floating sticker panel that lists image files from a local folder and pastes t
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `disableGlobalShortcuts` | `array` | `[]` | Array of global shortcuts to disable while app is in focus |
-| `globalShortcuts` | `array` | `[]` | Global keyboard shortcuts that work system-wide (opt-in, disabled by default). See [Global Shortcuts](#global-shortcuts) |
+| `shortcuts.global` | `array` | `[]` | Global keyboard shortcuts that work system-wide (opt-in, disabled by default). See [Global Shortcuts](#global-shortcuts) |
+| `shortcuts.disableWhileFocused` | `array` | `[]` | Array of global shortcuts to disable while app is in focus |
+| `globalShortcuts` | `array` | `[]` | Deprecated, use `shortcuts.global` |
+| `disableGlobalShortcuts` | `array` | `[]` | Deprecated, use `shortcuts.disableWhileFocused` |
 
 ### MQTT Integration
 
@@ -564,7 +712,8 @@ Wayland display server settings are organized under the `wayland` configuration 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `cacheManagement` | `object` | `{ enabled: false, maxCacheSizeMB: 600, cacheCheckIntervalMs: 3600000 }` | Cache management configuration |
-| `clearStorageData` | `boolean` | `null` | Flag to clear storage data |
+| `storage.clearData` | `boolean` \| `object` | `null` | Clear storage data on start. `true` clears everything; an object is passed through as Electron [`ClearStorageDataOptions`](https://www.electronjs.org/docs/latest/api/session#sesclearstoragedataoptions), for example `{"storages": ["cookies"]}` |
+| `clearStorageData` | `boolean` | `null` | Deprecated, use `storage.clearData` |
 
 > [!NOTE]
 > See [Cache Management](#cache-management) for detailed configuration and usage examples.
@@ -940,10 +1089,12 @@ System-wide keyboard shortcuts that work even when Teams is not focused. When tr
 
 ```json
 {
-  "globalShortcuts": [
-    "Control+Shift+M",
-    "Control+Shift+O"
-  ]
+  "shortcuts": {
+    "global": [
+      "Control+Shift+M",
+      "Control+Shift+O"
+    ]
+  }
 }
 ```
 

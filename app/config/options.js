@@ -278,6 +278,7 @@ module.exports = {
           "Flag to clear storage data. Expects an object of the type https://www.electronjs.org/docs/latest/api/session#sesclearstoragedataoptions",
         type: "boolean",
         applyMode: "restart",
+        deprecated: "use storage.clearData instead",
       },
       clientCertPath: {
         default: "",
@@ -425,6 +426,7 @@ module.exports = {
           "Array of global shortcuts to disable while the app is in focus. See https://www.electronjs.org/docs/latest/api/accelerator for available accelerators to use",
         type: "array",
         applyMode: "restart",
+        deprecated: "use shortcuts.disableWhileFocused instead",
       },
       globalShortcuts: {
         default: [],
@@ -432,6 +434,7 @@ module.exports = {
           "Global keyboard shortcuts that work system-wide. Disabled by default (opt-in). See configuration docs for details and limitations",
         type: "array",
         applyMode: "restart",
+        deprecated: "use shortcuts.global instead",
       },
       electronCLIFlags: {
         default: [],
@@ -453,9 +456,9 @@ module.exports = {
         applyMode: "restart",
       },
       followSystemTheme: {
-        default: true,
+        default: false,
         describe:
-          "Follow the operating-system dark/light theme preference. Default is true; set false to keep Outlook's own theme regardless of OS changes.",
+          "Follow the operating-system dark/light theme preference. Default is false; set true to drive Outlook's theme from the OS preference.",
         type: "boolean",
         applyMode: "restart",
       },
@@ -827,10 +830,16 @@ module.exports = {
           mediaTopics: {
             inCall: "in-call",
             incomingCall: "incoming-call",
+            meetingStarted: "meeting-started",
             camera: "camera",
             microphone: "microphone",
             microphoneControl: "microphone/control",
             screenSharing: "screen-sharing",
+          },
+          meetingStartDetection: {
+            enabled: false,
+            patterns: ["meeting started", "started the meeting"],
+            resetSeconds: 10,
           },
         },
         describe: "MQTT configuration for publishing web app status updates and receiving action commands",
@@ -890,6 +899,21 @@ module.exports = {
             type: "string",
             describe: "Device name shown in Home Assistant.",
           },
+          "meetingStartDetection.enabled": {
+            type: "boolean",
+            describe:
+              "Enable detection of a scheduled meeting starting (Teams' meeting-start banner/toast), published as a pulse to the meeting-started topic (experimental, see issue #2587).",
+          },
+          "meetingStartDetection.patterns": {
+            type: "array",
+            describe:
+              "Case-insensitive regular expressions for the DOM fallback, matched against banner/toast text. Primary detection uses Teams' internal command stream and needs no patterns; the defaults only cover English Teams, override for other UI languages.",
+          },
+          "meetingStartDetection.resetSeconds": {
+            type: "number",
+            describe:
+              "Seconds after which the meeting-started topic resets to false if you never join. Joining the call resets it immediately, whichever comes first.",
+          },
         },
         applyMode: "restart",
       },
@@ -941,8 +965,24 @@ module.exports = {
           reauthRecovery: {
             enabled: false,
           },
+          clientCertificate: {
+            pinDialog: {
+              enabled: false,
+            },
+          },
+          webLogin: {
+            user: "",
+            passwordCommand: "",
+            extraHosts: [],
+            autoSubmit: false,
+            verifyMethod: "",
+          },
+          keepMsalCacheEncryptionCookie: {
+            enabled: true,
+            days: 400
+          }
         },
-        describe: "Authentication configuration. auth.webauthn.enabled turns on hardware security key support on Linux (requires fido2-tools). auth.webauthn.debug enables verbose diagnostic logs, intended for beta testers only. auth.reauthRecovery.enabled opts into the in-app re-authentication recovery feature and is off by default; while off, renderer auth-failure signals are ignored and the web app's own stale 'sign in again' banner is left untouched. When on, a reliable MSAL InteractionRequired signal automatically clears stale auth state and reloads to force a fresh interactive login, and clicking the stale 'sign in again' banner is intercepted to recover in-app instead of opening the login popup externally. Uncaught Microsoft web worker 'UPR' errors are noisy and fire on healthy sessions, so they never trigger an automatic reload on their own; they only help recognise a genuinely broken session for the banner interception. Interception only happens when the session has emitted a trusted auth-failure signal within the last hour, so login popups from healthy flows (initial sign-in, consent and step-up prompts, adding an account) are never diverted.",
+        describe: "Authentication configuration. auth.webauthn.enabled turns on hardware security key support on Linux (requires fido2-tools). auth.webauthn.debug enables verbose diagnostic logs, intended for beta testers only. auth.reauthRecovery.enabled opts into the in-app re-authentication recovery feature and is off by default; while off, renderer auth-failure signals are ignored and Outlook's own stale 'sign in again' banner is left untouched (you re-authenticate by relaunching, as before this feature existed). When on, a reliable MSAL InteractionRequired signal automatically clears stale auth state and reloads to force a fresh interactive login, and clicking the stale 'sign in again' banner is intercepted to recover in-app instead of opening the login popup externally. Uncaught Microsoft web worker 'UPR' errors are noisy and fire on healthy sessions, so they never trigger an automatic reload on their own; they only help recognise a genuinely broken session for the banner interception. Interception only happens when the session has emitted a trusted auth-failure signal within the last hour, so login popups from healthy flows (initial sign-in, consent and step-up prompts, adding an account) are never diverted. During an active call, recovery is never run silently (it would end the call): the user is asked whether to sign in now, after the call, or not at all. auth.clientCertificate.pinDialog.enabled (Linux only) shows a PIN dialog for smartcard / PKCS#11 client certificates and is off by default. auth.webLogin.* pre-fills the Microsoft/federated web sign-in page so you don't retype credentials each launch: auth.webLogin.user pre-fills the email/account field, auth.webLogin.passwordCommand runs a shell command (e.g. 'pass show outlook') and pre-fills its first stdout line into the password field (the app stores no secret), auth.webLogin.autoSubmit clicks through the steps, auth.webLogin.verifyMethod clicks the matching option on the MFA 'Verify your identity' page (e.g. 'Text'), and auth.webLogin.extraHosts adds login hosts beyond the Microsoft defaults. All off/empty by default. Distinct from ssoBasicAuth*, which drive the native HTTP Basic/NTLM dialog, not the web form.",
         type: "object",
         fields: {
           "intune.enabled": {
@@ -967,6 +1007,44 @@ module.exports = {
             type: "boolean",
             describe:
               "Opt into in-app recovery from stale sessions by intercepting the stale 'sign in again' login popup and recovering in-app.",
+          },
+          "clientCertificate.pinDialog.enabled": {
+            type: "boolean",
+            describe:
+              "Show a PIN dialog for smartcard / PKCS#11 client certificates on Linux (issue #2639); off by default. Has no effect on macOS or Windows, which provide native PIN prompts.",
+          },
+          "webLogin.user": {
+            type: "string",
+            describe:
+              "Email/username pre-filled into the account field of the web sign-in page when it is empty. Empty disables it.",
+          },
+          "webLogin.passwordCommand": {
+            type: "string",
+            describe:
+              "Command whose first stdout line is pre-filled into the web sign-in password field. Runs in a shell; use your own password manager (e.g. 'pass show teams'). Empty disables it. The app stores no secret.",
+          },
+          "webLogin.extraHosts": {
+            type: "array",
+            describe:
+              "Extra hostnames (or parent domains) to treat as sign-in pages, in addition to the built-in Microsoft login hosts (login.microsoftonline.com, login.microsoft.com, login.live.com). Add your federated IdP host if sign-in happens off the Microsoft hosts.",
+          },
+          "webLogin.autoSubmit": {
+            type: "boolean",
+            describe:
+              "Automatically advance the web sign-in: click Next after the email and Sign in after the password. Off by default so you review and submit yourself.",
+          },
+          "webLogin.verifyMethod": {
+            type: "string",
+            describe:
+              "On the 'Verify your identity' (MFA) page, click the option whose label starts with this text, e.g. 'Text' for SMS. Empty disables it. Best-effort text match against the Microsoft method list.",
+          },
+          "keepMsalCacheEncryptionCookie.enabled": {
+            type: "boolean",
+            describe: "Sets an expiration date for the 'msal.cache.encryption' cookie to keep it after restarts (issue #2681); on by default. Set to false to keep the cookie session-scoped, at the cost of signing in again after every restart"
+          },
+          "keepMsalCacheEncryptionCookie.days": {
+            type: "number",
+            describe: "Sets the amount of days the 'msal.cache.encryption' cookie should be kept; defaults to 400"
           },
         },
         applyMode: "restart",
@@ -998,6 +1076,56 @@ module.exports = {
             type: "boolean",
             describe:
               "Keep GPU enabled and skip the fake media UI flag under XWayland; may fix camera issues but can break screen sharing.",
+          },
+        },
+        applyMode: "restart",
+      },
+      shortcuts: {
+        default: {
+          global: [],
+          disableWhileFocused: [],
+        },
+        describe:
+          "Keyboard shortcut configuration. " +
+          "global: global keyboard shortcuts that work system-wide, disabled by default (opt-in). " +
+          "disableWhileFocused: global shortcuts to disable while the app is in focus. " +
+          "Replaces the deprecated globalShortcuts and disableGlobalShortcuts options.",
+        type: "object",
+        fields: {
+          "global": {
+            type: "array",
+            describe:
+              "Global keyboard shortcuts that work system-wide. Disabled by default (opt-in). See configuration docs for details and limitations",
+          },
+          "disableWhileFocused": {
+            type: "array",
+            describe:
+              "Array of global shortcuts to disable while the app is in focus. See https://www.electronjs.org/docs/latest/api/accelerator for available accelerators to use",
+          },
+        },
+        applyMode: "restart",
+      },
+      storage: {
+        default: {
+          clearData: null,
+        },
+        describe:
+          "Storage configuration. " +
+          "clearData: flag to clear storage data, expects an object of the type " +
+          "https://www.electronjs.org/docs/latest/api/session#sesclearstoragedataoptions. " +
+          "Replaces the deprecated clearStorageData option.",
+        type: "object",
+        fields: {
+          "clearData": {
+            // Union because the value is either a flag (clear everything) or a
+            // clearStorageDataOptions object; both work, only the warn-only
+            // validator reads this. The deprecated flat clearStorageData keeps
+            // its plain "boolean" because that one IS handed to yargs, and an
+            // unrecognised type string silently disables boolean CLI parsing:
+            // --clearStorageData would yield null instead of true.
+            type: "boolean|object",
+            describe:
+              "Flag to clear storage data. Expects an object of the type https://www.electronjs.org/docs/latest/api/session#sesclearstoragedataoptions",
           },
         },
         applyMode: "restart",
