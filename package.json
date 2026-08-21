@@ -1,6 +1,7 @@
 {
   "name": "outlook-for-linux",
   "productName": "Outlook for Linux",
+  "desktopName": "outlook-for-linux",
   "version": "2.13.2",
   "main": "app/index.js",
  "description": "Unofficial client for Outlook for Linux",
@@ -92,6 +93,7 @@
     ],
     "linux": {
       "category": "Chat;Network;Office",
+      "syncDesktopName": true,
  "icon": "build/icon.png",
       "packageCategory": "net",
  "executableName": "outlook-for-linux",
