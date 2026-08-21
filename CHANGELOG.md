@@ -1,5 +1,131 @@
 # Changelog
 
+## [2.14.0](https://github.com/dpeng/outlook-for-linux/compare/v2.13.2...v2.14.0) (2026-08-21)
+
+
+### Features
+
+* **auth:** pre-fill Microsoft web sign-in credentials ([#2761](https://github.com/dpeng/outlook-for-linux/issues/2761)) ([#2798](https://github.com/dpeng/outlook-for-linux/issues/2798)) ([c7c0b0a](https://github.com/dpeng/outlook-for-linux/commit/c7c0b0a5076053a8390c17d8ff213566995427d2))
+* **clientCertificate:** add Linux smartcard PIN dialog and secure prompt ([#2659](https://github.com/dpeng/outlook-for-linux/issues/2659)) ([509ffbd](https://github.com/dpeng/outlook-for-linux/commit/509ffbd12a315809981572f3f3c82c425cb7ea8e))
+* **config:** add shortcuts and storage namespaces, deprecate their flat names ([#2859](https://github.com/dpeng/outlook-for-linux/issues/2859)) ([15e1b7f](https://github.com/dpeng/outlook-for-linux/commit/15e1b7f4cc05235b3cecc8c5d846b34307a36a98))
+* **linux:** background portal integration for Flatpak ([#2815](https://github.com/dpeng/outlook-for-linux/issues/2815)) ([#2826](https://github.com/dpeng/outlook-for-linux/issues/2826)) ([fe6d1df](https://github.com/dpeng/outlook-for-linux/commit/fe6d1df53923f144a0b2388a7a6b05764751b20e))
+* **mqtt:** meeting-started detection first pass ([#2587](https://github.com/dpeng/outlook-for-linux/issues/2587)) ([#2757](https://github.com/dpeng/outlook-for-linux/issues/2757)) ([a0b9d72](https://github.com/dpeng/outlook-for-linux/commit/a0b9d72090b2c4b18165c17108adc77b4c2c1c2b))
+* **multi-account:** bottom-left profile switcher pill (ADR-020 Phase 1c.2) ([#2661](https://github.com/dpeng/outlook-for-linux/issues/2661)) ([1cd8f9b](https://github.com/dpeng/outlook-for-linux/commit/1cd8f9b12c076e7384823eecb1ab20e5e157d423))
+* **multi-account:** pin profiles + Ctrl+Alt+1…5 switch shortcuts (ADR-020 Phase 1c.2) ([#2787](https://github.com/dpeng/outlook-for-linux/issues/2787)) ([08f1db6](https://github.com/dpeng/outlook-for-linux/commit/08f1db68ac9cb2c9b291659ec1fa4e9916b4cef4))
+* **webauthn:** log timeout, phase timings and page aborts ([#2785](https://github.com/dpeng/outlook-for-linux/issues/2785)) ([c82cd33](https://github.com/dpeng/outlook-for-linux/commit/c82cd33df6d8f8cb94e21a309a515735f045a60e))
+
+
+### Bug Fixes
+
+* **auth:** default keepMsalCacheEncryptionCookie to on ([#2850](https://github.com/dpeng/outlook-for-linux/issues/2850)) ([cc007bf](https://github.com/dpeng/outlook-for-linux/commit/cc007bf1548547953f3b85131a6f8f340c519716))
+* **auth:** Keep msal.cache.encryption cookie on restart ([#2780](https://github.com/dpeng/outlook-for-linux/issues/2780)) ([12ea841](https://github.com/dpeng/outlook-for-linux/commit/12ea841fdb13c7b51431ffc953d6f02f2056f451))
+* **certificate:** apply customCACertsFingerprints to every TLS verification ([#2778](https://github.com/dpeng/outlook-for-linux/issues/2778)) ([0248b63](https://github.com/dpeng/outlook-for-linux/commit/0248b63c6c8f3e4a39b2ef444992482030a4a559))
+* **ci:** bump electron-builder 26.15.3 -&gt; 26.15.7 to fix DOA snap builds ([#2756](https://github.com/dpeng/outlook-for-linux/issues/2756)) ([cc5bce1](https://github.com/dpeng/outlook-for-linux/commit/cc5bce1260d6e6ac96da2072ba01d385b8c9d227))
+* **ci:** install elfutils for the flatpak smoke build ([#2856](https://github.com/dpeng/outlook-for-linux/issues/2856)) ([e2e125c](https://github.com/dpeng/outlook-for-linux/commit/e2e125cb3e8326173218c7225484f6f797f07234))
+* **deps:** bump nanoid in docs-site lockfile to clear advisory [#211](https://github.com/dpeng/outlook-for-linux/issues/211) ([#2827](https://github.com/dpeng/outlook-for-linux/issues/2827)) ([f3f5a97](https://github.com/dpeng/outlook-for-linux/commit/f3f5a971665fdd5e5ee0b0347a45670cb7c2dafb))
+* **deps:** refresh docs-site lockfile to clear http-proxy-middleware advisory ([#2823](https://github.com/dpeng/outlook-for-linux/issues/2823)) ([4c2785f](https://github.com/dpeng/outlook-for-linux/commit/4c2785fdc14981e8d13822c872068f22eb4f509c))
+* **frameless:** update no-drag selectors for Teams top-bar restructure ([#2704](https://github.com/dpeng/outlook-for-linux/issues/2704)) ([b00b633](https://github.com/dpeng/outlook-for-linux/commit/b00b6336b038cc011beb8335d8e1295d58cbf553))
+* **idle:** stop hard-exiting on SIGINT/SIGTERM so shutdown flushes storage ([#2743](https://github.com/dpeng/outlook-for-linux/issues/2743)) ([ab7f46c](https://github.com/dpeng/outlook-for-linux/commit/ab7f46c7eef36477364ea8362cf813ea094812f6))
+* **logging:** remove [#2587](https://github.com/dpeng/outlook-for-linux/issues/2587) debug instrumentation that shipped in 2.15.0 ([#2814](https://github.com/dpeng/outlook-for-linux/issues/2814)) ([0af4c07](https://github.com/dpeng/outlook-for-linux/commit/0af4c0704d4ff9ee6ec44ac1698c0c2ac9ae9ed3))
+* **logging:** stop logging notification text and page DOM ([#2819](https://github.com/dpeng/outlook-for-linux/issues/2819)) ([2157c4f](https://github.com/dpeng/outlook-for-linux/commit/2157c4fdca715789be7b504c4a9f5a49438c9f20))
+* **mainAppWindow:** clear every profile partition on startup ([#2868](https://github.com/dpeng/outlook-for-linux/issues/2868)) ([ba6e029](https://github.com/dpeng/outlook-for-linux/commit/ba6e029bebe204d34a9a93f91657534cc0164070))
+* **menus:** clear every profile partition on Quit (Clear Storage) ([#2864](https://github.com/dpeng/outlook-for-linux/issues/2864)) ([689c140](https://github.com/dpeng/outlook-for-linux/commit/689c14026ef445a679af3f21cfda51f5e6a92e3a))
+* **menus:** honour clearStorageData when quitting with clear storage ([#2861](https://github.com/dpeng/outlook-for-linux/issues/2861)) ([210e331](https://github.com/dpeng/outlook-for-linux/commit/210e331ca2e7298de27457825498f51b0ee563af))
+* **menus:** limit hidden-menubar accelerators to profile switching ([#2821](https://github.com/dpeng/outlook-for-linux/issues/2821)) ([#2824](https://github.com/dpeng/outlook-for-linux/issues/2824)) ([2a5be99](https://github.com/dpeng/outlook-for-linux/commit/2a5be994b712ce07860be99a0de84c15ca1eeeb5))
+* **network:** bound the connectivity sweep so a hung probe cannot stall startup ([#2816](https://github.com/dpeng/outlook-for-linux/issues/2816)) ([ace3bb7](https://github.com/dpeng/outlook-for-linux/commit/ace3bb75dd1b98f6c0173d7142cea6954fec34f7))
+* **network:** treat ERR_TIMED_OUT as recoverable so the retry loop survives ([#2876](https://github.com/dpeng/outlook-for-linux/issues/2876)) ([21a8ed2](https://github.com/dpeng/outlook-for-linux/commit/21a8ed297183195a4f01ecbd16427c2e2af827a6)), closes [#2875](https://github.com/dpeng/outlook-for-linux/issues/2875)
+* **notifications:** load sender avatars for electron notifications ([#2809](https://github.com/dpeng/outlook-for-linux/issues/2809)) ([936ffde](https://github.com/dpeng/outlook-for-linux/commit/936ffde803b65e8aa7900e68bedcbae1ee1ca4cb))
+* **paste:** restore File.path on pasted files so Teams uploads accept them ([#2790](https://github.com/dpeng/outlook-for-linux/issues/2790)) ([fcc3191](https://github.com/dpeng/outlook-for-linux/commit/fcc31915cbf13b8f2d626819859ac8f4f2ed9cc8))
+* resolve SonarCloud bug and vulnerability findings ([#2766](https://github.com/dpeng/outlook-for-linux/issues/2766)) ([25009f6](https://github.com/dpeng/outlook-for-linux/commit/25009f6445b515964eb78434cfcfdabf777ea1cd))
+* **screen-sharing:** pass picker source directly to avoid Wayland ID mismatch ([#2755](https://github.com/dpeng/outlook-for-linux/issues/2755)) ([82d2950](https://github.com/dpeng/outlook-for-linux/commit/82d295022cff2089281118da1a218d33fd3072e9))
+* **sonar:** exclude declarative config schema from duplication checks ([#2793](https://github.com/dpeng/outlook-for-linux/issues/2793)) ([e54c9d4](https://github.com/dpeng/outlook-for-linux/commit/e54c9d474504e60799f720fd4c5cd517df527c65))
+* **theme:** revert followSystemTheme default to false ([#2732](https://github.com/dpeng/outlook-for-linux/issues/2732)) ([ea4999e](https://github.com/dpeng/outlook-for-linux/commit/ea4999e477d0de39f24f030e972d19fce60f18ae))
+* **ui:** point dialog placeholders at teams.cloud.microsoft ([#2797](https://github.com/dpeng/outlook-for-linux/issues/2797)) ([a6843d3](https://github.com/dpeng/outlook-for-linux/commit/a6843d3e0324a38afd5dcc0bee7036bbace62f3a))
+* **webauthn:** sign the iframe's own origin for relayed ceremonies ([#2828](https://github.com/dpeng/outlook-for-linux/issues/2828)) ([#2829](https://github.com/dpeng/outlook-for-linux/issues/2829)) ([e9db7b2](https://github.com/dpeng/outlook-for-linux/commit/e9db7b2f9cc2dd2430d6f47c56370ba3cf2ae9e8))
+
+
+### Performance
+
+* bound timestamp polling, cache tray base icon, parallelise cache scans ([#2837](https://github.com/dpeng/outlook-for-linux/issues/2837)) ([d623daf](https://github.com/dpeng/outlook-for-linux/commit/d623dafadc008a7c257424664c5c5af120769091))
+
+
+### Code Improvements
+
+* **config:** aggregate deprecation warnings into one message ([#2858](https://github.com/dpeng/outlook-for-linux/issues/2858)) ([3992d37](https://github.com/dpeng/outlook-for-linux/commit/3992d37f5e61d3ab5415b7274a3eadda0ca328c4))
+
+
+### Documentation
+
+* add missing commands and CI gotchas to CLAUDE.md ([#2882](https://github.com/dpeng/outlook-for-linux/issues/2882)) ([c61f0d0](https://github.com/dpeng/outlook-for-linux/commit/c61f0d007fcae725af2e2ddb95c6d0003bb64c13))
+* add privacy and data protection statement ([#2742](https://github.com/dpeng/outlook-for-linux/issues/2742)) ([189a26d](https://github.com/dpeng/outlook-for-linux/commit/189a26ddcfa317e150f7069bbb07b21465ff0ba8)), closes [#2741](https://github.com/dpeng/outlook-for-linux/issues/2741)
+* **adr:** add ADR 028 rejecting OTC pre-fill on third-party IdPs ([#2881](https://github.com/dpeng/outlook-for-linux/issues/2881)) ([d639b42](https://github.com/dpeng/outlook-for-linux/commit/d639b42ac6c00b93cec0274f69b71d49f5627ca9)), closes [#2869](https://github.com/dpeng/outlook-for-linux/issues/2869)
+* **adr:** ADR-025 config option naming convention ([#2836](https://github.com/dpeng/outlook-for-linux/issues/2836)) ([dcafe0a](https://github.com/dpeng/outlook-for-linux/commit/dcafe0a91e87e6379f3075713301fc2791fce441))
+* **adr:** ADR-026 performance audit outcomes ([#2838](https://github.com/dpeng/outlook-for-linux/issues/2838)) ([7689e1d](https://github.com/dpeng/outlook-for-linux/commit/7689e1d5ae4ced8057cf92e8d2e7cfbc0bd5676e))
+* **adr:** leave the rename mechanism undecided in ADR-025 ([#2843](https://github.com/dpeng/outlook-for-linux/issues/2843)) ([9c3fb70](https://github.com/dpeng/outlook-for-linux/commit/9c3fb7010b814d57584acf4cd33b04b6caa955ad))
+* **certificate:** document NSS trust store for TLS-inspecting proxies ([#2776](https://github.com/dpeng/outlook-for-linux/issues/2776)) ([b1e7e67](https://github.com/dpeng/outlook-for-linux/commit/b1e7e67ef73d55b77cedab11b55945fa5f353b31))
+* **idle:** document driving the idle state file on Wayland ([#2873](https://github.com/dpeng/outlook-for-linux/issues/2873)) ([d57d352](https://github.com/dpeng/outlook-for-linux/commit/d57d352ce5f31eb21e36c27450e6fc431ce07acd)), closes [#2851](https://github.com/dpeng/outlook-for-linux/issues/2851)
+* research documentation cleanup ([#2769](https://github.com/dpeng/outlook-for-linux/issues/2769)) ([688695c](https://github.com/dpeng/outlook-for-linux/commit/688695c0d4ebffa93c5f5b045bb7ddb35d1d7d88))
+* **roadmap:** record smartcard PIN dialog under awaiting user feedback ([#2739](https://github.com/dpeng/outlook-for-linux/issues/2739)) ([8fc2223](https://github.com/dpeng/outlook-for-linux/commit/8fc2223c10e2f970f7118dc1fab2fcdaf75cdec9))
+* update ADR-026 and roadmap for merged portal and perf work ([#2857](https://github.com/dpeng/outlook-for-linux/issues/2857)) ([a9704bf](https://github.com/dpeng/outlook-for-linux/commit/a9704bf2ae5918cc0e254622f00c2c25a7938ac9))
+
+
+### CI/CD
+
+* **docs:** bound the docs build with timeout-minutes ([#2852](https://github.com/dpeng/outlook-for-linux/issues/2852)) ([d6d4cb9](https://github.com/dpeng/outlook-for-linux/commit/d6d4cb9938d6e2fec1977fc328f1f470e5bd86c9))
+* **flatpak:** smoke build on release tags, document the beta remote ([#2853](https://github.com/dpeng/outlook-for-linux/issues/2853)) ([ed9a1da](https://github.com/dpeng/outlook-for-linux/commit/ed9a1da9a763a04f05fb17d5dcb9d7a87131c255))
+
+
+### Maintenance
+
+* add osv-scanner configuration ([#2846](https://github.com/dpeng/outlook-for-linux/issues/2846)) ([a314095](https://github.com/dpeng/outlook-for-linux/commit/a3140958267d89e454d2986e0e9069028af430d8))
+* **deps-dev:** bump electron from 42.5.1 to 42.7.0 ([#2740](https://github.com/dpeng/outlook-for-linux/issues/2740)) ([9f4ce43](https://github.com/dpeng/outlook-for-linux/commit/9f4ce43911223ba05a3a52b496d1245c2d2af6ba))
+* **deps-dev:** bump the minor-and-patch group with 2 updates ([#2820](https://github.com/dpeng/outlook-for-linux/issues/2820)) ([a00ba0a](https://github.com/dpeng/outlook-for-linux/commit/a00ba0a0aad8173706af3819c957a10c5b286a57))
+* **deps-dev:** bump typescript from 6.0.3 to 7.0.2 in /docs-site ([#2727](https://github.com/dpeng/outlook-for-linux/issues/2727)) ([b0a9fc5](https://github.com/dpeng/outlook-for-linux/commit/b0a9fc5983f6469c2d945d00dc09567f9d7a5c62))
+* **deps:** bump @easyops-cn/docusaurus-search-local ([#2784](https://github.com/dpeng/outlook-for-linux/issues/2784)) ([58eafc2](https://github.com/dpeng/outlook-for-linux/commit/58eafc20f400bab84125b025037aa1955f9c20f2))
+* **deps:** bump actions/checkout from 7.0.0 to 7.0.1 ([#2773](https://github.com/dpeng/outlook-for-linux/issues/2773)) ([3c9133c](https://github.com/dpeng/outlook-for-linux/commit/3c9133cf07e75298d40eb327194609150a3c4a1c))
+* **deps:** bump actions/setup-node from 6.4.0 to 7.0.0 ([#2772](https://github.com/dpeng/outlook-for-linux/issues/2772)) ([df25ab1](https://github.com/dpeng/outlook-for-linux/commit/df25ab12fe57f277c9ead94989cf8b9e7f1f397b))
+* **deps:** bump actions/stale from 9 to 11 ([#2771](https://github.com/dpeng/outlook-for-linux/issues/2771)) ([be1eb71](https://github.com/dpeng/outlook-for-linux/commit/be1eb71a5d07c1c711c6306e9b26f7465c037beb))
+* **deps:** bump app-builder-lib and electron-builder ([#2750](https://github.com/dpeng/outlook-for-linux/issues/2750)) ([3cd1fc5](https://github.com/dpeng/outlook-for-linux/commit/3cd1fc57c17d9584e15b567b8938c5264f71160b))
+* **deps:** bump body-parser from 1.20.5 to 1.20.6 in /docs-site ([#2735](https://github.com/dpeng/outlook-for-linux/issues/2735)) ([3a23323](https://github.com/dpeng/outlook-for-linux/commit/3a23323bc8c809ab9efbbf856b090a3b25a160b2))
+* **deps:** bump brace-expansion from 5.0.6 to 5.0.7 in /docs-site ([#2733](https://github.com/dpeng/outlook-for-linux/issues/2733)) ([6ecc9f0](https://github.com/dpeng/outlook-for-linux/commit/6ecc9f0ae82602319a5fab4a61fa4b90fb113c03))
+* **deps:** bump brace-expansion from 5.0.7 to 5.0.8 in /docs-site ([#2749](https://github.com/dpeng/outlook-for-linux/issues/2749)) ([5aa5f7a](https://github.com/dpeng/outlook-for-linux/commit/5aa5f7ae17e8e518f5ec41e6349ddc060103ac84))
+* **deps:** bump brace-expansion from 5.0.8 to 5.0.9 in /docs-site ([#2802](https://github.com/dpeng/outlook-for-linux/issues/2802)) ([3d443af](https://github.com/dpeng/outlook-for-linux/commit/3d443af4a531df03040701248ba8f771730d5683))
+* **deps:** bump builder-util-runtime and electron-builder ([#2752](https://github.com/dpeng/outlook-for-linux/issues/2752)) ([0101626](https://github.com/dpeng/outlook-for-linux/commit/0101626030a2003a359d221f1f6b6c9ac51dd52d))
+* **deps:** bump dompurify from 3.4.11 to 3.4.12 in /docs-site ([#2751](https://github.com/dpeng/outlook-for-linux/issues/2751)) ([64a92f3](https://github.com/dpeng/outlook-for-linux/commit/64a92f3266b45f46dde43862c27811056e0d9720))
+* **deps:** bump dompurify from 3.4.12 to 3.4.13 in /docs-site ([#2805](https://github.com/dpeng/outlook-for-linux/issues/2805)) ([690e820](https://github.com/dpeng/outlook-for-linux/commit/690e820f4078db636ff0124ce8d3ac301e7cd4fc))
+* **deps:** bump fast-uri and svgo in root and docs-site lockfiles ([#2748](https://github.com/dpeng/outlook-for-linux/issues/2748)) ([d32b97e](https://github.com/dpeng/outlook-for-linux/commit/d32b97e0596b74b3fab76dfb797619e2db9706f6))
+* **deps:** bump fast-uri from 3.1.4 to 3.1.5 ([#2800](https://github.com/dpeng/outlook-for-linux/issues/2800)) ([55708f5](https://github.com/dpeng/outlook-for-linux/commit/55708f54fd1c72f7f59102643c5c31440734639f))
+* **deps:** bump fast-uri from 3.1.4 to 3.1.5 in /docs-site ([#2804](https://github.com/dpeng/outlook-for-linux/issues/2804)) ([46a25e9](https://github.com/dpeng/outlook-for-linux/commit/46a25e9368b983c3c39e030345a9706c04e6ab0e))
+* **deps:** bump github/codeql-action from 3 to 4.37.3 ([#2774](https://github.com/dpeng/outlook-for-linux/issues/2774)) ([c8644f3](https://github.com/dpeng/outlook-for-linux/commit/c8644f394833f44d1dc2b675f79289279a0f34a8))
+* **deps:** bump ip-address from 10.2.0 to 10.4.0 ([#2788](https://github.com/dpeng/outlook-for-linux/issues/2788)) ([457b198](https://github.com/dpeng/outlook-for-linux/commit/457b198362b2d7f5b57d01b2571efab47299acef))
+* **deps:** bump js-yaml from 3.14.2 to 3.15.0 in /docs-site ([#2725](https://github.com/dpeng/outlook-for-linux/issues/2725)) ([160569d](https://github.com/dpeng/outlook-for-linux/commit/160569d0ed1d1ee7e63004462d40e910c80c0346))
+* **deps:** bump js-yaml from 4.3.0 to 4.3.1 ([#2808](https://github.com/dpeng/outlook-for-linux/issues/2808)) ([be4ee33](https://github.com/dpeng/outlook-for-linux/commit/be4ee33bf87065b53756236742d201ef748c669b))
+* **deps:** bump js-yaml from 4.3.0 to 4.3.1 in /docs-site ([#2807](https://github.com/dpeng/outlook-for-linux/issues/2807)) ([8466a9f](https://github.com/dpeng/outlook-for-linux/commit/8466a9f939bc64a59e3a82b2907e880149cb8337))
+* **deps:** bump mermaid from 11.15.0 to 11.16.1 in /docs-site ([#2806](https://github.com/dpeng/outlook-for-linux/issues/2806)) ([a5446b5](https://github.com/dpeng/outlook-for-linux/commit/a5446b58ee755251fca0aa2c4a08e701e0144bd9))
+* **deps:** bump postcss from 8.5.13 to 8.5.23 in /docs-site ([#2753](https://github.com/dpeng/outlook-for-linux/issues/2753)) ([d283b35](https://github.com/dpeng/outlook-for-linux/commit/d283b35d2b8c1d7ec2e4e9a7ffd7c137150444e3))
+* **deps:** bump shell-quote from 1.8.4 to 1.10.0 in /docs-site ([#2736](https://github.com/dpeng/outlook-for-linux/issues/2736)) ([cd7babe](https://github.com/dpeng/outlook-for-linux/commit/cd7babedb4fdb05831c8b2e0cc881704d775b61f))
+* **deps:** bump the minor-and-patch group across 1 directory with 7 updates ([#2726](https://github.com/dpeng/outlook-for-linux/issues/2726)) ([96e7c10](https://github.com/dpeng/outlook-for-linux/commit/96e7c10a0235e1d46b42dd3dbcfec73f57b2d382))
+* **deps:** bump the minor-and-patch group in /docs-site with 2 updates ([#2765](https://github.com/dpeng/outlook-for-linux/issues/2765)) ([f748ecd](https://github.com/dpeng/outlook-for-linux/commit/f748ecda96c00b1a0d948ffeafd928ef237ae0fb))
+* **deps:** bump the minor-and-patch group with 2 updates ([#2723](https://github.com/dpeng/outlook-for-linux/issues/2723)) ([85fcb9c](https://github.com/dpeng/outlook-for-linux/commit/85fcb9c423f93b3a98947b93d0c2efa221f3d3da))
+* **deps:** bump the minor-and-patch group with 3 updates ([#2783](https://github.com/dpeng/outlook-for-linux/issues/2783)) ([2f619d4](https://github.com/dpeng/outlook-for-linux/commit/2f619d4b464df67b1fc01a583eea5e74906a56d6))
+* **deps:** bump the minor-and-patch group with 6 updates ([#2764](https://github.com/dpeng/outlook-for-linux/issues/2764)) ([72f2196](https://github.com/dpeng/outlook-for-linux/commit/72f2196c7907acb5d8c8e38b3ef112b47455ae37))
+* **deps:** bump undici from 7.28.0 to 7.29.0 ([#2799](https://github.com/dpeng/outlook-for-linux/issues/2799)) ([1cea4dd](https://github.com/dpeng/outlook-for-linux/commit/1cea4ddb116f435268c0596d64816fb4984b89f1))
+* **deps:** bump undici from 7.28.0 to 7.29.0 in /docs-site ([#2801](https://github.com/dpeng/outlook-for-linux/issues/2801)) ([e271012](https://github.com/dpeng/outlook-for-linux/commit/e27101263499c014493ae606f4916989e2d5b7fb))
+* **deps:** bump webpack-dev-server from 5.2.5 to 5.2.6 in /docs-site ([#2734](https://github.com/dpeng/outlook-for-linux/issues/2734)) ([f48f49a](https://github.com/dpeng/outlook-for-linux/commit/f48f49a3ac78c614839e3d2f75fabdf66074da03))
+* **deps:** bump websocket-driver from 0.7.4 to 0.7.5 in /docs-site ([#2729](https://github.com/dpeng/outlook-for-linux/issues/2729)) ([9ab02f3](https://github.com/dpeng/outlook-for-linux/commit/9ab02f34d2874444185c51dac6062e0caf02b452))
+* **deps:** refresh brace-expansion in the lockfile ([#2847](https://github.com/dpeng/outlook-for-linux/issues/2847)) ([fe70fb9](https://github.com/dpeng/outlook-for-linux/commit/fe70fb99e6eddb3bbd5f460da9eb0468d5cbc2e9))
+* **main:** release 2.14.0 ([#2698](https://github.com/dpeng/outlook-for-linux/issues/2698)) ([3c52bfb](https://github.com/dpeng/outlook-for-linux/commit/3c52bfb02ca27719b9b527ca06b1c48d610693c7))
+* **main:** release 2.14.1 ([#2754](https://github.com/dpeng/outlook-for-linux/issues/2754)) ([6d5429a](https://github.com/dpeng/outlook-for-linux/commit/6d5429a917c513074040e36e6f05679e4475dd46))
+* **main:** release 2.15.0 ([#2763](https://github.com/dpeng/outlook-for-linux/issues/2763)) ([67b2097](https://github.com/dpeng/outlook-for-linux/commit/67b2097004c9f438fe5640b4ff723ed0514439be))
+* **main:** release 2.16.0 ([#2803](https://github.com/dpeng/outlook-for-linux/issues/2803)) ([eb84047](https://github.com/dpeng/outlook-for-linux/commit/eb840470b32d149c2be0c5281479792494b4ea89))
+* **main:** release 2.17.0 ([#2855](https://github.com/dpeng/outlook-for-linux/issues/2855)) ([40e13fa](https://github.com/dpeng/outlook-for-linux/commit/40e13fa3cd882b906f7fc8d3ca21eb6118475dde))
+* **main:** release 2.17.1 ([#2879](https://github.com/dpeng/outlook-for-linux/issues/2879)) ([e058122](https://github.com/dpeng/outlook-for-linux/commit/e058122beafd18dc550835553a61128c8428f180))
+* remove redundant code comments that restate the code ([#2728](https://github.com/dpeng/outlook-for-linux/issues/2728)) ([58b3098](https://github.com/dpeng/outlook-for-linux/commit/58b30985145de9f27ef62a7f85bd1dc0067195fe))
+* **snap:** migrate base core22 -&gt; core24 via the snapcraft config key ([#2758](https://github.com/dpeng/outlook-for-linux/issues/2758)) ([e6b8d2e](https://github.com/dpeng/outlook-for-linux/commit/e6b8d2ed320afe743ad09b01244dc5e1578edbb4))
+* **sonar:** clear docker and String.raw findings ([#2818](https://github.com/dpeng/outlook-for-linux/issues/2818)) ([#2825](https://github.com/dpeng/outlook-for-linux/issues/2825)) ([b82434b](https://github.com/dpeng/outlook-for-linux/commit/b82434b01a0118fae2bf901d44495ef11b85151d))
+* **sonar:** clear the code-smell tail ([#2813](https://github.com/dpeng/outlook-for-linux/issues/2813)) ([894dc4e](https://github.com/dpeng/outlook-for-linux/commit/894dc4e4c556698bae8d3321f1b9b8e885227197))
+* sync upstream changes and restore Outlook icons ([386872e](https://github.com/dpeng/outlook-for-linux/commit/386872ed825b394569cd23cb072648f55f2e7942))
+
 ## [2.13.0](https://github.com/IsmaelMartinez/outlook-for-linux/compare/v2.12.0...v2.13.0) (2026-06-25)
 
 

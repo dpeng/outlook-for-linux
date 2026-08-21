@@ -14,6 +14,108 @@
   <url type="bugtracker">https://github.com/dpeng/outlook-for-linux/issues</url>
   <launchable type="desktop-id">outlook-for-linux.desktop</launchable>
   <releases>
+    <release version="2.14.0" date="2026-08-21">
+      <description>
+        <ul>
+          <li>auth: pre-fill Microsoft web sign-in credentials (#2761) (#2798)</li>
+          <li>clientCertificate: add Linux smartcard PIN dialog and secure prompt (#2659)</li>
+          <li>config: add shortcuts and storage namespaces, deprecate their flat names (#2859)</li>
+          <li>linux: background portal integration for Flatpak (#2815) (#2826)</li>
+          <li>mqtt: meeting-started detection first pass (#2587) (#2757)</li>
+          <li>multi-account: bottom-left profile switcher pill (ADR-020 Phase 1c.2) (#2661)</li>
+          <li>multi-account: pin profiles + Ctrl+Alt+1…5 switch shortcuts (ADR-020 Phase 1c.2) (#2787)</li>
+          <li>webauthn: log timeout, phase timings and page aborts (#2785)</li>
+          <li>auth: default keepMsalCacheEncryptionCookie to on (#2850)</li>
+          <li>auth: Keep msal.cache.encryption cookie on restart (#2780)</li>
+          <li>certificate: apply customCACertsFingerprints to every TLS verification (#2778)</li>
+          <li>ci: bump electron-builder 26.15.3 -&amp;gt; 26.15.7 to fix DOA snap builds (#2756)</li>
+          <li>ci: install elfutils for the flatpak smoke build (#2856)</li>
+          <li>deps: bump nanoid in docs-site lockfile to clear advisory #211 (#2827)</li>
+          <li>deps: refresh docs-site lockfile to clear http-proxy-middleware advisory (#2823)</li>
+          <li>frameless: update no-drag selectors for Teams top-bar restructure (#2704)</li>
+          <li>idle: stop hard-exiting on SIGINT/SIGTERM so shutdown flushes storage (#2743)</li>
+          <li>logging: remove #2587 debug instrumentation that shipped in 2.15.0 (#2814)</li>
+          <li>logging: stop logging notification text and page DOM (#2819)</li>
+          <li>mainAppWindow: clear every profile partition on startup (#2868)</li>
+          <li>menus: clear every profile partition on Quit (Clear Storage) (#2864)</li>
+          <li>menus: honour clearStorageData when quitting with clear storage (#2861)</li>
+          <li>menus: limit hidden-menubar accelerators to profile switching (#2821) (#2824)</li>
+          <li>network: bound the connectivity sweep so a hung probe cannot stall startup (#2816)</li>
+          <li>network: treat ERR_TIMED_OUT as recoverable so the retry loop survives (#2876) (21a8ed2), closes #2875</li>
+          <li>notifications: load sender avatars for electron notifications (#2809)</li>
+          <li>paste: restore File.path on pasted files so Teams uploads accept them (#2790)</li>
+          <li>resolve SonarCloud bug and vulnerability findings (#2766)</li>
+          <li>screen-sharing: pass picker source directly to avoid Wayland ID mismatch (#2755)</li>
+          <li>sonar: exclude declarative config schema from duplication checks (#2793)</li>
+          <li>theme: revert followSystemTheme default to false (#2732)</li>
+          <li>ui: point dialog placeholders at teams.cloud.microsoft (#2797)</li>
+          <li>webauthn: sign the iframe's own origin for relayed ceremonies (#2828) (#2829)</li>
+          <li>bound timestamp polling, cache tray base icon, parallelise cache scans (#2837)</li>
+          <li>config: aggregate deprecation warnings into one message (#2858)</li>
+          <li>add missing commands and CI gotchas to CLAUDE.md (#2882)</li>
+          <li>add privacy and data protection statement (#2742) (189a26d), closes #2741</li>
+          <li>adr: add ADR 028 rejecting OTC pre-fill on third-party IdPs (#2881) (d639b42), closes #2869</li>
+          <li>adr: ADR-025 config option naming convention (#2836)</li>
+          <li>adr: ADR-026 performance audit outcomes (#2838)</li>
+          <li>adr: leave the rename mechanism undecided in ADR-025 (#2843)</li>
+          <li>certificate: document NSS trust store for TLS-inspecting proxies (#2776)</li>
+          <li>idle: document driving the idle state file on Wayland (#2873) (d57d352), closes #2851</li>
+          <li>research documentation cleanup (#2769)</li>
+          <li>roadmap: record smartcard PIN dialog under awaiting user feedback (#2739)</li>
+          <li>update ADR-026 and roadmap for merged portal and perf work (#2857)</li>
+          <li>docs: bound the docs build with timeout-minutes (#2852)</li>
+          <li>flatpak: smoke build on release tags, document the beta remote (#2853)</li>
+          <li>add osv-scanner configuration (#2846)</li>
+          <li>deps-dev: bump electron from 42.5.1 to 42.7.0 (#2740)</li>
+          <li>deps-dev: bump the minor-and-patch group with 2 updates (#2820)</li>
+          <li>deps-dev: bump typescript from 6.0.3 to 7.0.2 in /docs-site (#2727)</li>
+          <li>deps: bump @easyops-cn/docusaurus-search-local (#2784)</li>
+          <li>deps: bump actions/checkout from 7.0.0 to 7.0.1 (#2773)</li>
+          <li>deps: bump actions/setup-node from 6.4.0 to 7.0.0 (#2772)</li>
+          <li>deps: bump actions/stale from 9 to 11 (#2771)</li>
+          <li>deps: bump app-builder-lib and electron-builder (#2750)</li>
+          <li>deps: bump body-parser from 1.20.5 to 1.20.6 in /docs-site (#2735)</li>
+          <li>deps: bump brace-expansion from 5.0.6 to 5.0.7 in /docs-site (#2733)</li>
+          <li>deps: bump brace-expansion from 5.0.7 to 5.0.8 in /docs-site (#2749)</li>
+          <li>deps: bump brace-expansion from 5.0.8 to 5.0.9 in /docs-site (#2802)</li>
+          <li>deps: bump builder-util-runtime and electron-builder (#2752)</li>
+          <li>deps: bump dompurify from 3.4.11 to 3.4.12 in /docs-site (#2751)</li>
+          <li>deps: bump dompurify from 3.4.12 to 3.4.13 in /docs-site (#2805)</li>
+          <li>deps: bump fast-uri and svgo in root and docs-site lockfiles (#2748)</li>
+          <li>deps: bump fast-uri from 3.1.4 to 3.1.5 (#2800)</li>
+          <li>deps: bump fast-uri from 3.1.4 to 3.1.5 in /docs-site (#2804)</li>
+          <li>deps: bump github/codeql-action from 3 to 4.37.3 (#2774)</li>
+          <li>deps: bump ip-address from 10.2.0 to 10.4.0 (#2788)</li>
+          <li>deps: bump js-yaml from 3.14.2 to 3.15.0 in /docs-site (#2725)</li>
+          <li>deps: bump js-yaml from 4.3.0 to 4.3.1 (#2808)</li>
+          <li>deps: bump js-yaml from 4.3.0 to 4.3.1 in /docs-site (#2807)</li>
+          <li>deps: bump mermaid from 11.15.0 to 11.16.1 in /docs-site (#2806)</li>
+          <li>deps: bump postcss from 8.5.13 to 8.5.23 in /docs-site (#2753)</li>
+          <li>deps: bump shell-quote from 1.8.4 to 1.10.0 in /docs-site (#2736)</li>
+          <li>deps: bump the minor-and-patch group across 1 directory with 7 updates (#2726)</li>
+          <li>deps: bump the minor-and-patch group in /docs-site with 2 updates (#2765)</li>
+          <li>deps: bump the minor-and-patch group with 2 updates (#2723)</li>
+          <li>deps: bump the minor-and-patch group with 3 updates (#2783)</li>
+          <li>deps: bump the minor-and-patch group with 6 updates (#2764)</li>
+          <li>deps: bump undici from 7.28.0 to 7.29.0 (#2799)</li>
+          <li>deps: bump undici from 7.28.0 to 7.29.0 in /docs-site (#2801)</li>
+          <li>deps: bump webpack-dev-server from 5.2.5 to 5.2.6 in /docs-site (#2734)</li>
+          <li>deps: bump websocket-driver from 0.7.4 to 0.7.5 in /docs-site (#2729)</li>
+          <li>deps: refresh brace-expansion in the lockfile (#2847)</li>
+          <li>main: release 2.14.0 (#2698)</li>
+          <li>main: release 2.14.1 (#2754)</li>
+          <li>main: release 2.15.0 (#2763)</li>
+          <li>main: release 2.16.0 (#2803)</li>
+          <li>main: release 2.17.0 (#2855)</li>
+          <li>main: release 2.17.1 (#2879)</li>
+          <li>remove redundant code comments that restate the code (#2728)</li>
+          <li>snap: migrate base core22 -&amp;gt; core24 via the snapcraft config key (#2758)</li>
+          <li>sonar: clear docker and String.raw findings (#2818) (#2825)</li>
+          <li>sonar: clear the code-smell tail (#2813)</li>
+          <li>sync upstream changes and restore Outlook icons</li>
+        </ul>
+      </description>
+    </release>
     <release version="2.13.2" date="2026-07-10">
       <description>
         <ul>
