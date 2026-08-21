@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.14.1](https://github.com/dpeng/outlook-for-linux/compare/v2.14.0...v2.14.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* **linux:** package all desktop icon sizes ([cbe3ec3](https://github.com/dpeng/outlook-for-linux/commit/cbe3ec388f3e8fdedb22fd1c1f5eafe776b83129))
+
+
+### Maintenance
+
+* document GitHub push proxy ([59d07ae](https://github.com/dpeng/outlook-for-linux/commit/59d07ae56c0ccb7bd88e3f7fe1d11add07e6aca7))
+
 ## [2.14.0](https://github.com/dpeng/outlook-for-linux/compare/v2.13.2...v2.14.0) (2026-08-21)
 
 
