@@ -1,0 +1,14 @@
+---
+description: Use the working network proxy for GitHub pushes
+alwaysApply: true
+---
+
+# Git Push Proxy
+
+When pushing this repository to GitHub, route the command through the working proxy:
+
+```bash
+HTTP_PROXY=http://10.144.1.10:8080 HTTPS_PROXY=http://10.144.1.10:8080 git push origin <branch>
+```
+
+Do not store GitHub tokens in commands, files, remote URLs, or Git configuration.
