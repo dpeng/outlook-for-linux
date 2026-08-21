@@ -94,7 +94,7 @@
     "linux": {
       "category": "Chat;Network;Office",
       "syncDesktopName": true,
-      "icon": "build/icon.png",
+      "icon": "build/icons",
       "packageCategory": "net",
       "executableName": "outlook-for-linux",
       "synopsis": "Outlook for Linux",
